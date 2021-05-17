@@ -1,0 +1,36 @@
+main:
+
+		static void _init(t_data *data)
+		{
+			data->commands = NULL;
+			data->garbage = NULL;
+		}
+
+		int main()
+		{
+			t_data data;
+
+			_init(&data);
+			while (READ)
+			{
+				ft_lstadd_back(&data.garbage, ft_lstnew(data.input));
+				parser(&data, 0);
+				ft_lstadd_back(&data.garbage, ft_lstnew(data.input));
+			}
+			free_list(&data.garbage);
+			return (0);
+		}
+
+printf("-- %i --: %s\n", i++, lst->content);
+
+printf("-- var --: %s\n", lst->content);
+
+puts("ok_1\n");
+
+hello {guys} pp
+
+hello guys "my name" is wow
+
+"""hello" guys wtf "are" taling"about"
+
+			printf("\n-- var data->field 0 --: |%c|\n", data->field[0]);
