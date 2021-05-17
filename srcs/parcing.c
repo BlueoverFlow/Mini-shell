@@ -50,10 +50,10 @@ static void split_with_blanks(const char *str)
 
 static void merge_tokens(t_data *data, char *blanks)
 {
-	// if ((data->field[0] == '\'' || data->field[0] == '\"') && ft_lstsize(data->tokens) > 0)
-	// 	if (data->tokens->content[ft_strlen(data->tokens->content) - 1] != blanks[0])
-	// 		data->tokens->content = ft_strjoin2(data->tokens->content, data->field);
-	if (data->field[0] != blanks[0] && ft_lstsize(data->tokens) > 0)
+	if ((data->field[0] == '\'' || data->field[0] == '\"') && ft_lstsize(data->tokens) > 0)
+		if (((char *)(data->tokens->content))[ft_strlen(data->tokens->content) - 1] != blanks[0])
+			data->tokens->content = ft_strjoin2(data->tokens->content, data->field);
+	else if (data->field[0] != blanks[0] && ft_lstsize(data->tokens) > 0)
 		data->tokens->content = ft_strjoin2(data->tokens->content, data->field);
 	else
 		ft_lstadd_back(&data->tokens, ft_lstnew(data->field));
@@ -90,7 +90,7 @@ static void to_tokens(t_data *data)
 			data->field = ft_substr(data->input, i, next_quote(data->input + i + 1, '\'', '\"') + 2);
 			data->is_quoted = FALSE;
 		}
-		// merge_tokens(data, blanks);
+		merge_tokens(data, blanks);
 		i += ft_strlen(data->field) - 1;
 		printf("\n-- field  --: |%s|\n", data->field);
 	}
