@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/14 08:37:34 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/05/17 18:24:55 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/05/18 08:23:34 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ void	print_list(t_list *lst)
 
 	while (lst)
 	{
-		printf("-- %i --: %s\n", i++, lst->content);
+		printf("-- %i --: |%s|\n", i++, (char *)lst->content);
 		lst = lst->next;
 	}
 }

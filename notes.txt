@@ -6,7 +6,7 @@ main:
 			data->garbage = NULL;
 		}
 
-		int main()
+		int main()8690
 		{
 			t_data data;
 
@@ -32,5 +32,7 @@ hello {guys} pp
 hello guys "my name" is wow
 
 """hello" guys wtf "are" taling"about"
+
+"'hello guys'" "'haha"'
 
 			printf("\n-- var data->field 0 --: |%c|\n", data->field[0]);
