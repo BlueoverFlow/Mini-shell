@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 08:15:35 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/05/18 17:22:46 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/05/19 15:50:57 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,13 +40,11 @@ linked lists
 parser elems
 */
 	char *input;
-	int is_quoted;
+	BOOL is_quoted;
 	char *field;
 	int pos[2];
 	char **sub_field;
-	int is_one_token;
-/*
-*/	
+	BOOL is_one_token; 
 }				t_data;
 
 //========================================================================================================
@@ -79,6 +77,14 @@ utils.c
 */
 void out(int code);
 char	**ft_split_blanks(char *str);
+/*
+special_char.c
+*/
+int is_backslashed(int i, char *str);
+/*
+utils_2.c
+*/
+char *split_with_blanks(t_data *data, char *token, char *blanks);
 //========================================================================================================
 
 #endif

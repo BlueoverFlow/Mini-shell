@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/18 17:20:29 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/05/18 17:21:30 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/05/21 09:10:08 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,47 +26,48 @@ static void next_field(char *str, t_data *data)
 		{
 			if (data->pos[0] != ERROR && str[i] != str[data->pos[0]])
 				continue ;
-			if (str[i - 1] != '\\')
+			if (!is_backslashed(i, str))
 				data->pos[j++] = i;
 		}
+}
+
+static void unquoted_field(t_data *data, char *blanks, t_list *last)
+{
+	BOOL	next_field;
+	size_t	l;
+
+	l = ft_strlen(data->field);
+	if (data->field[0] != blanks[0] && data->field[0] != blanks[1] && data->is_one_token && ft_lstsize(data->tokens))
+		data->is_one_token = TRUE;
+	else
+		data->is_one_token = FALSE;
+	if (((data->field[l - 1] != blanks[0] && !is_backslashed(l - 1, data->field))
+	 	&& (data->field[l - 1] != blanks[1] && !is_backslashed(l - 1, data->field))) && data->field[l])
+		next_field = TRUE;
+	else
+		next_field = FALSE;
+	data->field = split_with_blanks(data, NULL, blanks);
+	if (data->is_one_token)
+		last->content = ft_strjoin2(last->content, data->field);
+	else
+		ft_dlstadd_back(&data->tokens, ft_lstnew(data->field));
+	data->is_one_token = next_field;
 }
 
 static void merge_tokens(t_data *data, char *blanks)
 {
 	t_list *last;
-	int		l;
 
-	l = -1;
 	last = ft_lstlast(data->tokens);
 	if (QUOTED_FIELD)
 	{
-		if (data->is_one_token)
+		if (data->is_one_token && ft_lstsize(data->tokens))
 			last->content = ft_strjoin2(last->content, data->field);
 		else
 			ft_dlstadd_back(&data->tokens, ft_lstnew(data->field));
-		if (data->field[ft_strlen(data->field) - 1] != blanks[0] && (data->field[ft_strlen(data->field) - 1] != blanks[1]))
-			data->is_one_token = TRUE;
 	}
 	else
-	{
-		data->sub_field = ft_split(data->field, ' ');
-		if (NEED_MERGE)
-		{
-			last->content = ft_strjoin2(last->content, data->sub_field[++l]);
-			if (data->field[ft_strlen(data->sub_field[l]) - 1] == blanks[0] || (data->field[ft_strlen(data->sub_field[l]) - 1] == blanks[1]))
-			data->is_one_token = FALSE;
-		}
-		if (NO_MERGE)
-		{
-			--l;
-			while (data->sub_field[++l])
-				ft_dlstadd_back(&data->tokens, ft_lstnew(data->sub_field[l]));
-			if (data->field[ft_strlen(data->field) - 1] == blanks[0] || (data->field[ft_strlen(data->field) - 1] == blanks[1]))
-				data->is_one_token = FALSE;
-			else
-			data->is_one_token = TRUE;	
-		}
-	}
+		unquoted_field(data, blanks, last);
 }
 
 int to_tokens(t_data *data)
@@ -91,7 +92,6 @@ int to_tokens(t_data *data)
 				data->field = ft_strdup2(data->input + i);
 			else
 				data->field = ft_substr(data->input, i, data->pos[0]);
-			data->is_quoted = TRUE;
 		}
 		else
 		{
@@ -99,7 +99,11 @@ int to_tokens(t_data *data)
 			data->is_quoted = FALSE;
 		}
 		merge_tokens(data, blanks);
-		i += ft_strlen(data->field) - 1;
+		puts("\n");
+		print_list((data->tokens));
+		i += ft_strlen(data->field);
+		if (QUOTED_FIELD)
+			i--;
 	}
 	return (1);
 }
