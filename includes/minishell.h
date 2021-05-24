@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 08:15:35 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/05/19 15:50:57 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/05/24 13:04:00 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,8 @@ parser elems
 	char *field;
 	int pos[2];
 	char **sub_field;
-	BOOL is_one_token; 
+	BOOL is_one_token;
+	BOOL is_separated;
 }				t_data;
 
 //========================================================================================================
@@ -76,7 +77,6 @@ void expansions(t_data *data);
 utils.c
 */
 void out(int code);
-char	**ft_split_blanks(char *str);
 /*
 special_char.c
 */
@@ -84,7 +84,7 @@ int is_backslashed(int i, char *str);
 /*
 utils_2.c
 */
-char *split_with_blanks(t_data *data, char *token, char *blanks);
+char	**ft_split_blanks(char const *s);
 //========================================================================================================
 
 #endif

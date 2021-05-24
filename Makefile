@@ -6,7 +6,7 @@
 #    By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/05/13 08:14:39 by ael-mezz          #+#    #+#              #
-#    Updated: 2021/05/19 08:21:29 by ael-mezz         ###   ########.fr        #
+#    Updated: 2021/05/23 10:59:48 by ael-mezz         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,7 +27,7 @@ SRCS_PATH =	./srcs
 
 CC = gcc
 
-RM = rm -f
+RM = rm -rf
 
 OBJ = $(SRCS:.c=.o)
 
@@ -37,16 +37,17 @@ HEADER = includes/minishell.h
 
 SRCS := $(addprefix $(SRCS_PATH)/, $(SRCS))
 
-ops: $(SRCS) $(HEADER)
-	@cd libft && make all && make bonus
+all: $(SRCS) $(HEADER)
+	@make -C libft && make bonus -C libft
 	@$(CC) $(SRCS) $(LIBFT) $(FLAGS) -o minishell
 
 clean:
 	@echo "cleaning..."
+	@make clean -C libft
 
 fclean:	clean
-	@$(RM) -r minishell minishell.dSYM
-	@cd libft && make fclean
+	@$(RM) minishell minishell.dSYM
+	@make fclean -C libft
 
 test:
 	@$(CC) srcs/$(FILE).c $(LIBFT) $(FLAGS) -o $(FILE)
@@ -56,4 +57,4 @@ test:
 exec:
 	@./minishell
 
-re: fclean ops exec
+re: fclean all exec

@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/18 17:20:29 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/05/21 09:10:08 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/05/24 13:12:04 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,23 +34,28 @@ static void next_field(char *str, t_data *data)
 static void unquoted_field(t_data *data, char *blanks, t_list *last)
 {
 	BOOL	next_field;
+	char	**table;
+	int		i;
 	size_t	l;
 
+	next_field = TRUE;
 	l = ft_strlen(data->field);
 	if (data->field[0] != blanks[0] && data->field[0] != blanks[1] && data->is_one_token && ft_lstsize(data->tokens))
 		data->is_one_token = TRUE;
-	else
-		data->is_one_token = FALSE;
-	if (((data->field[l - 1] != blanks[0] && !is_backslashed(l - 1, data->field))
-	 	&& (data->field[l - 1] != blanks[1] && !is_backslashed(l - 1, data->field))) && data->field[l])
-		next_field = TRUE;
-	else
+	if ((data->field[l - 1] == blanks[0] && !is_backslashed(l - 1, data->field))
+	 	|| (data->field[l - 1] == blanks[1] && !is_backslashed(l - 1, data->field)))
 		next_field = FALSE;
-	data->field = split_with_blanks(data, NULL, blanks);
+	i = -1;
+	table = ft_split_blanks(data->field);
+	if (!table[0])
+		data->is_separated = TRUE;
 	if (data->is_one_token)
-		last->content = ft_strjoin2(last->content, data->field);
-	else
-		ft_dlstadd_back(&data->tokens, ft_lstnew(data->field));
+	{
+		i = 0;
+		last->content = ft_strjoin2(last->content, table[i]);
+	}
+	while (table[++i])
+		ft_dlstadd_back(&data->tokens, ft_lstnew(table[i]));
 	data->is_one_token = next_field;
 }
 
@@ -61,13 +66,15 @@ static void merge_tokens(t_data *data, char *blanks)
 	last = ft_lstlast(data->tokens);
 	if (QUOTED_FIELD)
 	{
-		if (data->is_one_token && ft_lstsize(data->tokens))
+		if ((ft_lstsize(data->tokens) && (((char *)(last->content))[0] == '\''
+			|| ((char *)(last->content))[0] == '\"') && !data->is_separated) || data->is_one_token)
 			last->content = ft_strjoin2(last->content, data->field);
 		else
 			ft_dlstadd_back(&data->tokens, ft_lstnew(data->field));
 	}
 	else
 		unquoted_field(data, blanks, last);
+	data->is_separated = FALSE;
 }
 
 int to_tokens(t_data *data)
@@ -75,8 +82,8 @@ int to_tokens(t_data *data)
 	int i;
 	char blanks[2] = {' ', '\t'};
 
-	i = -1;
-	while (data->input[++i])
+	i = 0;
+	while (data->input[i])
 	{
 		next_field(data->input + i, data);
 		if (!data->is_quoted && NEXT_IS_UNCLOSED)
@@ -102,8 +109,6 @@ int to_tokens(t_data *data)
 		puts("\n");
 		print_list((data->tokens));
 		i += ft_strlen(data->field);
-		if (QUOTED_FIELD)
-			i--;
 	}
 	return (1);
 }

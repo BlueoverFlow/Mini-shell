@@ -6,39 +6,80 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/18 11:19:40 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/05/21 08:07:13 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/05/24 12:22:14 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-char *split_with_blanks(t_data *data, char *token, char *blanks)
+static size_t	ft_countwords(char const *s)
 {
-	int i;
-	int	j;
+	int		start;
+	size_t	count;
+
+	count = 1;
+	start = 0;
+	while (s[start])
+	{
+		while (s[start] && ((' ' == s[start] && !is_backslashed(start, (char *)s)) || ('\t' == s[start] && !is_backslashed(start, (char *)s))))
+			start++;
+		if (s[start])
+			count++;
+		while (s[start] &&((' ' != s[start] && !is_backslashed(start, (char *)s)) && ('\t' != s[start] && !is_backslashed(start, (char *)s))))
+			start++;
+	}
+	return (count);
+}
+
+static char	**ft_koalloc(char **ptr, size_t i)
+{
+	i += 1;
+	while (ptr[--i] != NULL)
+		free(ptr[i]);
+	free(ptr);
+	return (NULL);
+}
+
+static char	**ft_split2(char const *s, char **ptr, size_t cw)
+{
+	size_t	i;
+	int		start;
+	int		len;
 
 	i = -1;
-	j = 0;
-	while (data->field[++i])
+	start = 0;
+	len = 0;
+	while (s[start] && ++i < cw - 1)
 	{
-		if (((data->field[i] != blanks[0] && !is_backslashed(i, data->field)) && (data->field[i] != blanks[1] && !is_backslashed(i, data->field)))
-			|| ((data->field[i] == blanks[0] && is_backslashed(i, data->field)) || (data->field[i] == blanks[1] && is_backslashed(i, data->field))))
+		while ((' ' == s[start] && !is_backslashed(start, (char *)s)) || ('\t' == s[start] && !is_backslashed(start, (char *)s)))
+			start++;
+		while ((' ' != s[start] && !is_backslashed(start, (char *)s)) && ('\t' != s[start] && !is_backslashed(start, (char *)s)))
 		{
-			if (token)
-				token[j] = data->field[i];
-			j++;
+			start++;
+			len++;
 		}
-		else
-			if (j)
-				break;
+		start -= len;
+		ptr[i] = ft_calloc(len + 1, sizeof(char));
+		if (!ptr[i])
+			return (ft_koalloc(ptr, i));
+		ft_memcpy(ptr[i], s + start, len);
+		start += len;
+		len = 0;
 	}
-	if (token)
-	{
-		token[j] = '\0';
-		free(data->field);
-		return (token);
-	}
-	token = malloc(sizeof(char) * j + 1);
-	split_with_blanks(data, token, blanks);
-	return (token);
+	return (ptr);
+}
+
+char	**ft_split_blanks(char const *s)
+{
+	char		**ptr;
+	size_t		cw;
+
+	if (s == NULL)
+		return (NULL);
+	cw = ft_countwords(s);
+	ptr = (char **)malloc(sizeof(char *) * cw);
+	if (!ptr)
+		return (NULL);
+	ptr[cw - 1] = NULL;
+	return (ft_split2(s, ptr, cw));
 }

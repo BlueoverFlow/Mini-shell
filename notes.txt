@@ -35,4 +35,7 @@ hello guys "my name" is wow
 
 "'hello guys'" "'haha"'
 
+hello"wow"
+
 			printf("\n-- var data->field 0 --: |%c|\n", data->field[0]);
+"""" "" \" '' "    hello  world       you     ""
