@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/18 17:20:29 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/05/25 15:35:46 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/05/25 16:21:07 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,11 @@ static void next_field(char *str, t_data *data)
 	data->pos[0] = ERROR;
 	data->pos[1] = ERROR;
 	while (str[++i] && j < 2)
-		if (str[i] == '\'' || str[i] == '\"')
+		if (str[i] == '\'' || str[i] == '"')
 		{
 			if (data->pos[0] != ERROR && str[i] != str[data->pos[0]])
 				continue ;
-			if (!is_backslashed(i, str))
+			if (!(str[i] == '"' && is_backslashed(i, str)))
 				data->pos[j++] = i;
 		}
 }
@@ -107,8 +107,6 @@ int to_tokens(t_data *data)
 			data->is_quoted = FALSE;
 		}
 		merge_tokens(data, blanks);
-		puts("\n");
-		print_list((data->tokens));
 		i += ft_strlen(data->field);
 	}
 	return (1);

@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/18 11:19:40 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/05/25 15:18:51 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/05/25 15:44:48 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,10 +78,7 @@ char	**ft_split_blanks(char const *s)
 {
 	char		**ptr;
 	size_t		cw;
-	static int i = 0;
 
-	printf("%d var\n", i);
-	i++;
 	if (s == NULL)
 		return (NULL);
 	cw = ft_countwords(s);

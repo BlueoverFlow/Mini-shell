@@ -39,3 +39,5 @@ hello"wow"
 
 			printf("\n-- var data->field 0 --: |%c|\n", data->field[0]);
 """" "" \" '' "    hello  world       you     ""
+
+hello 'guys how\are you		\' '\\\\\ todaty ?''ok   \  or\ not'jaja 'ma boiz' yeah!

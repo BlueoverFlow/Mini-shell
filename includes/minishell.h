@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 08:15:35 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/05/25 15:35:25 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/05/25 16:12:04 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ int to_tokens(t_data *data);
 /*
 expansions.c
 */
-void expansions(t_data *data);
+void expansion(t_data *data);
 
 /*
 utils.c
