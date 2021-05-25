@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/19 08:05:25 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/05/23 09:26:16 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/05/25 09:55:15 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ int is_backslashed(int i, char *str)
 	int	d;
 
 	special = FALSE;
+	if (i == 0)
+		return (0);
 	d = i - 1;
 	while (d >= 0 && str[d] == '\\')
 		d--;

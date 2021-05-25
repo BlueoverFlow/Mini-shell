@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 08:15:35 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/05/24 13:04:00 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/05/25 15:35:25 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@
 #define QUOTED_FIELD ((data->field[0] == '\'' || data->field[0] == '\"'))
 #define NEED_MERGE ((data->field[0] != blanks[0] && data->field[0] != blanks[1]) && ft_lstsize(data->tokens) > 0)
 #define NEXT_IS_UNCLOSED (data->pos[0] != ERROR && data->pos[1] == ERROR)
-#define NO_MERGE (data->sub_field[++l] || data->field[0] == blanks[0] || data->field[0] == blanks[1])
 
 typedef struct s_data
 {

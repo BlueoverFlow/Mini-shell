@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/18 17:20:29 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/05/24 13:12:04 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/05/25 15:35:46 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ static void unquoted_field(t_data *data, char *blanks, t_list *last)
 		next_field = FALSE;
 	i = -1;
 	table = ft_split_blanks(data->field);
-	if (!table[0])
+	if (table)
 		data->is_separated = TRUE;
 	if (data->is_one_token)
 	{
@@ -67,14 +67,15 @@ static void merge_tokens(t_data *data, char *blanks)
 	if (QUOTED_FIELD)
 	{
 		if ((ft_lstsize(data->tokens) && (((char *)(last->content))[0] == '\''
-			|| ((char *)(last->content))[0] == '\"') && !data->is_separated) || data->is_one_token)
+			|| ((char *)(last->content))[0] == '\"') && !data->is_separated)
+			|| data->is_one_token)
 			last->content = ft_strjoin2(last->content, data->field);
 		else
 			ft_dlstadd_back(&data->tokens, ft_lstnew(data->field));
+		data->is_separated = FALSE;
 	}
 	else
 		unquoted_field(data, blanks, last);
-	data->is_separated = FALSE;
 }
 
 int to_tokens(t_data *data)
