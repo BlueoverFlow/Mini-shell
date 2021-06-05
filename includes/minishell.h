@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 08:15:35 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/05/25 16:12:04 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/06/05 10:41:20 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,15 +15,26 @@
 
 #include "../libft/includes/libft.h"
 
-#define PROMPT "minishell$"
-#define READ (write(STDERR_FILENO, PROMPT, 11) && get_next_line(STDIN_FILENO, &data.input) > 0 && ft_strcmp(data.input, "exit"))
+/*
+variables
+*/
 #define ERROR -1
 #define TRUE 1
 #define FALSE 0
 #define BOOL int
+#define PROMPT "minishell$"
+#define SNG_QUT 5
+#define DBL_QUT 6
+#define UNQUOTED 7
+
+//========================================================================================================
+/*
+*/
+#define READ (write(STDERR_FILENO, PROMPT, 11) && get_next_line(STDIN_FILENO, &data.input) > 0 && ft_strcmp(data.input, "exit"))
 #define QUOTED_FIELD ((data->field[0] == '\'' || data->field[0] == '\"'))
 #define NEED_MERGE ((data->field[0] != blanks[0] && data->field[0] != blanks[1]) && ft_lstsize(data->tokens) > 0)
 #define NEXT_IS_UNCLOSED (data->pos[0] != ERROR && data->pos[1] == ERROR)
+
 
 typedef struct s_data
 {
@@ -31,7 +42,7 @@ typedef struct s_data
 linked lists
 */
 	t_list *lines;
-	t_list *commands;
+	t_list *field_status;
 	t_list *options;
 	t_list *tokens;
 	t_list *garbage;
@@ -46,6 +57,12 @@ parser elems
 	BOOL is_one_token;
 	BOOL is_separated;
 }				t_data;
+
+typedef struct s_var
+{
+    int     _error;
+    int     _status;
+}               t_var;
 
 //========================================================================================================
 /*
@@ -70,12 +87,12 @@ int to_tokens(t_data *data);
 /*
 expansions.c
 */
-void expansion(t_data *data);
+void analyse_tokens(t_data *data);
 
 /*
 utils.c
 */
-void out(int code);
+void out(int code, t_data data);
 /*
 special_char.c
 */

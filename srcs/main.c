@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 08:15:00 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/05/24 13:05:36 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/06/05 10:40:42 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static void _init(t_data *data)
 {
-	data->commands = NULL;
+	data->field_status = NULL;
 	data->garbage = NULL;
 	data->tokens = NULL;
 	data->lines = NULL;

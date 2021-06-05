@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/15 15:32:25 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/05/25 17:43:28 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/06/05 11:09:59 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,30 +34,73 @@ static void single_quote_exp(t_list *token, t_data *data, char *new)
 		return ;
 	}
 	new = malloc(sizeof(char) * (j + 1));
+	if (!new)
+		out(1, *data);
 	single_quote_exp(token, data, new);
 }
 
-static void double_quote_exp(t_list *token, t_data *data)
+/*
+still need to expand environment
+*/
+static void double_quote_exp(t_list *token, t_data *data, char *new)
 {
-	
+	int		i;
+	int		j;
+	char	special[3] = {'\\', '"', '$'};
+
+	i = 0;
+	j = 0;
+	while (((char *)(token->content))[++i])
+	{
+		if (((char *)(token->content))[i + 1]
+			&& is_backslashed(i + 1, (char *)(token->content))
+			&& (((char *)(token->content))[i] == special[0]
+				|| ((char *)(token->content))[i] == special[1]))
+			continue ;
+		if (new)
+			new[j] = ((char *)(token->content))[i];
+		j++;
+	}
+	if (new)
+	{
+		new[--j] = '\0';
+		free(token->content);
+		token->content = new;
+		return ;
+	}
+	new = malloc(sizeof(char) * j);
+	if (!new)
+		out(1, *data);
+	double_quote_exp(token, data, new);
 }
 
 static void expand_input(t_list *token, t_data *data)
 {
-	
+	/* code */
 }
 
-void expansion(t_data *data)
+void analyse_tokens(t_data *data)
 {
 	t_list *tokens;
+	int		*i;
 
 	tokens = data->tokens;
 	while (tokens)
 	{
 		if (((char *)(tokens->content))[0] == '\'')
+		{
 			single_quote_exp(tokens, data, NULL);
+			i = malloc(sizeof(int));
+			*i = SNG_QUT;
+			ft_lstadd_back(&data->field_status, ft_lstnew(i));
+		}
 		else if (((char *)(tokens->content))[0] == '"')
-			double_quote_exp(tokens, data);
+		{
+			double_quote_exp(tokens, data, NULL);
+			i = malloc(sizeof(int));
+			*i = DBL_QUT;
+			ft_lstadd_back(&data->field_status, ft_lstnew(i));
+		}
 		else
 			expand_input(tokens, data);
 		tokens = tokens->next;

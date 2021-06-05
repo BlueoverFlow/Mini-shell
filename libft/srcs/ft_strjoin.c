@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-mezz <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/15 10:53:26 by ael-mezz          #+#    #+#             */
-/*   Updated: 2019/10/25 15:49:25 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/06/05 10:25:01 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,10 @@ char	*ft_strjoin(char const *s1, char const *s2)
 {
 	char	*nstr;
 
+	if (!s1)
+		return ((char *)s2);
+	else if (!s2)
+		return ((char *)s1);
 	nstr = (char *)malloc(sizeof(char) * (ft_strlen(s1)
 				+ ft_strlen(s2) + 1));
 	if (!nstr)

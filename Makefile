@@ -6,7 +6,7 @@
 #    By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/05/13 08:14:39 by ael-mezz          #+#    #+#              #
-#    Updated: 2021/05/25 11:45:40 by ael-mezz         ###   ########.fr        #
+#    Updated: 2021/06/05 09:43:07 by ael-mezz         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,8 @@ SRCS =	main.c			\
 		expansions_1.c	\
 		utils_2.c		\
 		quotes.c		\
-		special_char.c
+		special_char.c	\
+		echo.c
 
 LIBFT =	libft/libft.a
 
