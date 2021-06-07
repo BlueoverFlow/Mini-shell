@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/15 09:41:53 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/06/07 16:02:54 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/06/07 17:38:01 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,11 @@ void out(int code, t_data data)
 		ft_putstr_fd("Error while parsing!\n", STDERR_FILENO);
 	if (code == 1)
 	{
-		free_list(&data.tokens);
-		free_list(&data.garbage);
+		/* clear the memory */
 		ft_putstr_fd("Allocation error!\n", STDERR_FILENO);
 		exit(1);
 	}
+	/* clear the memory */
 }
 
 int is_backslashed(int i, char *str)
@@ -46,6 +46,21 @@ int is_backslashed(int i, char *str)
 	return (special);
 }
 
+static int separator_search(const char *s, char *separator, int c)
+{
+	int i = -1;
+	int j = 0;
+
+	while (separator[++i])
+	{
+		if ((s[c] == separator[i] && is_backslashed(c, (char *)s)) || s[c] != separator[i])
+			j++;
+	}
+	if (j == ft_strlen(separator))
+		return (0);
+	return (1);
+}
+
 static size_t	ft_countwords(char const *s, char *separator)
 {
 	int		start;
@@ -56,27 +71,12 @@ static size_t	ft_countwords(char const *s, char *separator)
 	start = 0;
 	while (s[start])
 	{
-		i = -1;
-		while (separator[++i])
-		{
-			if (s[start] && s[start] == separator[i] && !is_backslashed(start, (char *)s))
-			{
-				start++;
-				i = -1;
-			}
-		}
+		while (separator_search(s, separator, start) && s[start])
+			start++;
 		if (s[start])
 			count++;
-		i = -1;
-		while (separator[++i])
-		{
-			if (s[start] && (s[start] != separator[i]
-				|| (s[start] == separator[i] && is_backslashed(start, (char *)s))))
-			{
-				start++;
-				i = -1;
-			}
-		}
+		while (!separator_search(s, separator, start) && s[start])
+			start++;
 	}
 	return (count);
 }
@@ -90,7 +90,7 @@ static char	**ft_koalloc(char **ptr, size_t i)
 	return (NULL);
 }
 
-static char	**ft_split2(char const *s, char **ptr, char *separator, size_t cw)
+static char	**spliter(char const *s, char **ptr, char *separator, size_t cw)
 {
 	size_t	i;
 	int		start;
@@ -102,25 +102,13 @@ static char	**ft_split2(char const *s, char **ptr, char *separator, size_t cw)
 	len = 0;
 	while (s[start] && ++i < cw)
 	{
+		while (separator_search(s, separator, start) && s[start])
+			start++;
 		j = -1;
-		while (separator[++j])
+		while (!separator_search(s, separator, start) && s[start])
 		{
-			if (s[start] && s[start] == separator[j] && !is_backslashed(start, (char *)s))
-			{
-				start++;
-				j = -1;
-			}
-		}
-		j = -1;
-		while (separator[++j])
-		{
-			if (s[start] && (s[start] != separator[j]
-				|| (s[start] == separator[j] && is_backslashed(start, (char *)s))))
-			{
-				start++;
-				len++;
-				j = -1;
-			}
+			len++;
+			start++;
 		}
 		start -= len;
 		ptr[i] = ft_calloc(len + 1, sizeof(char));
@@ -145,5 +133,5 @@ char	**ft_split_input(char const *s, char *separator)
 	if (!ptr)
 		return (NULL);
 	ptr[cw] = NULL;
-	return (ft_split2(s, ptr, separator,cw));
+	return (spliter(s, ptr, separator,cw));
 }

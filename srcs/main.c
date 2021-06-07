@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 08:15:00 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/06/07 16:01:59 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/06/07 19:04:37 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,8 @@ static void _init(t_data *data)
 {
 	data->commands = NULL;
 	data->piped = NULL;
-	data->tokens = NULL;
+	data->fields = NULL;
 	data->garbage = NULL;
-	data->is_one_token = FALSE;
-	data->is_quoted = FALSE;
-	data->is_separated = FALSE;
 }
 
 int main()

@@ -6,7 +6,7 @@
 #    By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/05/13 08:14:39 by ael-mezz          #+#    #+#              #
-#    Updated: 2021/06/07 16:05:43 by ael-mezz         ###   ########.fr        #
+#    Updated: 2021/06/07 19:46:17 by ael-mezz         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@ SRCS =	main.c			\
 		parcing.c		\
 		utils.c			\
 		expansions.c	\
-		quotes.c		\
+		fields.c		\
 		echo.c			\
 		is_command.c
 
