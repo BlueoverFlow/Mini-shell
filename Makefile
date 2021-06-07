@@ -6,19 +6,18 @@
 #    By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/05/13 08:14:39 by ael-mezz          #+#    #+#              #
-#    Updated: 2021/06/05 09:43:07 by ael-mezz         ###   ########.fr        #
+#    Updated: 2021/06/07 16:05:43 by ael-mezz         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 SRCS =	main.c			\
 		lst_utils.c		\
 		parcing.c		\
-		utils_1.c		\
-		expansions_1.c	\
-		utils_2.c		\
+		utils.c			\
+		expansions.c	\
 		quotes.c		\
-		special_char.c	\
-		echo.c
+		echo.c			\
+		is_command.c
 
 LIBFT =	libft/libft.a
 

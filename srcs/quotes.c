@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/18 17:20:29 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/06/05 10:32:16 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/06/07 13:31:16 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ static void unquoted_field(t_data *data, char *blanks, t_list *last)
 	if ((data->field[l - 1] == blanks[0] && !is_backslashed(l - 1, data->field))
 	 	|| (data->field[l - 1] == blanks[1] && !is_backslashed(l - 1, data->field)))
 		next_field = FALSE;
-	table = ft_split_blanks(data->field);
+	table = ft_split_input(data->field, "\t ");
 	if (table)
 		data->is_separated = TRUE;
 	i = -1;
@@ -79,15 +79,15 @@ static void merge_tokens(t_data *data, char *blanks)
 		unquoted_field(data, blanks, last);
 }
 
-int to_tokens(t_data *data)
+int to_tokens(t_data *data, char *input)
 {
 	int i;
 	char blanks[2] = {' ', '\t'};
 
 	i = 0;
-	while (data->input[i])
+	while (input[i])
 	{
-		next_field(data->input + i, data);
+		next_field(input + i, data);
 		if (!data->is_quoted && NEXT_IS_UNCLOSED)
 		{
 			out(0, *data);
@@ -98,13 +98,13 @@ int to_tokens(t_data *data)
 		if (!data->is_quoted)
 		{
 			if (data->pos[0] == ERROR)
-				data->field = ft_strdup2(data->input + i);
+				data->field = ft_strdup2(input + i);
 			else
-				data->field = ft_substr(data->input, i, data->pos[0]);
+				data->field = ft_substr(input, i, data->pos[0]);
 		}
 		else
 		{
-			data->field = ft_substr(data->input, i, data->pos[1] + 1);
+			data->field = ft_substr(input, i, data->pos[1] + 1);
 			data->is_quoted = FALSE;
 		}
 		merge_tokens(data, blanks);

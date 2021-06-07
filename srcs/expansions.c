@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/15 15:32:25 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/06/05 11:09:59 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/06/05 11:13:47 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,19 +88,9 @@ void analyse_tokens(t_data *data)
 	while (tokens)
 	{
 		if (((char *)(tokens->content))[0] == '\'')
-		{
 			single_quote_exp(tokens, data, NULL);
-			i = malloc(sizeof(int));
-			*i = SNG_QUT;
-			ft_lstadd_back(&data->field_status, ft_lstnew(i));
-		}
 		else if (((char *)(tokens->content))[0] == '"')
-		{
 			double_quote_exp(tokens, data, NULL);
-			i = malloc(sizeof(int));
-			*i = DBL_QUT;
-			ft_lstadd_back(&data->field_status, ft_lstnew(i));
-		}
 		else
 			expand_input(tokens, data);
 		tokens = tokens->next;

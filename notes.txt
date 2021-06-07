@@ -40,4 +40,30 @@ hello"wow"
 			printf("\n-- var data->field 0 --: |%c|\n", data->field[0]);
 """" "" \" '' "    hello  world       you     ""
 
-hello 'guys how\are you		\' '\\\\\ todaty ?''ok   \  or\ not'jaja 'ma boiz' yeah!
+hello 'guys how\are you		\' '\\\\\ todaty ?''ok   \  or\ not'jaja 'ma boiz' 
+
+echo """hello" guys wtf "are" taling"about" | ls """" "" \" '' "    hello  world       you     "; echo all; ls | echo "that" | wow |guys
+
+echo "hello world" yo guys'wtf' | cat file.txt; ls /l; cd guys/files | echo all | export a=5
+
+typedef struct s_piped
+{
+	to_tokens		*tokens
+	struct s_piped	*previous;
+	struct s_piped	*next;
+}					t_piped;
+
+typedef struct s_command
+{
+	t_piped				*piped_line;
+	struct s_command	*previous;
+	struct s_command	*next;
+}						t_command;
+
+typedef struct s_line
+{
+	t_command		*commands;
+	struct s_line	*previous;
+	struct s_line	*next;
+}					s_line;
+
