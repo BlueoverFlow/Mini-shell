@@ -38,9 +38,9 @@ hello guys "my name" is wow
 hello"wow"
 
 			printf("\n-- var data->field 0 --: |%c|\n", data->field[0]);
-"""" "" \" '' "    hello  world       you     ""
+ """" "" \" '' "    hello  world       you     ""
 
-hello 'guys how\are you		\' '\\\\\ todaty ?''ok   \  or\ not'jaja 'ma boiz' 
+hello 'guys how\are you		\' '\\\\\ todaty ?''ok   \  or\ not'jaja 'ma boiz'
 
 echo """hello" guys wtf "are" taling"about" | ls """" "" \" '' "    hello  world       you     "; echo all; ls | echo "that" | wow |guys
 

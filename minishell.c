@@ -1,0 +1,14 @@
+&1
+1&
+Dockerfile
+Makefile
+README.md
+includes
+libft
+minishell
+minishell.c
+minishell.dSYM
+notes.txt
+setup.sh
+srcs
+tester

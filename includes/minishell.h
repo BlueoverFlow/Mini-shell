@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 08:15:35 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/06/07 21:28:56 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/06/08 18:29:59 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ macros
 #define TRUE 1
 #define FALSE 0
 #define BOOL int
+#define OUTPUT 1
+#define INPUT 0
 #define PROMPT "minishell$"
 #define SNG_QUT 5
 #define DBL_QUT 6
@@ -31,18 +33,28 @@ macros
 #define NEED_MERGE ((data->field[0] != blanks[0] && data->field[0] != blanks[1]) && ft_lstsize(data->tokens) > 0)
 #define NEXT_IS_UNCLOSED (data->pos[0] != ERROR && data->pos[1] == ERROR)
 
+typedef struct s_list_2
+{
+    void			*content;
+	void			*content_2;
+	struct s_var	*next;
+}               t_list_2;
+
 typedef struct s_data
 {
-	t_list	*garbage;
-	t_list	*line;
-	t_list	*commands;
-	t_list	*piped;
-	t_list	*fields;
-	char	*input;
-	char	*token;
-	int		pos[2];
-	BOOL	is_separated;
-	BOOL	merge;
+	t_list		*garbage;
+	t_list		*line;
+	t_list		*commands;
+	t_list		*piped;
+	t_list		*fields;
+	t_list		*prototype;
+	t_list_2	*file;
+	t_list_2	*branch;
+	char		*input;
+	char		*token;
+	int			pos[2];
+	BOOL		is_separated;
+	BOOL		merge;
 }				t_data;
 
 typedef struct s_var
@@ -50,6 +62,12 @@ typedef struct s_var
     int     _error;
     int     _status;
 }               t_var;
+
+
+/*
+main.c
+*/
+void _init(t_data *data);
 
 //========================================================================================================
 /*
@@ -71,14 +89,11 @@ int		parser(t_data *data, int i, char *input);
 /*
 fields.c
 */
-void	pre_check(t_data *data, char *blanks);
-int		extract_fields(t_data *data, char *input);
-void	merge_token(t_data *data, t_list *last);
+int		extract_branches(t_data *data, char *input);
 
 /*
 expansions.c
 */
-void	expand_token(t_data *data);
 
 /*
 utils.c

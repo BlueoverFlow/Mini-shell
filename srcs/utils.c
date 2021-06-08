@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/15 09:41:53 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/06/07 17:38:01 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/06/08 18:30:11 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void out(int code, t_data data)
 {
 	if (code == 0)
-		ft_putstr_fd("Error while parsing!\n", STDERR_FILENO);
+		ft_putstr_fd("syntax error!\n", STDERR_FILENO);
 	if (code == 1)
 	{
 		/* clear the memory */

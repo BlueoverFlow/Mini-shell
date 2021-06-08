@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/18 17:20:29 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/06/07 21:28:09 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/06/08 19:03:24 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,16 +30,7 @@ static void next_token(char *str, t_data *data)
 				data->pos[j++] = i;
 		}
 }
-
-void merge_token(t_data *data, t_list *last)
-{
-	if (data->merge)
-		last->content = ft_strjoin(last->content, data->token);
-	else
-		ft_dlstadd_back(&data->fields, ft_lstnew(data->token));
-}
-
-void pre_check(t_data *data, char *blanks)
+static void pre_check(t_data *data, char *blanks)
 {
 	BOOL	next_token;
 	char	**table;
@@ -56,10 +47,7 @@ void pre_check(t_data *data, char *blanks)
 	}
 	else
 	{
-		if ((data->token[0] != blanks[0] && data->token[0] != blanks[1])
-			|| data->is_separated)
-			data->merge = FALSE;
-		else
+		if (data->token[0] != blanks[0] && data->token[0] == blanks[1] && !data->is_separated)
 			data->merge = TRUE;
 		if ((data->token[l - 1] == blanks[0] && !is_backslashed(l - 1, data->token))
 			|| (data->token[l - 1] == blanks[1] && !is_backslashed(l - 1, data->token)))
@@ -69,7 +57,97 @@ void pre_check(t_data *data, char *blanks)
 	}
 }
 
-int extract_fields(t_data *data, char *input)
+static void merge_unquoted_token(t_data *data, t_list *last)
+{
+	char	**table;
+	int		i;
+
+	table = ft_split_input(data->token, "\t ");
+	i = -1;
+	if (data->merge && table[i])
+		last->content = ft_strjoin(last->content, table[1 + i++]);
+	while (table[++i])
+		ft_dlstadd_back(&data->fields, ft_lstnew(table[i]));
+}
+
+void merge_quoted_token(t_data *data, t_list *last)
+{
+	if (data->merge)
+		last->content = ft_strjoin(last->content, data->token);
+	else
+		ft_dlstadd_back(&data->fields, ft_lstnew(data->token));
+}
+
+static merge_tokens(t_data *data)
+{
+	int		*i;
+	t_list	*last;
+	char	blanks[2] = {' ', '\t'};
+
+	last = ft_lstlast(data->fields);
+	pre_check(data, blanks);
+	if (QUOTED_TOKEN)
+		merge_quoted_token(data, last);
+	else
+		merge_unquoted_token(data, last);
+}
+
+static int find_chrs(char *str, char* chars)
+{
+	int i;
+	int j;
+
+	i = -1;
+	if (str)
+		while (str[++i])
+		{
+			j = -1;
+			if (chars)
+				while (chars[++j])
+					if (str[i] == chars[j])
+						return (i);
+		}
+	return (i);
+}
+
+static int check_redirections(t_list **field, t_data *data)
+{
+	int		i;
+	char	*file_path;
+	int	rsl;
+
+	i = -1;
+	rsl = find_chr((*field)->content, ft_strdup("<>"));
+	if (rsl != ERROR)
+	{
+		ft_dlstadd_back(&data->prototype, ft_lstnew(ft_substr((*field)->content, 0, rsl + 1)));
+		
+	}
+	return (FALSE);
+}
+
+static int tokens_analyser(t_data *data)
+{
+	t_list	*tmp_field;
+	int		rsl;
+
+	merge_tokens;
+	tmp_field = data->fields;
+	while (tmp_field)
+	{
+		rsl = check_redirections(&tmp_field, data);
+		if (rsl)
+		{
+			if (rsl == ERROR)
+				return (ERROR);	
+			tmp_field = tmp_field->next;
+		}
+		ft_dlstadd_back(&data->prototype, ft_lstnew(tmp_field->content));
+		tmp_field = tmp_field->next;
+	}
+}
+
+int extract_branches(t_data *data, char *input)
 {
 	int i;
 	int j;
@@ -83,7 +161,7 @@ int extract_fields(t_data *data, char *input)
 		if (NEXT_IS_UNCLOSED)
 		{
 			out(0, *data);
-			return (0);
+			return (ERROR);
 		}
 		if (!data->pos[0])
 			j++;
@@ -92,7 +170,7 @@ int extract_fields(t_data *data, char *input)
 		else
 			data->token = ft_substr(input, i, data->pos[j] + j);
 		i += ft_strlen(data->token);
-		expand_token(data);
+		tokens_analyser(data);
 	}
 	return (1);
 }

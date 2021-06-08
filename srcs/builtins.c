@@ -1,42 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/05/13 08:15:00 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/06/08 15:54:12 by ael-mezz         ###   ########.fr       */
+/*   Created: 2021/06/08 11:16:46 by ael-mezz          #+#    #+#             */
+/*   Updated: 2021/06/08 13:39:26 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void _init(t_data *data)
-{
-	data->commands = NULL;
-	data->piped = NULL;
-	data->fields = NULL;
-	data->prototype = NULL;
-	data->file = NULL;
-	data->branch = NULL;
-}
+// int exec_cmd(t_data *data)
+// {
+// 	t_list *last;
 
-int main()
-{
-	t_data data;
-	t_list *cmd_tmp;
-
-	data.line = NULL;
-	data.garbage = NULL;
-	while (READ)
-	{
-		_init(&data);
-		if (data_tree(&data) == ERROR)
-			continue ;
-		print_lines(data);			// just for debug
-		/* execution */
-		/* code */
-	}
-	return (0);
-}
+// 	_init(data);
+// 	last = ft_lstlast(data->line);
+// 	data->commands = last->content;
+// 	while (data->commands)
+// 	{
+// 		data->piped = data->commands->content;
+// 		while (data->piped)
+// 		{
+// 			data->fields = data->piped->content;
+// 			while (data->fields)
+// 			{
+// 			}
+// 		}
+// 	}
+// }
