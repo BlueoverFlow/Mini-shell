@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/14 08:37:34 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/06/07 16:03:09 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/06/13 17:28:00 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,10 +35,51 @@ t_list	*ft_lstprevious(t_list *lst)
 	return (lst);	
 }
 
-void	ft_dlstadd_back(t_list **alst, t_list *new)
+int	ft_lst2size(t_list_2 *lst)
 {
-	t_list *tmp;
+	int	i;
 
+	i = 0;
+	while (lst != NULL)
+	{
+		lst = lst->next;
+		i++;
+	}
+	return (i);
+}
+
+t_list_2	*ft_lst2last(t_list_2 *lst)
+{
+	int	i;
+	int	j;
+
+	if (lst == NULL)
+		return (NULL);
+	i = ft_lst2size(lst);
+	j = 0;
+	while (j < i - 1)
+	{
+		lst = lst->next;
+		j++;
+	}
+	return (lst);
+}
+
+t_list_2 *build_node(void *content, void *content_2)
+{
+	t_list_2 *new;
+
+	new = malloc(sizeof(t_list_2));
+	if ((!new) || (!content && !content_2))
+		return (NULL);
+	new->content_2 = (void *)content_2;
+	new->content = (void *)content;
+	new->next = NULL;
+	return (new);
+}
+
+void add_node(t_list_2 **alst, t_list_2 *new)
+{
 	if (alst == NULL)
 		return ;
 	if (*alst == NULL)
@@ -46,9 +87,7 @@ void	ft_dlstadd_back(t_list **alst, t_list *new)
 		*alst = new;
 		return ;
 	}
-	tmp = ft_lstlast(*alst);
-	ft_lstlast(*alst)->next = new;
-	new->previous = tmp;
+	ft_lst2last(*alst)->next = new;
 }
 
 void	print_list(t_list *lst)
@@ -82,22 +121,22 @@ void	print_content_list(t_list *lst)
 	}
 }
 
-void	print_lines(t_data data)
-{
-	t_list *cmd;
-	t_list *pipes;
-	t_list *tokens;
+// void	print_lines(t_data data)
+// {
+// 	t_list *cmd;
+// 	t_list *pipes;
+// 	t_list *tokens;
 
-	while (data.line)
-	{
-		cmd = (t_list *)(data.line->content);
-		while (cmd)
-		{
-			pipes = (t_list *)(cmd->content);
-			print_content_list(pipes);
-			puts("=\n=\n=\n=\n=");
-			cmd = cmd->next;
-		}
-		data.line = data.line->next;
-	}
-}
+// 	while (data.line)
+// 	{
+// 		cmd = (t_list *)(data.line->content);
+// 		while (cmd)
+// 		{
+// 			pipes = (t_list *)(cmd->content);
+// 			print_content_list(pipes);
+// 			puts("=\n=\n=\n=\n=");
+// 			cmd = cmd->next;
+// 		}
+// 		data.line = data.line->next;
+// 	}
+// }

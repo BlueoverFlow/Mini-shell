@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 08:15:00 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/06/08 15:54:12 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/06/13 18:29:45 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ void _init(t_data *data)
 {
 	data->commands = NULL;
 	data->piped = NULL;
-	data->fields = NULL;
 	data->prototype = NULL;
 	data->file = NULL;
 	data->branch = NULL;
@@ -27,14 +26,31 @@ int main()
 	t_data data;
 	t_list *cmd_tmp;
 
-	data.line = NULL;
 	data.garbage = NULL;
 	while (READ)
 	{
 		_init(&data);
-		if (data_tree(&data) == ERROR)
+		if (parser(&data) == ERROR)
 			continue ;
-		print_lines(data);			// just for debug
+		while (data.commands)
+		{
+			data.piped = data.commands->content;
+			while (data.piped)
+			{
+				data.branch = data.piped->content;
+				data.prototype = data.branch->content_2;
+				while (data.prototype)
+				{
+					printf("prototype:|%s|\n", data.prototype->content);
+					data.prototype = data.prototype->next;
+				}
+				data.piped = data.piped->next;
+			}
+			// exit(0);
+			data.commands = data.commands->next;
+		}
+		
+		// print_lines(data);			// just for debug
 		/* execution */
 		/* code */
 	}

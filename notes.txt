@@ -46,4 +46,11 @@ echo """hello" guys wtf "are" taling"about" | ls """" "" \" '' "    hello  world
 
 echo "hello world" yo guys'wtf' | cat file.txt; ls /l; cd guys/files | echo all | export a=5
 
+branch 0x0000603000001b10
+prototype _2 0x00006020000001b0
+piped 0x00006020000002f0
+data->commands 0x00006020000003d0
 
+
+0x0000602000000190
+0x0000603000001b10
