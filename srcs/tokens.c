@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/18 17:20:29 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/06/13 18:25:16 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/06/16 11:59:53 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ static int theres_atoken(char *frg)
 			||  (frg[i] == '\t' && is_backslashed(i, frg))))
 			return (1);
 	}
+	free(frg);
 	return (0);
 }
 
@@ -119,22 +120,41 @@ static int make_branch(t_data *data, char *frg)
 	return (1);
 }
 
+static char *lst_to_string(t_list *lst)
+{
+	int l;
+	char *str;
+	int i = 0;
+
+	l = ft_lstsize(lst);
+	str = malloc(sizeof * str * (l + 1));
+	while (lst)
+	{
+		str[i++] = *(char *)lst->content;
+		lst = lst->next;
+	}
+	str[i] = '\0';
+	return (str);
+}
+
 static int fill_branch(t_data *data, int i)
 {
-	char	*fragment;
+	char *fragment;
 
-	fragment = ft_substr(data->input, data->skip, i - data->skip);
+	fragment = lst_to_string(data->word);
 	if (!theres_atoken(fragment))
 		return (ERROR);
-	data->skip = i + 1;
 	if (make_branch(data, fragment) == ERROR)
 			return (ERROR);
+	free(fragment);
+	if (data->word)
+		free_list(&data->word);
 	return (1);
 }
 
 static int fill_pipeline(t_data *data, int i)
 {
-	if (!data->prototype)
+	if (data->word || !data->prototype)
 		if (fill_branch(data, i) == ERROR)
 			return (ERROR);
 	add_node(&data->branch, build_node(data->file, data->prototype));
@@ -142,51 +162,63 @@ static int fill_pipeline(t_data *data, int i)
 	data->prototype = NULL;
 	ft_lstadd_back(&data->piped, ft_lstnew(data->branch));
 	data->branch = NULL;
+	free_list(&data->word);
 	return (1);
 }
 
 static int fill_command(t_data *data, int i)
 {
-	if (!data->piped)
+	if (!data->input[i + 1])
+	{
+		if (data->input[i] == ';' || data->input[i] == '|')
+			return (ERROR);
+		ft_lstadd_back(&data->word, ft_lstnew(ft_substr(data->input, i, 1)));
+	}
+	if (data->word || !data->prototype)
 		if (fill_pipeline(data, i) == ERROR)
 			return (ERROR);
 	ft_lstadd_back(&data->commands, ft_lstnew(data->piped));
 	data->piped = NULL;
+	free_list(&data->word);
 	return (1);
 }
 
 static int build_tree(t_data *data, int i)
 {
-	if (!is_backslashed(i, data->input))
+	if (!is_backslashed(i, data->input) && data->quoting_state == UNQUOTED)
 	{
-		if (data->input[i] == ' ' || data->input[i] == '\t')
+		if (data->input[i] == ';' || !data->input[i + 1])
+			return (fill_command(data, i));
+		else if (data->input[i] == ' ' || data->input[i] == '\t')
+		{
 			fill_branch(data, i);
+			return (1);
+		}
 		else if (data->input[i] == '|')
 			return (fill_pipeline(data, i));
-		else if (data->input[i] == ';' || !data->input[i + 1])
-			return (fill_command(data, i));
 	}
+	ft_lstadd_back(&data->word, ft_lstnew(ft_substr(data->input, i, 1)));
+	return (1);
+}
+
+static int syntax_checking(t_data data)
+{
+	if (data.quoting_state != UNQUOTED)
+		return(ERROR);
 	return (1);
 }
 
 int extract_branches(t_data *data)
 {
 	int		i;
-	char c;
 
 	i = -1;
-	data->skip = 0;
-	data->quoting_state = UNQUOTED;
 	while (data->input[++i])
 	{
-		c = data->input[i];
-		printf ("c: %c\n", c);
 		if (QUOTED_FRAGMENT && !is_backslashed(i, data->input))
 			define_quoting_state(data, data->input[i]);
-		if (data->quoting_state == UNQUOTED)
-			if (build_tree(data, i) == ERROR)
-				return (ERROR);
+		if (build_tree(data, i) == ERROR)
+			return(ERROR);
 	}
-	free(data->input);
-	return (1);
+	return (syntax_checking(*data));
 }

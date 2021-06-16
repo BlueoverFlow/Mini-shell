@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 08:15:35 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/06/13 16:55:55 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/06/16 12:01:04 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,16 +46,15 @@ typedef struct s_data
 	t_list		*garbage;
 	t_list		*commands;
 	t_list		*piped;
+	t_list		*word;
 	t_list		*prototype;
 	t_list_2	*file;
 	t_list_2	*branch;
 	int			quoting_state;
 	char		*input;
 	char		*token;
-	int			skip;
-	int			pos[2];
-	BOOL		is_separated;
-	BOOL		merge;
+	int			read;
+	int			filled;
 }				t_data;
 
 typedef struct s_var
@@ -85,11 +84,11 @@ t_list_2 	*build_node(void *content, void *content_2);
 t_list_2	*ft_lst2last(t_list_2 *lst);
 int			ft_lst2size(t_list_2 *lst);
 void		add_node(t_list_2 **alst, t_list_2 *new);
+t_list *lst_elem(t_list *lst, int index);
 
 /*
 parser.c
 */
-int		data_tree(t_data *data);
 int		parser(t_data *data);
 
 /*
@@ -109,7 +108,7 @@ expansions.c
 /*
 utils.c
 */
-void	out(int code, t_data data);
+int	out(int code, t_data data);
 int		is_backslashed(int i, char *str);
 char	**ft_split_input(char const *s, char *separator);
 

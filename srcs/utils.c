@@ -6,13 +6,13 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/15 09:41:53 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/06/09 10:08:04 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/06/15 17:26:45 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void out(int code, t_data data)
+int out(int code, t_data data)
 {
 	if (code == 0)
 		ft_putstr_fd("syntax error!\n", STDERR_FILENO);
@@ -23,6 +23,7 @@ void out(int code, t_data data)
 		exit(1);
 	}
 	/* clear the memory */
+	return (ERROR);
 }
 
 int is_backslashed(int i, char *str)

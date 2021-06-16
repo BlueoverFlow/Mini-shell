@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 08:15:00 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/06/13 18:29:45 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/06/16 12:05:29 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@ void _init(t_data *data)
 	data->prototype = NULL;
 	data->file = NULL;
 	data->branch = NULL;
+	data->word = NULL;
+	data->quoting_state = UNQUOTED;
 }
 
 int main()
@@ -45,11 +47,13 @@ int main()
 					data.prototype = data.prototype->next;
 				}
 				data.piped = data.piped->next;
+				if (data.piped)
+					puts("\t|\n\t|");
 			}
-			// exit(0);
+			puts("=============================\n");
 			data.commands = data.commands->next;
+												// exit(0);
 		}
-		
 		// print_lines(data);			// just for debug
 		/* execution */
 		/* code */
