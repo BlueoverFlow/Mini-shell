@@ -37,8 +37,8 @@ hello guys "my name" is wow
 
 hello"wow"
 
-			printf("\n-- var data->field 0 --: |%c|\n", data->field[0]);
- """" "" \" '' "    hello  world       you     ""
+			printf("\n-- var data->field 0 --: |%c|\n", data->field[0])
+ """" "" \" '' "    hello  world       you     "
 
 hello 'guys how\are you		\		 '\\\\\ todaty ?''ok \	 or\ not'jaja 'ma boiz''
 
@@ -54,3 +54,4 @@ piped 0x00006020000002f0 0x0000603000001bd0
 data->commands 0x00006020000003d0
 
 
+ls >file1 hello | < file2_files cat; hello >>all "how are you"

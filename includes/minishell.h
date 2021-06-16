@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 08:15:35 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/06/16 12:01:04 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/06/16 18:18:03 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,9 +52,6 @@ typedef struct s_data
 	t_list_2	*branch;
 	int			quoting_state;
 	char		*input;
-	char		*token;
-	int			read;
-	int			filled;
 }				t_data;
 
 typedef struct s_var
@@ -95,6 +92,7 @@ int		parser(t_data *data);
 tokens.c
 */
 int extract_branches(t_data *data);
+int make_branch(t_data *data, char *fragment);
 /*
 fields.c
 */
