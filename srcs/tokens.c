@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/18 17:20:29 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/06/16 11:59:53 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/06/16 12:24:18 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,7 +170,8 @@ static int fill_command(t_data *data, int i)
 {
 	if (!data->input[i + 1])
 	{
-		if (data->input[i] == ';' || data->input[i] == '|')
+		if ((data->input[i] == ';' && !is_backslashed(i, data->input))
+			|| (data->input[i] == '|' && !is_backslashed(i, data->input)))
 			return (ERROR);
 		ft_lstadd_back(&data->word, ft_lstnew(ft_substr(data->input, i, 1)));
 	}
@@ -197,6 +198,8 @@ static int build_tree(t_data *data, int i)
 		else if (data->input[i] == '|')
 			return (fill_pipeline(data, i));
 	}
+	if (!data->input[i + 1])
+		fill_command(data , i);
 	ft_lstadd_back(&data->word, ft_lstnew(ft_substr(data->input, i, 1)));
 	return (1);
 }
