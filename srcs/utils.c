@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/15 09:41:53 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/06/15 17:26:45 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/06/17 13:54:00 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,4 +135,11 @@ char	**ft_split_input(char const *s, char *separator)
 		return (NULL);
 	ptr[cw] = NULL;
 	return (spliter(s, ptr, separator,cw));
+}
+
+BOOL quoted_fragment(char c)
+{
+	if (c == '\'' || c == '\"')
+		return (TRUE);
+	return (FALSE);
 }

@@ -1,30 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   tokens.c                                           :+:      :+:    :+:   */
+/*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/18 17:20:29 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/06/16 19:48:21 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/06/17 19:42:56 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-
-static void define_quoting_state(t_data *data, char c)
-{
-	int state;
-
-	if (c == '\'')
-		state = SNG_QUT;
-	else if (c == '"')
-		state = DBL_QUT;
-	if (data->quoting_state == UNQUOTED)
-		data->quoting_state = state;
-	else if (data->quoting_state == state)
-		data->quoting_state = UNQUOTED;
-}
 
 static int theres_atoken(char *fragment)
 {
@@ -109,6 +95,32 @@ static int fill_file_path(t_data *data, char *fragment, char *token)
 	return (0);
 }
 
+void init_2(t_data *data)
+{
+	data->quoting_state = UNQUOTED;
+	data->old_quoting_state = UNQUOTED;
+	data->current_state = UNQUOTED;
+}
+
+void define_quoting_state(t_data *data, char *input, int i)
+{
+	if (quoted_fragment(input[i]))
+	{
+		data->old_quoting_state++;
+		if (data->old_quoting_state > 2)
+			data->old_quoting_state -= 2;
+		if (data->old_quoting_state == 1)
+			data->current_state = input[i];
+		if (data->quoting_state == UNQUOTED || data->quoting_state != data->current_state)
+			data->quoting_state = data->current_state;
+	}
+	if (data->quoting_state != UNQUOTED && i > 0)
+		if ((!input[i + 1] && data->old_quoting_state == 2)
+			|| (quoted_fragment(input[i - 1]) && !quoted_fragment(input[i])
+			&& data->old_quoting_state == 2))
+		init_2(data);
+}
+
 static int hundle_redirection(t_data *data, char *fragment, char *token, int i)
 {
 	int ret;
@@ -145,15 +157,15 @@ int make_branch(t_data *data, char *fragment)
 		out(1, *data);
 	while (fragment[++i] && !is_redirection(fragment, i, data->quoting_state))
 	{
-		if (QUOTED_FRAGMENT && !is_backslashed(i, data->input))
-			define_quoting_state(data, data->input[i]);
+		if (quoted_fragment(data->input[i]) && !is_backslashed(i, data->input))
+			define_quoting_state(data, data->input, i);
 		token[i] = fragment[i];
 	}
-	data->quoting_state = UNQUOTED;
+	init_2(data);
 	return (hundle_redirection(data, fragment, token, i));
 }
 
-static char *lst_to_string(t_list *lst)
+char *lst_to_string(t_list *lst)
 {
 	int l;
 	char *str;
@@ -173,10 +185,12 @@ static char *lst_to_string(t_list *lst)
 static int syntax_checking(t_data data, int option)
 {
 	int l;
+	t_list_2 *last;
 
+	last = ft_lst2last(data.file);
 	l = ft_strlen(data.input) - 1;
 	if (option == 0 || option == 2)
-		if ((data.file && data.file->content_2 && !data.file->content)
+		if ((last && last->content_2 && !last->content)
 			|| ((data.input[l] == ';' && !is_backslashed(l, data.input))
 			|| (data.input[l] == '|' && !is_backslashed(l, data.input)))
 			|| data.quoting_state != UNQUOTED)
@@ -193,7 +207,7 @@ static int fill_branch(t_data *data, int i)
 
 	fragment = lst_to_string(data->word);
 	if (!theres_atoken(fragment))
-		return (ERROR);
+		return((data->input[i + 1]) ? ERROR : 1);
 	if (make_branch(data, fragment) == ERROR)
 			return (ERROR);
 	free(fragment);
@@ -255,17 +269,24 @@ static int build_tree(t_data *data, int i)
 	return (1);
 }
 
-int extract_branches(t_data *data)
+static int extract_branches(t_data *data)
 {
 	int		i;
 
 	i = -1;
 	while (data->input[++i])
 	{
-		if (QUOTED_FRAGMENT && !is_backslashed(i, data->input))
-			define_quoting_state(data, data->input[i]);
+		if (!is_backslashed(i, data->input))
+			define_quoting_state(data, data->input, i);
 		if (build_tree(data, i) == ERROR)
 			return(ERROR);
 	}
 	return (syntax_checking(*data, 1));
+}
+
+int	parser(t_data *data)
+{
+	if (extract_branches(data) == ERROR)
+		return (out(0, *data));
+	return (1);
 }

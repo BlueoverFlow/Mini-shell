@@ -6,71 +6,98 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/15 15:32:25 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/06/16 18:20:42 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/06/17 19:42:20 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-// static void single_quote_exp(t_data *data, char *new)
-// {
-// 	int		i;
-// 	int		j;
+static int is_special_char(int i, char *input, char *special)
+{
+	int j;
 
-// 	i = -1;
-// 	j = 0;
-// 	while (data->token[++i])
-// 		if (data->token[i] != '\'')
-// 		{
-// 			if (new)
-// 				new[j] = data->token[i];
-// 			j++;
-// 		}
-// 	if (new)
-// 	{
-// 		new[j] = '\0';
-// 		free(data->token);
-// 		data->token = new;
-// 		return ;
-// 	}
-// 	new = malloc(sizeof(char) * (j + 1));
-// 	if (!new)
-// 		out(1, *data);
-// 	single_quote_exp(data, new);
-// }
+	j = -1;
+	while (special[++j] != '\0')
+		if (!is_backslashed(i, input) && input[i] == special[j]) 
+			return (1);
+	return (0);
+}
 
-// /*
-// still need to expand environment
-// */
-// static void double_quote_exp(t_data *data, char *new)
-// {
-// 	int		i;
-// 	int		j;
-// 	char	special[3] = {'\\', '"', '$'};
+char	*expand_unquoted_token(t_data *data, char *input)
+{
+	int i;
+	int j;
+	char *new;
+	char special[4] = {' ', '\t', '\\', '\0'};
+	
+	j = 0;
+	i = -1;
+	init_2(data);
+	new = ft_calloc(ft_strlen(input) + 1, sizeof *new);
+	if (!new)
+		out(1, *data);
+	while (input[++i])
+	{
+		if (quoted_fragment(input[i]) && !is_backslashed(i, input))
+			define_quoting_state(data, input, i);
+		if (data->quoting_state == UNQUOTED && is_special_char(i, input, special)) 
+			continue ;
+		new[j++] = input[i];
+	}
+	new[j] = '\0';
+	free(input);
+	return (new);
+}
 
-// 	i = -1;
-// 	j = 0;
-// 	while (data->token[++i])
-// 	{
-// 		if (data->token[i + 1]
-// 			&& is_backslashed(i + 1, data->token)
-// 			&& (data->token[i] == special[0]
-// 				|| data->token[i] == special[1]))
-// 			continue ;
-// 		if (new)
-// 			new[j] = data->token[i];
-// 		j++;
-// 	}
-// 	if (new)
-// 	{
-// 		new[j] = '\0';
-// 		free(data->token);
-// 		data->token = new;
-// 		return ;
-// 	}
-// 	new = malloc(sizeof(char) * (j + 1));
-// 	if (!new)
-// 		out(1, *data);
-// 	double_quote_exp(data, new);
-// }
+char	*expand_in_double_quote(t_data *data, char *input)
+{
+	int i;
+	int j;
+	char *new;
+	char special[3] = {'"', '\\', '\0'};
+	
+	j = 0;
+	i = -1;
+	init_2(data);
+	new = ft_calloc(ft_strlen(input) + 1, sizeof *new);
+	if (!new)
+		out(1, *data);
+	while (input[++i])
+	{
+		if (quoted_fragment(input[i]) && !is_backslashed(i, input))
+			define_quoting_state(data, input, i);
+		if ((input[i] == '"') && ((data->quoting_state == '"'
+			&& is_special_char(i, input, special)) || !input[i + 1]))
+			continue ;
+		new[j++] = input[i];
+	}
+	new[j] = '\0';
+	free(input);
+	return (new);
+}
+
+char *expand_in_single_quote(t_data *data, char *input)
+{
+	int		i;
+	int		j;
+	char	*new;
+
+	j = 0;
+	i = -1;
+	init_2(data);
+	new = ft_calloc(ft_strlen(input) + 1, sizeof *new);
+	if (!new)
+		out(1, *data);
+	while (input[++i])
+	{
+		if (quoted_fragment(input[i]) && !is_backslashed(i, input))
+			define_quoting_state(data, input, i);
+		if ((input[i] == '\'') && (data->quoting_state == '\'' || !input[i + 1]))
+			continue ;
+		new[j++] = input[i];
+	}
+	new[j] = '\0';
+	free(input);
+	return (new);
+}
 

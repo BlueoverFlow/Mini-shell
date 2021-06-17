@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 08:15:35 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/06/16 18:18:03 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/06/17 19:41:25 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,8 @@ macros
 #define STD_INPUT 0
 #define STD_APPENDED_OUTPUT 11
 #define PROMPT "minishell$"
-#define SNG_QUT 1
-#define DBL_QUT 2
 #define UNQUOTED 0
 #define READ (write(STDERR_FILENO, PROMPT, 11) && get_next_line(STDIN_FILENO, &data.input) > 0 && ft_strcmp(data.input, "exit"))
-#define QUOTED_FRAGMENT (data->input[i] == '\'' || data->input[i] == '\"')
-#define NEED_MERGE ((data->field[0] != blanks[0] && data->field[0] != blanks[1]) && ft_lstsize(data->tokens) > 0)
-#define NEXT_IS_UNCLOSED (data->pos[0] != ERROR && data->pos[1] == ERROR)
 
 typedef struct s_list_2
 {
@@ -51,7 +46,9 @@ typedef struct s_data
 	t_list_2	*file;
 	t_list_2	*branch;
 	int			quoting_state;
+	int			old_quoting_state;
 	char		*input;
+	int			current_state;
 }				t_data;
 
 typedef struct s_var
@@ -87,21 +84,17 @@ t_list *lst_elem(t_list *lst, int index);
 parser.c
 */
 int		parser(t_data *data);
-
-/*
-tokens.c
-*/
-int extract_branches(t_data *data);
-int make_branch(t_data *data, char *fragment);
-/*
-fields.c
-*/
-
-int		tokens_analyser(t_data *data);
+char	*lst_to_string(t_list *lst);
+int		 make_branch(t_data *data, char *fragment);
+void	define_quoting_state(t_data *data, char *input, int i);
+void init_2(t_data *data);
 
 /*
 expansions.c
 */
+char	*expand_unquoted_token(t_data *data, char *input);
+char	*expand_in_single_quote(t_data *data, char *input);
+char	*expand_in_double_quote(t_data *data, char *input);
 
 /*
 utils.c
@@ -109,12 +102,13 @@ utils.c
 int	out(int code, t_data data);
 int		is_backslashed(int i, char *str);
 char	**ft_split_input(char const *s, char *separator);
+BOOL quoted_fragment(char c);
 
 /*
-is_commands.c
+execution.c
 */
-void	commands(t_data *data);
-void	piped(t_data *data);
+int execute(t_data *data);
+
 //========================================================================================================
 
 #endif

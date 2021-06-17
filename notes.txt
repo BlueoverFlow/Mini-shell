@@ -54,4 +54,38 @@ piped 0x00006020000002f0 0x0000603000001bd0
 data->commands 0x00006020000003d0
 
 
+
+		while (data.commands)
+		{
+			data.piped = data.commands->content;
+			while (data.piped)
+			{
+				data.branch = data.piped->content;
+				data.prototype = data.branch->content_2;
+				data.file = data.branch->content;
+				while (data.prototype)
+				{
+					printf("prototype:|%s|\n", data.prototype->content);
+					data.prototype = data.prototype->next;
+				}
+				while (data.file)
+				{
+					printf("file_path:|%s|\tid:|%d|\n", data.file->content, *(int *)data.file->content_2);
+					data.file = data.file->next;
+				}
+				data.piped = data.piped->next;
+				if (data.piped)
+					puts("\t|\n\t|");
+			}
+			data.commands = data.commands->next;
+			if (data.commands)
+				puts("=============================\n");
+												// exit(0);
+		}
+
+
 ls >file1 hello | < file2_files cat; hello >>all "how are you"
+
+\l\s\  all in 
+
+prototype 0x0000602000000350 0x0000602000000330
