@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/15 15:32:25 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/06/17 19:42:20 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/06/18 09:39:10 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,7 @@ char	*expand_unquoted_token(t_data *data, char *input)
 		out(1, *data);
 	while (input[++i])
 	{
-		if (quoted_fragment(input[i]) && !is_backslashed(i, input))
-			define_quoting_state(data, input, i);
+		define_quoting_state(data, input, i);
 		if (data->quoting_state == UNQUOTED && is_special_char(i, input, special)) 
 			continue ;
 		new[j++] = input[i];
@@ -64,8 +63,7 @@ char	*expand_in_double_quote(t_data *data, char *input)
 		out(1, *data);
 	while (input[++i])
 	{
-		if (quoted_fragment(input[i]) && !is_backslashed(i, input))
-			define_quoting_state(data, input, i);
+		define_quoting_state(data, input, i);
 		if ((input[i] == '"') && ((data->quoting_state == '"'
 			&& is_special_char(i, input, special)) || !input[i + 1]))
 			continue ;
@@ -90,8 +88,7 @@ char *expand_in_single_quote(t_data *data, char *input)
 		out(1, *data);
 	while (input[++i])
 	{
-		if (quoted_fragment(input[i]) && !is_backslashed(i, input))
-			define_quoting_state(data, input, i);
+		define_quoting_state(data, input, i);
 		if ((input[i] == '\'') && (data->quoting_state == '\'' || !input[i + 1]))
 			continue ;
 		new[j++] = input[i];

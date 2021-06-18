@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/18 17:20:29 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/06/17 19:42:56 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/06/18 09:54:08 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ void init_2(t_data *data)
 
 void define_quoting_state(t_data *data, char *input, int i)
 {
-	if (quoted_fragment(input[i]))
+	if (quoted_fragment(input[i]) && !is_backslashed(i, input))
 	{
 		data->old_quoting_state++;
 		if (data->old_quoting_state > 2)
@@ -165,7 +165,7 @@ int make_branch(t_data *data, char *fragment)
 	return (hundle_redirection(data, fragment, token, i));
 }
 
-char *lst_to_string(t_list *lst)
+static char *lst_to_word(t_list *lst)
 {
 	int l;
 	char *str;
@@ -191,8 +191,7 @@ static int syntax_checking(t_data data, int option)
 	l = ft_strlen(data.input) - 1;
 	if (option == 0 || option == 2)
 		if ((last && last->content_2 && !last->content)
-			|| ((data.input[l] == ';' && !is_backslashed(l, data.input))
-			|| (data.input[l] == '|' && !is_backslashed(l, data.input)))
+			|| (data.input[l] == '|' && !is_backslashed(l, data.input))
 			|| data.quoting_state != UNQUOTED)
 			return(ERROR);
 	if (option == 1 || option == 2)
@@ -205,7 +204,7 @@ static int fill_branch(t_data *data, int i)
 {
 	char *fragment;
 
-	fragment = lst_to_string(data->word);
+	fragment = lst_to_word(data->word);
 	if (!theres_atoken(fragment))
 		return((data->input[i + 1]) ? ERROR : 1);
 	if (make_branch(data, fragment) == ERROR)
@@ -234,7 +233,7 @@ static int fill_pipeline(t_data *data, int i)
 
 static int fill_command(t_data *data, int i)
 {
-	if (!data->input[i + 1])
+	if (!data->input[i + 1] && data->input[i] != ';')
 	{
 		if (syntax_checking(*data, 2) == ERROR)
 			return (ERROR);
@@ -276,8 +275,7 @@ static int extract_branches(t_data *data)
 	i = -1;
 	while (data->input[++i])
 	{
-		if (!is_backslashed(i, data->input))
-			define_quoting_state(data, data->input, i);
+		define_quoting_state(data, data->input, i);
 		if (build_tree(data, i) == ERROR)
 			return(ERROR);
 	}

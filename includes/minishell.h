@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 08:15:35 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/06/17 19:41:25 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/06/18 10:25:10 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,9 @@ macros
 #define STD_OUTPUT 1
 #define STD_INPUT 0
 #define STD_APPENDED_OUTPUT 11
-#define PROMPT "minishell$"
+#define PROMPT "minishell$ "
 #define UNQUOTED 0
-#define READ (write(STDERR_FILENO, PROMPT, 11) && get_next_line(STDIN_FILENO, &data.input) > 0 && ft_strcmp(data.input, "exit"))
+#define READ (write(STDERR_FILENO, PROMPT, 12) && get_next_line(STDIN_FILENO, &data.input) > 0 && ft_strcmp(data.input, "exit"))
 
 typedef struct s_list_2
 {
@@ -84,10 +84,9 @@ t_list *lst_elem(t_list *lst, int index);
 parser.c
 */
 int		parser(t_data *data);
-char	*lst_to_string(t_list *lst);
 int		 make_branch(t_data *data, char *fragment);
 void	define_quoting_state(t_data *data, char *input, int i);
-void init_2(t_data *data);
+void 	init_2(t_data *data);
 
 /*
 expansions.c
@@ -108,6 +107,11 @@ BOOL quoted_fragment(char c);
 execution.c
 */
 int execute(t_data *data);
+
+/*
+builtins.c
+*/
+int is_builtin(t_data *data);
 
 //========================================================================================================
 
