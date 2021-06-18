@@ -3,23 +3,32 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: ael-mezz <ael-mezz@sudent.1337.ma>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/17 10:06:45 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/06/18 10:23:57 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/06/18 19:33:03 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
+static void command_name_to_lower_case(t_list *prototype)
+{
+	int j;
+
+	j = -1;
+	while (((char *)prototype->content)[++j])
+		((char *)prototype->content)[j] = ft_tolower(((char *)prototype->content)[j]);
+}
+
 static void expand_prototype(t_data *data, t_list *prototype)
 {
 	if (!prototype)
 		return ;
-	prototype->content = expand_unquoted_token(data, prototype->content);
-	prototype->content = expand_in_double_quote(data, prototype->content);
-	// prototype->content = expand_envirenment_var(prototype->content);
-	prototype->content = expand_in_single_quote(data, prototype->content);
+	prototype->content = expand_token(data, prototype->content);
+
+	/* still need to expand envirenment variable */
+
 	if (ft_strcmp(prototype->content, "export"))
 		expand_prototype(data, prototype->next);
 }
@@ -36,9 +45,11 @@ int execute(t_data *data)
 			data->prototype = data->branch->content_2;
 			if (data->prototype)
 			{
+				command_name_to_lower_case(data->prototype);
 				expand_prototype(data, data->prototype);
 				if (is_builtin(data) == ERROR)
 					return (ERROR);
+				/* execute the non-builtin commands */
 			}
 			data->piped = data->piped->next;
 		}

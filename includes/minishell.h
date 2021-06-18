@@ -3,17 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: ael-mezz <ael-mezz@sudent.1337.ma>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 08:15:35 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/06/18 10:25:10 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/06/18 19:08:40 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PUSH_SWAP_H
 # define PUSH_SWAP_H
 
-#include "../libft/includes/libft.h"
+# include "../libft/includes/libft.h"
+# include <errno.h>
+# include <sys/types.h>
 
 /*
 macros
@@ -91,9 +93,7 @@ void 	init_2(t_data *data);
 /*
 expansions.c
 */
-char	*expand_unquoted_token(t_data *data, char *input);
-char	*expand_in_single_quote(t_data *data, char *input);
-char	*expand_in_double_quote(t_data *data, char *input);
+char 	*expand_token(t_data *data, char *input);
 
 /*
 utils.c

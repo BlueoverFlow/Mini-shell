@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: ael-mezz <ael-mezz@sudent.1337.ma>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 08:15:00 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/06/18 09:10:53 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/06/18 18:26:45 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ int main()
 			continue ;
 		if (execute(&data) == ERROR)
 			return (out(0, data));
+		printf("\033[H\033[J");
 		/* code */
 	}
 	return (0);

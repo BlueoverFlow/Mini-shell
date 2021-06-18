@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expansions.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: ael-mezz <ael-mezz@sudent.1337.ma>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/15 15:32:25 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/06/18 09:39:10 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/06/18 19:08:24 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,49 +23,27 @@ static int is_special_char(int i, char *input, char *special)
 	return (0);
 }
 
-char	*expand_unquoted_token(t_data *data, char *input)
+char	*expand_token(t_data *data, char *input)
 {
-	int i;
 	int j;
-	char *new;
+	int i;
 	char special[4] = {' ', '\t', '\\', '\0'};
-	
-	j = 0;
-	i = -1;
-	init_2(data);
-	new = ft_calloc(ft_strlen(input) + 1, sizeof *new);
-	if (!new)
-		out(1, *data);
-	while (input[++i])
-	{
-		define_quoting_state(data, input, i);
-		if (data->quoting_state == UNQUOTED && is_special_char(i, input, special)) 
-			continue ;
-		new[j++] = input[i];
-	}
-	new[j] = '\0';
-	free(input);
-	return (new);
-}
-
-char	*expand_in_double_quote(t_data *data, char *input)
-{
-	int i;
-	int j;
+	char special_2[3] = {'"', '\\', '\0'};
 	char *new;
-	char special[3] = {'"', '\\', '\0'};
 	
 	j = 0;
-	i = -1;
-	init_2(data);
+	data->quoting_state = UNQUOTED;
 	new = ft_calloc(ft_strlen(input) + 1, sizeof *new);
 	if (!new)
 		out(1, *data);
+	i = -1;
 	while (input[++i])
 	{
 		define_quoting_state(data, input, i);
-		if ((input[i] == '"') && ((data->quoting_state == '"'
-			&& is_special_char(i, input, special)) || !input[i + 1]))
+		if ((data->quoting_state == UNQUOTED && is_special_char(i, input, special))
+			|| (input[i] == '"' && ((data->quoting_state == '"'
+			&& is_special_char(i, input, special_2)) || !input[i + 1]))
+			|| ((input[i] == '\'') && (data->quoting_state == '\'' || !input[i + 1])))
 			continue ;
 		new[j++] = input[i];
 	}
@@ -73,28 +51,3 @@ char	*expand_in_double_quote(t_data *data, char *input)
 	free(input);
 	return (new);
 }
-
-char *expand_in_single_quote(t_data *data, char *input)
-{
-	int		i;
-	int		j;
-	char	*new;
-
-	j = 0;
-	i = -1;
-	init_2(data);
-	new = ft_calloc(ft_strlen(input) + 1, sizeof *new);
-	if (!new)
-		out(1, *data);
-	while (input[++i])
-	{
-		define_quoting_state(data, input, i);
-		if ((input[i] == '\'') && (data->quoting_state == '\'' || !input[i + 1]))
-			continue ;
-		new[j++] = input[i];
-	}
-	new[j] = '\0';
-	free(input);
-	return (new);
-}
-

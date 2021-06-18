@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: ael-mezz <ael-mezz@sudent.1337.ma>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/18 17:20:29 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/06/18 09:54:08 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/06/18 19:27:35 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,30 +95,24 @@ static int fill_file_path(t_data *data, char *fragment, char *token)
 	return (0);
 }
 
-void init_2(t_data *data)
-{
-	data->quoting_state = UNQUOTED;
-	data->old_quoting_state = UNQUOTED;
-	data->current_state = UNQUOTED;
-}
-
 void define_quoting_state(t_data *data, char *input, int i)
 {
-	if (quoted_fragment(input[i]) && !is_backslashed(i, input))
+	static BOOL passive = FALSE;
+
+	if (data->quoting_state == input[i])
 	{
-		data->old_quoting_state++;
-		if (data->old_quoting_state > 2)
-			data->old_quoting_state -= 2;
-		if (data->old_quoting_state == 1)
-			data->current_state = input[i];
-		if (data->quoting_state == UNQUOTED || data->quoting_state != data->current_state)
-			data->quoting_state = data->current_state;
+		if (passive == TRUE || !input[i + 1])
+		{
+			data->quoting_state = UNQUOTED;
+			passive = FALSE;
+		}
 	}
-	if (data->quoting_state != UNQUOTED && i > 0)
-		if ((!input[i + 1] && data->old_quoting_state == 2)
-			|| (quoted_fragment(input[i - 1]) && !quoted_fragment(input[i])
-			&& data->old_quoting_state == 2))
-		init_2(data);
+	else if (quoted_fragment(input[i]) && !is_backslashed(i, input))
+		if (data->quoting_state == UNQUOTED)
+		{
+			data->quoting_state = input[i];
+			passive = TRUE;
+		}
 }
 
 static int hundle_redirection(t_data *data, char *fragment, char *token, int i)
@@ -161,7 +155,7 @@ int make_branch(t_data *data, char *fragment)
 			define_quoting_state(data, data->input, i);
 		token[i] = fragment[i];
 	}
-	init_2(data);
+	data->quoting_state = UNQUOTED;
 	return (hundle_redirection(data, fragment, token, i));
 }
 
