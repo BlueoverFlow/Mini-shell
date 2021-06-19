@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@sudent.1337.ma>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/18 17:20:29 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/06/18 19:27:35 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/06/19 15:38:14 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,36 +59,43 @@ static int *int_alloc(int i, t_data data)
 
 static int is_redirection(char *str, int i, int quoting_state)
 {
-	if (((str[i] == '>' && !is_backslashed(i, str))
-		|| (str[i] == '<' && !is_backslashed(i, str))) && quoting_state == UNQUOTED)
+	if ((str[i] == '>' || str[i] == '<') && quoting_state == UNQUOTED)
 		return (1);
 	return (0);
 }
 
-static void fill_file_id(t_data *data, char **fragment)
+static int fill_file_id(t_data *data, char **fragment, t_list_2 *last)
 {
-	if ((*fragment)[1] && ((*fragment)[0] == '>' &&
-		((*fragment)[1]) == '>' && !is_backslashed(1, *fragment)))
+	if (data->file && !last->content)
+		return (ERROR);
+	if ((*fragment)[0] == '>')
 	{
-		add_node(&data->file, build_node(NULL, int_alloc(STD_APPENDED_OUTPUT, *data)));
-		*fragment += 1;
+		if ((*fragment)[1] && (*fragment)[1] == '>')
+		{
+			add_node(&data->file, build_node(NULL, int_alloc(STD_APPENDED_OUTPUT, *data)));
+			*fragment += 1;
+		}
+		else
+			add_node(&data->file, build_node(NULL, int_alloc(STD_OUTPUT, *data)));
 	}
-	else if ((*fragment)[0] == '<' && !is_backslashed(0, *fragment))
-		add_node(&data->file, build_node(NULL, int_alloc(STD_INPUT, *data)));
-	else
-		add_node(&data->file, build_node(NULL, int_alloc(STD_OUTPUT, *data)));
+	else if ((*fragment)[0] == '<')
+	{
+		if ((*fragment)[1] && (*fragment)[1] == '<')
+		{
+			add_node(&data->file, build_node(NULL, int_alloc(STD_APPENDED_INPUT, *data)));
+			*fragment += 1;
+		}
+		else
+			add_node(&data->file, build_node(NULL, int_alloc(STD_INPUT, *data)));
+	}
 	*fragment += 1;
+	return (1);
 }
 
-static int fill_file_path(t_data *data, char *fragment, char *token)
+static int fill_file_path(t_data *data, char *fragment, char *token, t_list_2 *last)
 {
-	t_list_2	*last;
-
-	last = ft_lst2last(data->file);
 	if (data->file && !last->content)
 	{
-		if (!token)
-			return (ERROR);
 		last->content = token;
 		return (1);
 	}
@@ -97,65 +104,54 @@ static int fill_file_path(t_data *data, char *fragment, char *token)
 
 void define_quoting_state(t_data *data, char *input, int i)
 {
-	static BOOL passive = FALSE;
-
-	if (data->quoting_state == input[i])
+	if (data->passive)
 	{
-		if (passive == TRUE || !input[i + 1])
-		{
-			data->quoting_state = UNQUOTED;
-			passive = FALSE;
-		}
+		data->quoting_state = UNQUOTED;
+		data->passive = FALSE;
 	}
-	else if (quoted_fragment(input[i]) && !is_backslashed(i, input))
-		if (data->quoting_state == UNQUOTED)
-		{
+	else if (input[i] == data->quoting_state)
+			data->passive = TRUE;
+	if (data->quoting_state == UNQUOTED && quoted_fragment(input[i]))
 			data->quoting_state = input[i];
-			passive = TRUE;
-		}
 }
 
 static int hundle_redirection(t_data *data, char *fragment, char *token, int i)
 {
-	int ret;
+	t_list_2	*last;
 
+	last = ft_lst2last(data->file);
 	if (fragment[i] && is_redirection(fragment, 0, UNQUOTED))
-		fill_file_id(data, &fragment);
+	{
+		if (fill_file_id(data, &fragment, last) == ERROR)
+			return (ERROR);
+	}
 	else
 	{
-		ret = fill_file_path(data, fragment, token);
-		if (ret)
-		{
-			if (ret == ERROR)
-				return (ERROR);
-		}
-		else
+		if (!fill_file_path(data, fragment, token, last))
 			ft_lstadd_back(&data->prototype, ft_lstnew(token));
 		fragment += i;
 	}
-	make_branch(data, fragment);
-	return (1);
+	return (make_branch(data, fragment));
 }
 
 int make_branch(t_data *data, char *fragment)
 {
 	char *token;
+	int tmp;
 	int i;
 	int ret;
 
-	i = -1;
+	i = 0;
 	if (!*fragment)
 		return (1);
+	tmp = data->passive;
 	token = ft_calloc(ft_strlen(fragment) + 1, sizeof(char));
 	if (!token)
 		out(1, *data);
+	define_quoting_state(data, data->input, i--);
 	while (fragment[++i] && !is_redirection(fragment, i, data->quoting_state))
-	{
-		if (quoted_fragment(data->input[i]) && !is_backslashed(i, data->input))
-			define_quoting_state(data, data->input, i);
 		token[i] = fragment[i];
-	}
-	data->quoting_state = UNQUOTED;
+	data->passive = tmp;
 	return (hundle_redirection(data, fragment, token, i));
 }
 
@@ -176,22 +172,21 @@ static char *lst_to_word(t_list *lst)
 	return (str);
 }
 
-static int syntax_checking(t_data data, int option)
+static int syntax_checking(t_data data, int i)
 {
 	int l;
 	t_list_2 *last;
 
 	last = ft_lst2last(data.file);
 	l = ft_strlen(data.input) - 1;
-	if (option == 0 || option == 2)
-		if ((last && last->content_2 && !last->content)
-			|| (data.input[l] == '|' && !is_backslashed(l, data.input))
-			|| data.quoting_state != UNQUOTED)
-			return(ERROR);
-	if (option == 1 || option == 2)
-		if (data.quoting_state != UNQUOTED)
-			return (ERROR);
-	return (1);
+	if ((last && last->content_2 && !last->content)
+		|| (data.input[l] == '|')
+		|| (data.quoting_state != UNQUOTED && !data.input[i + 1] && !data.passive))
+		l = ERROR;
+	data.file = NULL;
+	data.prototype = NULL;
+	data.branch = NULL;
+	return(l);
 }
 
 static int fill_branch(t_data *data, int i)
@@ -211,53 +206,28 @@ static int fill_branch(t_data *data, int i)
 
 static int fill_pipeline(t_data *data, int i)
 {
+	if (!data->input[i + 1])
+		ft_lstadd_back(&data->word, ft_lstnew(ft_substr(data->input, i, 1)));
 	if (data->word || !data->prototype)
 		if (fill_branch(data, i) == ERROR)
 			return (ERROR);
-	if (syntax_checking(*data, 0) == ERROR)
-		return (ERROR);
 	add_node(&data->branch, build_node(data->file, data->prototype));
-	data->file = NULL;
-	data->prototype = NULL;
 	ft_lstadd_back(&data->piped, ft_lstnew(data->branch));
-	data->branch = NULL;
 	free_list(&data->word);
-	return (1);
-}
-
-static int fill_command(t_data *data, int i)
-{
-	if (!data->input[i + 1] && data->input[i] != ';')
-	{
-		if (syntax_checking(*data, 2) == ERROR)
-			return (ERROR);
-		ft_lstadd_back(&data->word, ft_lstnew(ft_substr(data->input, i, 1)));
-	}
-	if (data->word || !data->branch)
-		if (fill_pipeline(data, i) == ERROR)
-			return (ERROR);
-	ft_lstadd_back(&data->commands, ft_lstnew(data->piped));
-	data->piped = NULL;
-	free_list(&data->word);
-	return (1);
+	return (syntax_checking(*data, i));
 }
 
 static int build_tree(t_data *data, int i)
 {
-	if (!is_backslashed(i, data->input) && data->quoting_state == UNQUOTED)
+	if (data->quoting_state == UNQUOTED)
 	{
-		if (data->input[i] == ';' || !data->input[i + 1])
-			return (fill_command(data, i));
-		else if (data->input[i] == ' ' || data->input[i] == '\t')
-		{
-			fill_branch(data, i);
-			return (1);
-		}
+		if (data->input[i] == ' ' || data->input[i] == '\t')
+			return (fill_branch(data, i));
 		else if (data->input[i] == '|')
 			return (fill_pipeline(data, i));
 	}
 	if (!data->input[i + 1])
-		fill_command(data , i);
+		return (fill_pipeline(data, i));
 	ft_lstadd_back(&data->word, ft_lstnew(ft_substr(data->input, i, 1)));
 	return (1);
 }
@@ -273,7 +243,7 @@ static int extract_branches(t_data *data)
 		if (build_tree(data, i) == ERROR)
 			return(ERROR);
 	}
-	return (syntax_checking(*data, 1));
+	return (1);
 }
 
 int	parser(t_data *data)

@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@sudent.1337.ma>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 08:15:00 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/06/18 18:26:45 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/06/19 15:39:24 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,13 @@
 
 void _init(t_data *data)
 {
-	data->commands = NULL;
 	data->piped = NULL;
 	data->prototype = NULL;
 	data->file = NULL;
 	data->branch = NULL;
 	data->word = NULL;
 	data->quoting_state = UNQUOTED;
-	data->old_quoting_state = UNQUOTED;
-	data->current_state = UNQUOTED;
+	data->passive = FALSE;
 }
 
 int main()
@@ -38,7 +36,6 @@ int main()
 			continue ;
 		if (execute(&data) == ERROR)
 			return (out(0, data));
-		printf("\033[H\033[J");
 		/* code */
 	}
 	return (0);

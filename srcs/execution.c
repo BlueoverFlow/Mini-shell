@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@sudent.1337.ma>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/17 10:06:45 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/06/18 19:33:03 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/06/19 12:54:27 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,25 +35,20 @@ static void expand_prototype(t_data *data, t_list *prototype)
 
 int execute(t_data *data)
 {
-	while (data->commands)
+	while (data->piped)
 	{
-		data->piped = data->commands->content;
-		while (data->piped)
+		data->branch = data->piped->content;
+		data->file = data->branch->content_2;
+		data->prototype = data->branch->content_2;
+		if (data->prototype)
 		{
-			data->branch = data->piped->content;
-			data->file = data->branch->content_2;
-			data->prototype = data->branch->content_2;
-			if (data->prototype)
-			{
-				command_name_to_lower_case(data->prototype);
-				expand_prototype(data, data->prototype);
-				if (is_builtin(data) == ERROR)
-					return (ERROR);
-				/* execute the non-builtin commands */
-			}
-			data->piped = data->piped->next;
+			command_name_to_lower_case(data->prototype);
+			expand_prototype(data, data->prototype);
+			if (is_builtin(data) == ERROR)
+				return (ERROR);
+			/* execute the non-builtin commands */
 		}
-		data->commands = data->commands->next;
+		data->piped = data->piped->next;
 	}
 	return (1);
 }

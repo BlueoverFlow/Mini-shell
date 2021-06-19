@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@sudent.1337.ma>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 08:15:35 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/06/18 19:08:40 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/06/19 12:53:53 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ macros
 #define STD_OUTPUT 1
 #define STD_INPUT 0
 #define STD_APPENDED_OUTPUT 11
+#define STD_APPENDED_INPUT 22
 #define PROMPT "minishell$ "
 #define UNQUOTED 0
 #define READ (write(STDERR_FILENO, PROMPT, 12) && get_next_line(STDIN_FILENO, &data.input) > 0 && ft_strcmp(data.input, "exit"))
@@ -41,16 +42,14 @@ typedef struct s_list_2
 typedef struct s_data
 {
 	t_list		*garbage;
-	t_list		*commands;
 	t_list		*piped;
 	t_list		*word;
 	t_list		*prototype;
 	t_list_2	*file;
 	t_list_2	*branch;
 	int			quoting_state;
-	int			old_quoting_state;
+	BOOL		passive;
 	char		*input;
-	int			current_state;
 }				t_data;
 
 typedef struct s_var
@@ -87,7 +86,7 @@ parser.c
 */
 int		parser(t_data *data);
 int		 make_branch(t_data *data, char *fragment);
-void	define_quoting_state(t_data *data, char *input, int i);
+void define_quoting_state(t_data *data, char *input, int i);
 void 	init_2(t_data *data);
 
 /*
