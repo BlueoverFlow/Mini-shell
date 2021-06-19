@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@sudent.1337.ma>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/14 14:23:07 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/06/18 20:20:07 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/06/19 16:07:35 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ int is_builtin(t_data *data)
 	char **prototype;
 
 	prototype = lst_to_table(data->prototype);
-	if (!ft_strcmp(prototype[0], "echo"))
+	if (!ft_strcmp(prototype[0], "echo") || !ft_strcmp(prototype[0], "export"))
 		echo(prototype);
 	return (1);
 }

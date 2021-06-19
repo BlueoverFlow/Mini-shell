@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@sudent.1337.ma>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/18 17:20:29 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/06/19 15:38:14 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/06/19 16:14:13 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -172,20 +172,20 @@ static char *lst_to_word(t_list *lst)
 	return (str);
 }
 
-static int syntax_checking(t_data data, int i)
+static int syntax_checking(t_data *data, int i)
 {
 	int l;
 	t_list_2 *last;
 
-	last = ft_lst2last(data.file);
-	l = ft_strlen(data.input) - 1;
+	last = ft_lst2last(data->file);
+	l = ft_strlen(data->input) - 1;
 	if ((last && last->content_2 && !last->content)
-		|| (data.input[l] == '|')
-		|| (data.quoting_state != UNQUOTED && !data.input[i + 1] && !data.passive))
+		|| (data->input[l] == '|')
+		|| (data->quoting_state != UNQUOTED && !data->input[i + 1] && !data->passive))
 		l = ERROR;
-	data.file = NULL;
-	data.prototype = NULL;
-	data.branch = NULL;
+	data->file = NULL;
+	data->prototype = NULL;
+	data->branch = NULL;
 	return(l);
 }
 
@@ -195,7 +195,7 @@ static int fill_branch(t_data *data, int i)
 
 	fragment = lst_to_word(data->word);
 	if (!theres_atoken(fragment))
-		return((data->input[i + 1]) ? ERROR : 1);
+		return((data->input[i + 1]) ? 1 : ERROR);
 	if (make_branch(data, fragment) == ERROR)
 			return (ERROR);
 	free(fragment);
@@ -214,7 +214,7 @@ static int fill_pipeline(t_data *data, int i)
 	add_node(&data->branch, build_node(data->file, data->prototype));
 	ft_lstadd_back(&data->piped, ft_lstnew(data->branch));
 	free_list(&data->word);
-	return (syntax_checking(*data, i));
+	return (syntax_checking(data, i));
 }
 
 static int build_tree(t_data *data, int i)
