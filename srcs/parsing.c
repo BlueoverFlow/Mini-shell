@@ -1,12 +1,12 @@
-/* ************************************************************************** */
+ /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-mezz <ael-mezz@sudent.1337.ma>         +#+  +:+       +#+        */
+/*   By: ael-mezz <ael-mezz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/18 17:20:29 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/06/19 16:14:13 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/06/23 12:27:11 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,13 +46,13 @@ static int find_chars(char *str, char* chars)
 	return (i);
 }
 
-static int *int_alloc(int i, t_data data)
+static int *int_alloc(int i, t_data *data)
 {
 	int *p;
 
 	p = malloc(sizeof(int));
 	if (!p)
-		out(1, data);
+		out(data, "ALlocation failure!\n", 1);
 	*p = i;
 	return (p);
 }
@@ -72,21 +72,21 @@ static int fill_file_id(t_data *data, char **fragment, t_list_2 *last)
 	{
 		if ((*fragment)[1] && (*fragment)[1] == '>')
 		{
-			add_node(&data->file, build_node(NULL, int_alloc(STD_APPENDED_OUTPUT, *data)));
+			add_node(&data->file, build_node(NULL, int_alloc(STD_APPENDED_OUTPUT, data)));
 			*fragment += 1;
 		}
 		else
-			add_node(&data->file, build_node(NULL, int_alloc(STD_OUTPUT, *data)));
+			add_node(&data->file, build_node(NULL, int_alloc(STD_OUTPUT, data)));
 	}
 	else if ((*fragment)[0] == '<')
 	{
 		if ((*fragment)[1] && (*fragment)[1] == '<')
 		{
-			add_node(&data->file, build_node(NULL, int_alloc(STD_APPENDED_INPUT, *data)));
+			add_node(&data->file, build_node(NULL, int_alloc(STD_APPENDED_INPUT, data)));
 			*fragment += 1;
 		}
 		else
-			add_node(&data->file, build_node(NULL, int_alloc(STD_INPUT, *data)));
+			add_node(&data->file, build_node(NULL, int_alloc(STD_INPUT, data)));
 	}
 	*fragment += 1;
 	return (1);
@@ -147,7 +147,7 @@ int make_branch(t_data *data, char *fragment)
 	tmp = data->passive;
 	token = ft_calloc(ft_strlen(fragment) + 1, sizeof(char));
 	if (!token)
-		out(1, *data);
+		out(data, "ALlocation failure!\n", 1);
 	define_quoting_state(data, data->input, i--);
 	while (fragment[++i] && !is_redirection(fragment, i, data->quoting_state))
 		token[i] = fragment[i];
@@ -195,7 +195,7 @@ static int fill_branch(t_data *data, int i)
 
 	fragment = lst_to_word(data->word);
 	if (!theres_atoken(fragment))
-		return((data->input[i + 1]) ? 1 : ERROR);
+		return((data->input[i + 1] || data->prototype) ? 1 : ERROR);
 	if (make_branch(data, fragment) == ERROR)
 			return (ERROR);
 	free(fragment);
@@ -221,7 +221,7 @@ static int build_tree(t_data *data, int i)
 {
 	if (data->quoting_state == UNQUOTED)
 	{
-		if (data->input[i] == ' ' || data->input[i] == '\t')
+		if (data->input[i + 1] && (data->input[i] == ' ' || data->input[i] == '\t'))
 			return (fill_branch(data, i));
 		else if (data->input[i] == '|')
 			return (fill_pipeline(data, i));
@@ -248,7 +248,5 @@ static int extract_branches(t_data *data)
 
 int	parser(t_data *data)
 {
-	if (extract_branches(data) == ERROR)
-		return (out(0, *data));
-	return (1);
+	return(extract_branches(data));
 }

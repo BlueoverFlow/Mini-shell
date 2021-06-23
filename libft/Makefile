@@ -6,13 +6,13 @@
 #    By: ael-mezz <ael-mezz@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/10/21 12:57:37 by ael-mezz          #+#    #+#              #
-#    Updated: 2021/02/25 16:51:54 by ael-mezz         ###   ########.fr        #
+#    Updated: 2021/06/23 18:10:24 by ael-mezz         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = libft.a
 
-FLAGS = -Wall -Werror -Wextra -c
+FLAGS = -Wall -Werror -Wextra -c -g
 
 CC = gcc
 

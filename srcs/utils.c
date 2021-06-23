@@ -3,26 +3,26 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: ael-mezz <ael-mezz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/15 09:41:53 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/06/17 13:54:00 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/06/23 17:15:14 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int out(int code, t_data data)
+int out(t_data *data, char *exit_message, int code)
 {
-	if (code == 0)
-		ft_putstr_fd("syntax error!\n", STDERR_FILENO);
-	if (code == 1)
-	{
-		/* clear the memory */
-		ft_putstr_fd("Allocation error!\n", STDERR_FILENO);
-		exit(1);
-	}
-	/* clear the memory */
+	if (data)
+		data->exit_status = code;
+	ft_putstr_fd("minishell: ", STDERR_FILENO);
+	if (code == 3)
+		ft_putstr_fd("export: `", STDERR_FILENO);
+	ft_putstr_fd(exit_message, STDERR_FILENO);
+	if (code == 3)
+		ft_putstr_fd("': not a valid identifier\n", STDERR_FILENO);
+	/* free memory */
 	return (ERROR);
 }
 

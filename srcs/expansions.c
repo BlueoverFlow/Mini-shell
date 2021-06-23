@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expansions.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-mezz <ael-mezz@sudent.1337.ma>         +#+  +:+       +#+        */
+/*   By: ael-mezz <ael-mezz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/15 15:32:25 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/06/19 12:51:57 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/06/23 19:22:36 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ char	*expand_token(t_data *data, char *input)
 	data->quoting_state = UNQUOTED;
 	new = ft_calloc(ft_strlen(input) + 1, sizeof *new);
 	if (!new)
-		out(1, *data);
+		out(data, "ALlocation failure!\n", 1);
 	i = -1;
 	while (input[++i])
 	{
@@ -46,7 +46,6 @@ char	*expand_token(t_data *data, char *input)
 				continue ;
 		new[j++] = input[i];
 	}
-	new[j] = '\0';
 	free(input);
 	return (new);
 }

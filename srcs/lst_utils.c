@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lst_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: ael-mezz <ael-mezz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/14 08:37:34 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/06/16 12:00:22 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/06/22 19:18:51 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,13 +90,40 @@ void add_node(t_list_2 **alst, t_list_2 *new)
 	ft_lst2last(*alst)->next = new;
 }
 
+t_list	*ft_dlstnew(void *content)
+{
+	t_list	*ptr;
+
+	ptr = (t_list *)malloc(sizeof(t_list));
+	if (!ptr)
+		return (NULL);
+	ptr->content = (void *)content;
+	ptr->next = NULL;
+	ptr->previous = NULL;
+	return (ptr);
+}
+
+void	ft_dlstadd_back(t_list **alst, t_list *new)
+{
+	t_list *tmp;
+
+	if (alst == NULL)
+		return ;
+	if (*alst == NULL)
+	{
+		*alst = new;
+		return ;
+	}
+	tmp = ft_lstlast(*alst);
+	ft_lstlast(*alst)->next = new;
+	new->previous = tmp;
+}
+
 void	print_list(t_list *lst)
 {
-	int i = 0;
-
 	while (lst)
 	{
-		printf("-- %i --: |%s|\n", i++, (char *)lst->content);
+		printf("%s\n", (char *)lst->content);
 		lst = lst->next;
 	}
 }
