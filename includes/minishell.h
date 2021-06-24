@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 08:15:35 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/06/23 15:29:37 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/06/24 13:34:15 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,12 +62,6 @@ typedef struct s_var
     int     _status;
 }               t_var;
 
-
-/*
-main.c
-*/
-void _init(t_data *data);
-
 //========================================================================================================
 /*
 lst_utils.c
@@ -85,14 +79,14 @@ int			ft_lst2size(t_list_2 *lst);
 void		add_node(t_list_2 **alst, t_list_2 *new);
 t_list *lst_elem(t_list *lst, int index);
 t_list	*ft_dlstnew(void *content);
+void	ft_dlst_delete_node(t_list *lst);
 
 /*
 parser.c
 */
 int		parser(t_data *data);
-int		 make_branch(t_data *data, char *fragment);
-void define_quoting_state(t_data *data, char *input, int i);
-void 	init_2(t_data *data);
+int		make_branch(t_data *data, char *fragment);
+void	define_quoting_state(t_data *data, char *input, int i);
 
 /*
 expansions.c
@@ -102,10 +96,11 @@ char	*expand_token(t_data *data, char *input);
 /*
 utils.c
 */
-int out(t_data *data, char *exit_message, int code);
+int		out(t_data *data, char *exit_message, int code);
 int		is_backslashed(int i, char *str);
+int		find_char(char *str, char c);
 char	**ft_split_input(char const *s, char *separator);
-BOOL quoted_fragment(char c);
+BOOL	quoted_fragment(char c);
 
 /*
 execution.c
@@ -116,6 +111,9 @@ int execute(t_data *data);
 builtins.c
 */
 int is_builtin(t_data *data, char **prototype);
+int     echo(char **args);
+int env(t_data *data, char **prototype);
+int export(t_data *data, char **prototype);
 
 //========================================================================================================
 

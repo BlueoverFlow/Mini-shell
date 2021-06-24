@@ -52,7 +52,7 @@ static int *int_alloc(int i, t_data *data)
 
 	p = malloc(sizeof(int));
 	if (!p)
-		out(data, "ALlocation failure!\n", 1);
+		out(data, "ALlocation failure!\n", 0);
 	*p = i;
 	return (p);
 }
@@ -147,7 +147,7 @@ int make_branch(t_data *data, char *fragment)
 	tmp = data->passive;
 	token = ft_calloc(ft_strlen(fragment) + 1, sizeof(char));
 	if (!token)
-		out(data, "ALlocation failure!\n", 1);
+		out(data, "ALlocation failure!\n", 0);
 	define_quoting_state(data, data->input, i--);
 	while (fragment[++i] && !is_redirection(fragment, i, data->quoting_state))
 		token[i] = fragment[i];
@@ -232,7 +232,7 @@ static int build_tree(t_data *data, int i)
 	return (1);
 }
 
-static int extract_branches(t_data *data)
+int parser(t_data *data)
 {
 	int		i;
 
@@ -241,12 +241,7 @@ static int extract_branches(t_data *data)
 	{
 		define_quoting_state(data, data->input, i);
 		if (build_tree(data, i) == ERROR)
-			return(ERROR);
+			return(out(data, "syntax error!\n", 1));
 	}
 	return (1);
-}
-
-int	parser(t_data *data)
-{
-	return(extract_branches(data));
 }

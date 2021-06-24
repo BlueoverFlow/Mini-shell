@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/14 08:37:34 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/06/22 19:18:51 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/06/24 13:27:45 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,6 +146,14 @@ void	print_content_list(t_list *lst)
 		i = 0;
 		lst = lst->next;
 	}
+}
+
+void	ft_dlst_delete_node(t_list *lst)
+{
+	if (lst->previous)
+		lst->previous->next = lst->next;
+	if (lst->next)
+		lst->next->previous = lst->previous;
 }
 
 t_list *lst_elem(t_list *lst, int index)

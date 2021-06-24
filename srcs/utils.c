@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/15 09:41:53 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/06/23 17:15:14 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/06/24 12:28:51 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,22 @@
 
 int out(t_data *data, char *exit_message, int code)
 {
-	if (data)
-		data->exit_status = code;
+	if (code <= 10)
+		data->exit_status = 1;
 	ft_putstr_fd("minishell: ", STDERR_FILENO);
-	if (code == 3)
+	if (code == 11)
+	{
+		ft_putnbr_fd(data->exit_status, STDERR_FILENO);
+		data->exit_status = 127;
+	}
+	else if (code == 3)
 		ft_putstr_fd("export: `", STDERR_FILENO);
 	ft_putstr_fd(exit_message, STDERR_FILENO);
 	if (code == 3)
 		ft_putstr_fd("': not a valid identifier\n", STDERR_FILENO);
+
 	/* free memory */
+
 	return (ERROR);
 }
 
@@ -142,4 +149,19 @@ BOOL quoted_fragment(char c)
 	if (c == '\'' || c == '\"')
 		return (TRUE);
 	return (FALSE);
+}
+
+int find_char(char *str, char c)
+{
+	int i;
+
+	i = 0;
+	if (str)
+		while (str[i])
+		{
+			if (str[i] == c)
+				return (i);
+			i++;
+		}
+	return (-1);
 }
