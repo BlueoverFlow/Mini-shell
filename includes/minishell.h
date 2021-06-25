@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-mezz <ael-mezz@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 08:15:35 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/06/24 13:34:15 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/06/25 19:21:44 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,7 @@ builtins.c
 int is_builtin(t_data *data, char **prototype);
 int     echo(char **args);
 int env(t_data *data, char **prototype);
-int export(t_data *data, char **prototype);
+int export(t_data *data, char **prototype, int code);
 
 //========================================================================================================
 

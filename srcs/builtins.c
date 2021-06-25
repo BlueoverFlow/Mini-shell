@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-mezz <ael-mezz@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/14 14:23:07 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/06/24 13:33:14 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/06/25 19:21:59 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	is_builtin(t_data *data, char **prototype)
 	if (!ft_strcmp(prototype[0], "echo"))
 		echo(prototype);
 	else if (!ft_strcmp(prototype[0], "export"))
-		export(data, prototype);
+		export(data, prototype, 0);
 	else if (!ft_strcmp(prototype[0], "env"))
 		env(data, prototype);
 	else if (!ft_strcmp(prototype[0], "$?"))

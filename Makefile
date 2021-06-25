@@ -6,7 +6,7 @@
 #    By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/05/13 08:14:39 by ael-mezz          #+#    #+#              #
-#    Updated: 2021/06/17 12:03:05 by ael-mezz         ###   ########.fr        #
+#    Updated: 2021/06/25 19:20:49 by ael-mezz         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,10 @@ SRCS =	main.c			\
 		utils.c			\
 		expansions.c	\
 		execution.c		\
-		builtins.c
+		builtins.c		\
+		echo.c			\
+		env.c			\
+		export.c
 
 LIBFT =	libft/libft.a
 
