@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 08:15:35 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/06/25 19:21:44 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/06/28 15:45:47 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,20 +66,20 @@ typedef struct s_var
 /*
 lst_utils.c
 */
-void    free_list(t_list **lst);
-void	print_list(t_list *lst);
-t_list	*ft_lstprevious(t_list *lst);
-void	ft_dlstadd_back(t_list **alst, t_list *new);
-void	print_content_list(t_list *lst);
-void	print_lines(t_data data);
-int		tokens_analyser(t_data *data);
+void		free_list(t_list **lst);
+void		print_list(t_list *lst);
+t_list		*ft_lstprevious(t_list *lst);
+void		ft_dlstadd_back(t_list **alst, t_list *new);
+void		print_content_list(t_list *lst);
+void		print_lines(t_data data);
+int			tokens_analyser(t_data *data);
 t_list_2 	*build_node(void *content, void *content_2);
 t_list_2	*ft_lst2last(t_list_2 *lst);
 int			ft_lst2size(t_list_2 *lst);
 void		add_node(t_list_2 **alst, t_list_2 *new);
-t_list *lst_elem(t_list *lst, int index);
-t_list	*ft_dlstnew(void *content);
-void	ft_dlst_delete_node(t_list *lst);
+t_list		*lst_elem(t_list *lst, int index);
+t_list		*ft_dlstnew(void *content);
+void		ft_dlst_delete_node(t_list *lst);
 
 /*
 parser.c
@@ -92,6 +92,7 @@ void	define_quoting_state(t_data *data, char *input, int i);
 expansions.c
 */
 char	*expand_token(t_data *data, char *input);
+char 	*expand_env_var(t_data *data, char *value);
 
 /*
 utils.c
@@ -101,6 +102,7 @@ int		is_backslashed(int i, char *str);
 int		find_char(char *str, char c);
 char	**ft_split_input(char const *s, char *separator);
 BOOL	quoted_fragment(char c);
+int		find_value(t_data *data, char *var, char **value);
 
 /*
 execution.c
@@ -113,7 +115,7 @@ builtins.c
 int is_builtin(t_data *data, char **prototype);
 int     echo(char **args);
 int env(t_data *data, char **prototype);
-int export(t_data *data, char **prototype, int code);
+int export(t_data *data, char **prototype);
 
 //========================================================================================================
 

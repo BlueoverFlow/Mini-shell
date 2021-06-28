@@ -108,3 +108,4 @@ declare -x COMMAND_MODE=\"unix2003\"
 
 0x0000603000001cf0
 
+export $asta$eno
