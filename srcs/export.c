@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/24 13:29:24 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/06/28 17:41:16 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/06/28 19:06:18 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,29 @@ static char *quoting_var_value(t_data *data, char *line)
 	}
 	free(line);
 	return (new);
+}
+
+static void increase_shelllvl(t_data *data)
+{
+	char	*tmp;
+	t_list	*lst_tmp;
+	int		level;
+
+	lst_tmp = data->exported;
+	while (data->exported)
+	{
+		tmp = ft_substr(data->exported->content, 11, 5);
+		if (!ft_strcmp(tmp, "SHLVL"))
+		{
+			level = ft_atoi(data->exported->content + 18);
+			level++;
+			((char *)(data->exported->content))[18] = '\0';
+			data->exported->content = ft_strjoin(data->exported->content, ft_itoa(level));
+			data->exported->content = ft_strjoin(data->exported->content, ft_strdup("\""));
+		}
+		data->exported = data->exported->next;
+	}
+	data->exported = lst_tmp;
 }
 
 static void insert_var(t_data *data, char *var)
@@ -170,6 +193,7 @@ int export(t_data *data, char **prototype)
 		data->exported = NULL;
 		while (data->envp[++i])
 			insert_var(data, (char *)data->envp[i]);
+		increase_shelllvl(data);
 	}
 	if (!prototype)
 		return (1);
