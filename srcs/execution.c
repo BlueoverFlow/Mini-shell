@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-mezz <ael-mezz@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/17 10:06:45 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/06/23 19:42:32 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/06/27 12:15:16 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,11 +48,8 @@ static void expand_prototype(t_data *data, t_list *prototype)
 	if (!prototype)
 		return ;
 	prototype->content = expand_token(data, prototype->content);
-
-	/* still need to expand envirenment variable */
-
-	if (ft_strcmp(prototype->content, "export"))
-		expand_prototype(data, prototype->next);
+	prototype->content = expand_env_var(data, prototype->content);
+	expand_prototype(data, prototype->next);
 }
 
 static void free_data(t_data data)
