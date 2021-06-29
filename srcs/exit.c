@@ -1,30 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env.c                                              :+:      :+:    :+:   */
+/*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mlabrayj <mlabrayj@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/06/24 13:31:19 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/06/29 12:08:44 by mlabrayj         ###   ########.fr       */
+/*   Created: 2021/06/26 16:33:50 by mlabrayj          #+#    #+#             */
+/*   Updated: 2021/06/29 12:04:46 by mlabrayj         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "includes/minishell.h"
+#include <signal.h>
 
-int env(t_data *data, char **prototype)
+void    my_exit(void)
 {
-	t_list	*tmp;
-	int i;
-	int j;
+    printf("exit\n");
+    exit(1);
+}
 
-	i = -1;
-	tmp = data->exported;
-	if (prototype[1])
-		return (out(data, "unsupported syntax!\n", 1));
-	if (!data->exported)
-		export(data, NULL);
-	while (data->exported)
-		printf("%s + 11", data->exported->content);
-	return (1);
+int main(void)
+{
+    my_exit();
+    return 0;
 }
