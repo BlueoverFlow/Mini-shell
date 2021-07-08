@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-mezz <ael-mezz@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mlabrayj <mlabrayj@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/15 09:41:53 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/06/24 12:28:51 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/07/01 16:05:47 by mlabrayj         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int out(t_data *data, char *exit_message, int code)
+int	out(t_data *data, char *exit_message, int code)
 {
 	if (code <= 10)
 		data->exit_status = 1;
@@ -27,13 +27,11 @@ int out(t_data *data, char *exit_message, int code)
 	ft_putstr_fd(exit_message, STDERR_FILENO);
 	if (code == 3)
 		ft_putstr_fd("': not a valid identifier\n", STDERR_FILENO);
-
 	/* free memory */
-
 	return (ERROR);
 }
 
-int is_backslashed(int i, char *str)
+int	is_backslashed(int i, char *str)
 {
 	int	special;
 	int	d;
@@ -54,14 +52,17 @@ int is_backslashed(int i, char *str)
 	return (special);
 }
 
-static int separator_search(const char *s, char *separator, int c)
+static int	separator_search(const char *s, char *separator, int c)
 {
-	int i = -1;
-	int j = 0;
+	int	i;
+	int	j;
 
+	i = -1;
+	j = 0;
 	while (separator[++i])
 	{
-		if ((s[c] == separator[i] && is_backslashed(c, (char *)s)) || s[c] != separator[i])
+		if ((s[c] == separator[i] && is_backslashed(c, (char *)s)) \
+			|| s[c] != separator[i])
 			j++;
 	}
 	if (j == ft_strlen(separator))
@@ -141,27 +142,29 @@ char	**ft_split_input(char const *s, char *separator)
 	if (!ptr)
 		return (NULL);
 	ptr[cw] = NULL;
-	return (spliter(s, ptr, separator,cw));
+	return (spliter(s, ptr, separator, cw));
 }
 
-BOOL quoted_fragment(char c)
+BOOL	quoted_fragment(char c)
 {
 	if (c == '\'' || c == '\"')
 		return (TRUE);
 	return (FALSE);
 }
 
-int find_char(char *str, char c)
+int	find_char(char *str, char c)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	if (str)
+	{
 		while (str[i])
 		{
 			if (str[i] == c)
 				return (i);
 			i++;
 		}
+	}
 	return (-1);
 }

@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: mlabrayj <mlabrayj@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/17 10:06:45 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/06/27 12:15:16 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/07/08 13:45:03 by mlabrayj         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-static void command_name_to_lower_case(t_data *data)
+static void	command_name_to_lower_case(t_data *data)
 {
 	char	*tmp;
 	int		j;
@@ -21,18 +21,19 @@ static void command_name_to_lower_case(t_data *data)
 	tmp = ft_strdup(data->prototype->content);
 	while (((char *)data->prototype->content)[++j])
 		((char *)data->prototype->content)[j] = ft_tolower(((char *)data->prototype->content)[j]);
-	if (!ft_strcmp(data->prototype->content, "export") || !ft_strcmp(data->prototype->content, "cd")
+	if (!ft_strcmp(data->prototype->content, "export") || \
+		!ft_strcmp(data->prototype->content, "cd") \
 		|| !ft_strcmp(data->prototype->content, "exit"))
 		data->prototype->content = tmp;
 	data->cmd_name = tmp;
 }
 
-static char **lst_to_table(t_list *lst)
+static char	**lst_to_table(t_list *lst)
 {
 	char	**table;
 	int		i;
 
-	table = malloc(sizeof *table * (ft_lstsize(lst) + 1));
+	table = malloc(sizeof(*table) * (ft_lstsize(lst) + 1));
 	i = 0;
 	while (lst)
 	{
@@ -43,7 +44,7 @@ static char **lst_to_table(t_list *lst)
 	return (table);
 }
 
-static void expand_prototype(t_data *data, t_list *prototype)
+static void	expand_prototype(t_data *data, t_list *prototype)
 {
 	if (!prototype)
 		return ;
@@ -52,14 +53,13 @@ static void expand_prototype(t_data *data, t_list *prototype)
 	expand_prototype(data, prototype->next);
 }
 
-static void free_data(t_data data)
+static void	free_data(t_data data)
 {
-	/* code */
 }
 
-int execute(t_data *data)
+int	execute(t_data *data)
 {
-	char **prototype;
+	char	**prototype;
 
 	while (data->piped)
 	{
@@ -74,9 +74,20 @@ int execute(t_data *data)
 			if (is_builtin(data, prototype) == ERROR)
 				return (ERROR);
 			/* execute the non-builtin commands */
+			else if(data->input)
+			{
+				pid_t h;
+				h = fork();
+				if (h == 0)
+				{
+					binarycmd(data->input);
+					printf("%s: %s: command not found\n", "minishell", data->input);
+				}
+				wait(NULL);
+			}
 			free_data(*data);
 		}
 		data->piped = data->piped->next;
 	}
-	return (1);
+	return (0);
 }

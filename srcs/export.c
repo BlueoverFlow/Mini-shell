@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: mlabrayj <mlabrayj@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/24 13:29:24 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/06/28 19:06:18 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/07/05 14:45:33 by mlabrayj         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-static int analyze_var(t_data *data, char *var)
+static int	analyze_var(t_data *data, char *var)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	if (!ft_isalpha(var[0]))
@@ -25,9 +25,9 @@ static int analyze_var(t_data *data, char *var)
 	return (1);
 }
 
-static int check_export_syntax(t_data *data, char *prototype, char **var, char **value)
+static int	check_export_syntax(t_data *data, char *prototype, char **var, char **value)
 {
-	int i;
+	int	i;
 	int	l;
 
 	i = find_char(prototype, '=');
@@ -40,14 +40,14 @@ static int check_export_syntax(t_data *data, char *prototype, char **var, char *
 	else
 	{
 		*var = ft_substr(prototype, 0, i);
-		*value = ft_substr(prototype, i, ft_strlen(prototype) - i);	
+		*value = ft_substr(prototype, i, ft_strlen(prototype) - i);
 	}
 	if (analyze_var(data, *var) == ERROR)
 		return (ERROR);
 	return (1);
 }
 
-static char *quoting_var_value(t_data *data, char *line)
+static char	*quoting_var_value(t_data *data, char *line)
 {
 	char	*new;
 	int		i;
@@ -57,7 +57,7 @@ static char *quoting_var_value(t_data *data, char *line)
 	i = -1;
 	if (!line)
 		return (NULL);
-	new = ft_calloc(ft_strlen(line) + 3, sizeof *new);
+	new = ft_calloc(ft_strlen(line) + 3, sizeof (*new));
 	if (!new)
 		out(data, "ALlocation failure!\n", 0);
 	while (line[++i])
@@ -75,7 +75,7 @@ static char *quoting_var_value(t_data *data, char *line)
 	return (new);
 }
 
-static void increase_shelllvl(t_data *data)
+static void	increase_shelllvl(t_data *data)
 {
 	char	*tmp;
 	t_list	*lst_tmp;
@@ -98,11 +98,11 @@ static void increase_shelllvl(t_data *data)
 	data->exported = lst_tmp;
 }
 
-static void insert_var(t_data *data, char *var)
+static void	insert_var(t_data *data, char *var)
 {
 	t_list	*last;
 	char	*new;
-	
+
 	new = ft_strjoin("declare -x ", ft_strdup(var));
 	new = quoting_var_value(data, new);
 	ft_dlstadd_back(&data->exported, ft_dlstnew(new));
@@ -122,7 +122,7 @@ static void insert_var(t_data *data, char *var)
 		data->exported = last;
 }
 
-int		find_value(t_data *data, char *var, char **value)
+int	find_value(t_data *data, char *var, char **value)
 {
 	int		l;
 	int		i;
@@ -143,7 +143,7 @@ int		find_value(t_data *data, char *var, char **value)
 	return (!ret ? 1 : 0);
 }
 
-static int already_exported(t_data *data, char **var, char **value, int i)
+static int	already_exported(t_data *data, char **var, char **value, int i)
 {
 	char	*old_value;
 
@@ -159,7 +159,7 @@ static int already_exported(t_data *data, char **var, char **value, int i)
 	return (0);
 }
 
-static int scan_env_vars(t_data *data, char **var, char **value)
+static int	scan_env_vars(t_data *data, char **var, char **value)
 {
 	t_list	*tmp;
 	char	*key;
@@ -182,12 +182,13 @@ static int scan_env_vars(t_data *data, char **var, char **value)
 	return (0);
 }
 
-int export(t_data *data, char **prototype)
+int	export(t_data *data, char **prototype)
 {
-	static int i = -1;
-	char *var;
-	char *value;
-	
+	static int	i;
+	char		*var;
+	char		*value;
+
+	i = -1;
 	if (i == -1)
 	{
 		data->exported = NULL;

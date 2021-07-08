@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+         #
+#    By: mlabrayj <mlabrayj@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/05/13 08:14:39 by ael-mezz          #+#    #+#              #
-#    Updated: 2021/06/25 19:20:49 by ael-mezz         ###   ########.fr        #
+#    Updated: 2021/07/05 14:45:38 by mlabrayj         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,11 +19,12 @@ SRCS =	main.c			\
 		builtins.c		\
 		echo.c			\
 		env.c			\
-		export.c
+		export.c		\
+		binarycmd.c
 
 LIBFT =	libft/libft.a
 
-FLAGS =	-g -fsanitize=address #-Wall -Werror -Wextra
+FLAGS = -g -fsanitize=address #-Wall -Werror -Wextra
 
 SRCS_PATH =	./srcs
 

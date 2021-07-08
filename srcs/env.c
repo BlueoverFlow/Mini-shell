@@ -3,20 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: mlabrayj <mlabrayj@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/24 13:31:19 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/06/28 18:14:32 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/07/02 17:20:58 by mlabrayj         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int env(t_data *data, char **prototype)
+int	env(t_data *data, char **prototype)
 {
 	t_list	*tmp;
-	int i;
-	int j;
+	int		i;
+	int		j;
 
 	i = -1;
 	tmp = data->exported;

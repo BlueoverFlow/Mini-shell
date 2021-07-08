@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-mezz <ael-mezz@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mlabrayj <mlabrayj@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/14 14:23:07 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/06/24 13:33:09 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/07/02 17:18:43 by mlabrayj         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,10 @@ static size_t	check_ifn(char **args)
 		else
 			return (i);
 	}
-	return (i); 
+	return (i);
 }
 
-int     echo(char **args)
+int	echo(char **args)
 {
 	size_t	i;
 	int		n;
@@ -51,11 +51,10 @@ int     echo(char **args)
 	if (!ft_strcmp(args[1], " ") && !args[2])
 		return (1);
 	i = check_ifn(args);
-	// if(i > 1)
-	// 	n = 0;
-	// else
-	// 	n = 1;
-	n = i > 1 ? 0 : 1;
+	if (i > 1)
+		n = 0;
+	else
+		n = 1;
 	while (args[i])
 	{
 		ft_putstr_fd(args[i], 1);

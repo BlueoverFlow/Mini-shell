@@ -1,40 +1,41 @@
- /* ************************************************************************** */
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-mezz <ael-mezz@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mlabrayj <mlabrayj@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/18 17:20:29 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/06/23 12:27:11 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/07/03 13:19:49 by mlabrayj         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-static int theres_atoken(char *fragment)
+static	int	theres_atoken(char *fragment)
 {
-	int i;
+	int	i;
 
 	i = -1;
 	while (fragment[++i])
 	{
-		if ((fragment[i] != ' ' && fragment[i] != '\t')
-			|| ((fragment[i] == ' ' && is_backslashed(i, fragment))
-			||  (fragment[i] == '\t' && is_backslashed(i, fragment))))
+		if ((fragment[i] != ' ' && fragment[i] != '\t') \
+			|| ((fragment[i] == ' ' && is_backslashed(i, fragment)) \
+			|| (fragment[i] == '\t' && is_backslashed(i, fragment))))
 			return (1);
 	}
 	free(fragment);
 	return (0);
 }
 
-static int find_chars(char *str, char* chars)
+static	int	find_chars(char *str, char *chars)
 {
-	int i;
-	int j;
+	int	i;
+	int	j;
 
 	i = -1;
 	if (str)
+	{
 		while (str[++i])
 		{
 			j = -1;
@@ -43,12 +44,13 @@ static int find_chars(char *str, char* chars)
 					if (str[i] == chars[j] && !is_backslashed(i, str))
 						return (i);
 		}
+	}
 	return (i);
 }
 
-static int *int_alloc(int i, t_data *data)
+static	int	*int_alloc(int i, t_data *data)
 {
-	int *p;
+	int	*p;
 
 	p = malloc(sizeof(int));
 	if (!p)
@@ -57,14 +59,14 @@ static int *int_alloc(int i, t_data *data)
 	return (p);
 }
 
-static int is_redirection(char *str, int i, int quoting_state)
+static	int	is_redirection(char *str, int i, int quoting_state)
 {
 	if ((str[i] == '>' || str[i] == '<') && quoting_state == UNQUOTED)
 		return (1);
 	return (0);
 }
 
-static int fill_file_id(t_data *data, char **fragment, t_list_2 *last)
+static	int	fill_file_id(t_data *data, char **fragment, t_list_2 *last)
 {
 	if (data->file && !last->content)
 		return (ERROR);
@@ -92,7 +94,7 @@ static int fill_file_id(t_data *data, char **fragment, t_list_2 *last)
 	return (1);
 }
 
-static int fill_file_path(t_data *data, char *fragment, char *token, t_list_2 *last)
+static int	fill_file_path(t_data *data, char *fragment, char *token, t_list_2 *last)
 {
 	if (data->file && !last->content)
 	{
@@ -102,7 +104,7 @@ static int fill_file_path(t_data *data, char *fragment, char *token, t_list_2 *l
 	return (0);
 }
 
-void define_quoting_state(t_data *data, char *input, int i)
+void	define_quoting_state(t_data *data, char *input, int i)
 {
 	if (data->passive)
 	{
@@ -110,12 +112,12 @@ void define_quoting_state(t_data *data, char *input, int i)
 		data->passive = FALSE;
 	}
 	else if (input[i] == data->quoting_state)
-			data->passive = TRUE;
+		data->passive = TRUE;
 	if (data->quoting_state == UNQUOTED && quoted_fragment(input[i]))
-			data->quoting_state = input[i];
+		data->quoting_state = input[i];
 }
 
-static int hundle_redirection(t_data *data, char *fragment, char *token, int i)
+static int	hundle_redirection(t_data *data, char *fragment, char *token, int i)
 {
 	t_list_2	*last;
 
@@ -134,12 +136,12 @@ static int hundle_redirection(t_data *data, char *fragment, char *token, int i)
 	return (make_branch(data, fragment));
 }
 
-int make_branch(t_data *data, char *fragment)
+int	make_branch(t_data *data, char *fragment)
 {
-	char *token;
-	int tmp;
-	int i;
-	int ret;
+	char	*token;
+	int		tmp;
+	int		i;
+	int		ret;
 
 	i = 0;
 	if (!*fragment)
@@ -155,14 +157,15 @@ int make_branch(t_data *data, char *fragment)
 	return (hundle_redirection(data, fragment, token, i));
 }
 
-static char *lst_to_word(t_list *lst)
+static char	*lst_to_word(t_list *lst)
 {
-	int l;
-	char *str;
-	int i = 0;
+	int		l;
+	char	*str;
+	int		i;
 
+	i = 0;
 	l = ft_lstsize(lst);
-	str = malloc(sizeof * str * (l + 1));
+	str = malloc(sizeof(*str) * (l + 1));
 	while (lst)
 	{
 		str[i++] = *(char *)lst->content;
@@ -172,39 +175,39 @@ static char *lst_to_word(t_list *lst)
 	return (str);
 }
 
-static int syntax_checking(t_data *data, int i)
+static int	syntax_checking(t_data *data, int i)
 {
-	int l;
-	t_list_2 *last;
+	int			l;
+	t_list_2	*last;
 
 	last = ft_lst2last(data->file);
 	l = ft_strlen(data->input) - 1;
-	if ((last && last->content_2 && !last->content)
-		|| (data->input[l] == '|')
-		|| (data->quoting_state != UNQUOTED && !data->input[i + 1] && !data->passive))
+	if ((last && last->content_2 && !last->content) || (data->input[l] == '|')
+		|| (data->quoting_state != UNQUOTED && \
+		!data->input[i + 1] && !data->passive))
 		l = ERROR;
 	data->file = NULL;
 	data->prototype = NULL;
 	data->branch = NULL;
-	return(l);
+	return (l);
 }
 
-static int fill_branch(t_data *data, int i)
+static int	fill_branch(t_data *data, int i)
 {
-	char *fragment;
+	char	*fragment;
 
 	fragment = lst_to_word(data->word);
 	if (!theres_atoken(fragment))
-		return((data->input[i + 1] || data->prototype) ? 1 : ERROR);
+		return ((data->input[i + 1] || data->prototype) ? 1 : ERROR);
 	if (make_branch(data, fragment) == ERROR)
-			return (ERROR);
+		return (ERROR);
 	free(fragment);
 	if (data->word)
 		free_list(&data->word);
 	return (1);
 }
 
-static int fill_pipeline(t_data *data, int i)
+static int	fill_pipeline(t_data *data, int i)
 {
 	if (!data->input[i + 1])
 		ft_lstadd_back(&data->word, ft_lstnew(ft_substr(data->input, i, 1)));
@@ -217,7 +220,7 @@ static int fill_pipeline(t_data *data, int i)
 	return (syntax_checking(data, i));
 }
 
-static int build_tree(t_data *data, int i)
+static	int	build_tree(t_data *data, int i)
 {
 	if (data->quoting_state == UNQUOTED)
 	{
@@ -232,7 +235,7 @@ static int build_tree(t_data *data, int i)
 	return (1);
 }
 
-int parser(t_data *data)
+int	parser(t_data *data)
 {
 	int		i;
 
@@ -241,7 +244,7 @@ int parser(t_data *data)
 	{
 		define_quoting_state(data, data->input, i);
 		if (build_tree(data, i) == ERROR)
-			return(out(data, "syntax error!\n", 1));
+			return (out(data, "syntax error!\n", 1));
 	}
 	return (1);
 }

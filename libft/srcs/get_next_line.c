@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-mezz <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mlabrayj <mlabrayj@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/23 12:56:41 by ael-mezz          #+#    #+#             */
-/*   Updated: 2020/03/06 03:29:44 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/07/01 15:59:13 by mlabrayj         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,8 +80,8 @@ int	get_next_line(int fd, char **line)
 	int			ret;
 
 	ret = 1;
-	if ((read(fd, NULL, 0) != 0 || fd < 0 || BUFFER_SIZE >= 2147483647
-			|| BUFFER_SIZE < 0 || !(reader = malloc(BUFFER_SIZE + 1))))
+	if ((read(fd, NULL, 0) != 0 || fd < 0 || BUFFER_SIZE >= 2147483647 \
+		|| BUFFER_SIZE < 0 || !(reader = malloc(BUFFER_SIZE + 1))))
 		return (-1);
 	if (!(get_buffer(&buffer, reader, fd, &ret)))
 		return (-1);

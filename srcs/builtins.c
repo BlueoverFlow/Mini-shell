@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: mlabrayj <mlabrayj@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/14 14:23:07 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/06/27 10:27:43 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/07/06 11:07:37 by mlabrayj         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,5 +24,9 @@ int	is_builtin(t_data *data, char **prototype)
 		env(data, prototype);
 	else if (!ft_strcmp(prototype[0], "$?"))
 		out(data, ": command not found\n", 11);
-	return ((data->exit_status != 0 ) ? ERROR : 1);
+	// return ((data->exit_status != 0 ) ? ERROR : 1);
+	if (data->exit_status != 0)
+		return (ERROR);
+	else
+		return (1);
 }

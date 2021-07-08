@@ -3,21 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   lst_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-mezz <ael-mezz@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mlabrayj <mlabrayj@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/14 08:37:34 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/06/24 13:27:45 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/07/03 13:45:21 by mlabrayj         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void    free_list(t_list **lst)
+void	free_list(t_list **lst)
 {
-	t_list  *tmp;
+	t_list	*tmp;
 
 	if (*lst == NULL)
-			return ;
+		return ;
 	tmp = (*lst)->next;
 	if ((*lst)->content)
 		free((*lst)->content);
@@ -32,7 +32,7 @@ t_list	*ft_lstprevious(t_list *lst)
 		return (NULL);
 	while (lst->next->next)
 		lst = lst->next;
-	return (lst);	
+	return (lst);
 }
 
 int	ft_lst2size(t_list_2 *lst)
@@ -65,9 +65,9 @@ t_list_2	*ft_lst2last(t_list_2 *lst)
 	return (lst);
 }
 
-t_list_2 *build_node(void *content, void *content_2)
+t_list_2	*build_node(void *content, void *content_2)
 {
-	t_list_2 *new;
+	t_list_2	*new;
 
 	new = malloc(sizeof(t_list_2));
 	if ((!new) || (!content && !content_2))
@@ -78,7 +78,7 @@ t_list_2 *build_node(void *content, void *content_2)
 	return (new);
 }
 
-void add_node(t_list_2 **alst, t_list_2 *new)
+void	add_node(t_list_2 **alst, t_list_2 *new)
 {
 	if (alst == NULL)
 		return ;
@@ -105,7 +105,7 @@ t_list	*ft_dlstnew(void *content)
 
 void	ft_dlstadd_back(t_list **alst, t_list *new)
 {
-	t_list *tmp;
+	t_list	*tmp;
 
 	if (alst == NULL)
 		return ;
@@ -130,10 +130,12 @@ void	print_list(t_list *lst)
 
 void	print_content_list(t_list *lst)
 {
-	t_list *sub_list;
-	int i = 0;
-	int j = 0;
+	t_list	*sub_list;
+	int		i;
+	int		j;
 
+	i = 0;
+	j = 0;
 	while (lst)
 	{
 		sub_list = (t_list *)(lst->content);
@@ -156,7 +158,7 @@ void	ft_dlst_delete_node(t_list *lst)
 		lst->next->previous = lst->previous;
 }
 
-t_list *lst_elem(t_list *lst, int index)
+t_list	*lst_elem(t_list *lst, int index)
 {
 	index++;
 	while (lst && --index)

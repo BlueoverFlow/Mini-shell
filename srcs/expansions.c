@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   expansions.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: mlabrayj <mlabrayj@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/15 15:32:25 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/06/28 17:42:34 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/07/03 13:26:13 by mlabrayj         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-static int is_special_char(int i, char *input, char *special)
+static int	is_special_char(int i, char *input, char *special)
 {
-	int j;
+	int	j;
 
 	j = -1;
 	while (special[++j] != '\0')
@@ -23,7 +23,7 @@ static int is_special_char(int i, char *input, char *special)
 	return (0);
 }
 
-static char *assign_value(t_data *data, char *var)
+static char	*assign_value(t_data *data, char *var)
 {
 	char	*value;
 	t_list	*tmp;
@@ -43,15 +43,15 @@ static char *assign_value(t_data *data, char *var)
 	return (value);
 }
 
-char    *expand_env_var(t_data *data, char *input)
+char	*expand_env_var(t_data *data, char *input)
 {
 	int		i;
 	int		len;
-	char    *var;
-	char    *new;
+	char	*var;
+	char	*new;
 
 	i = -1;
-	new = ft_calloc(1, sizeof *new);
+	new = ft_calloc(1, sizeof(*new));
 	if (!new)
 		out(data, "ALlocation failure!\n", 0);
 	data->quoting_state = UNQUOTED;
@@ -59,7 +59,7 @@ char    *expand_env_var(t_data *data, char *input)
 	{
 		define_quoting_state(data, input, i);
 		if (data->quoting_state != '\'' && input[i + 1]
-				&& input[i] == '$' && ft_isalpha(input[i + 1]))
+			&& input[i] == '$' && ft_isalpha(input[i + 1]))
 		{
 			if ((len = find_char(input + i + 1, '$')) == ERROR)
 				len = ft_strlen(input) - i - 1;
@@ -76,25 +76,25 @@ char    *expand_env_var(t_data *data, char *input)
 
 char	*expand_token(t_data *data, char *input)
 {
-	int j;
-	int i;
-	char special[4] = {' ', '\t', '\0'};
-	char special_2[3] = {'"', '\0'};
-	char *new;
-	
+	int		j;
+	int		i;
+	char	special[4] = {' ', '\t', '\0'};
+	char	special_2[3] = {'"', '\0'};
+	char	*new;
+
 	j = 0;
 	data->quoting_state = UNQUOTED;
-	new = ft_calloc(ft_strlen(input) + 1, sizeof *new);
+	new = ft_calloc(ft_strlen(input) + 1, sizeof(*new));
 	if (!new)
 		out(data, "ALlocation failure!\n", 0);
 	i = -1;
 	while (input && input[++i])
 	{
 		define_quoting_state(data, input, i);
-		if ((data->quoting_state == UNQUOTED && is_special_char(i, input, special))
-			|| (data->quoting_state == '"' && is_special_char(i, input, special_2))
+		if ((data->quoting_state == UNQUOTED && is_special_char(i, input, special)) \
+			|| (data->quoting_state == '"' && is_special_char(i, input, special_2)) \
 			|| (data->quoting_state == '\'' && input[i] == '\''))
-				continue ;
+			continue ;
 		new[j++] = input[i];
 	}
 	free(input);
