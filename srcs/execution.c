@@ -6,7 +6,7 @@
 /*   By: mlabrayj <mlabrayj@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/17 10:06:45 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/07/08 13:45:03 by mlabrayj         ###   ########.fr       */
+/*   Updated: 2021/07/10 09:55:12 by mlabrayj         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ static void	expand_prototype(t_data *data, t_list *prototype)
 
 static void	free_data(t_data data)
 {
+	free(data.input);
 }
 
 int	execute(t_data *data)
@@ -71,16 +72,17 @@ int	execute(t_data *data)
 			command_name_to_lower_case(data);
 			expand_prototype(data, data->prototype);
 			prototype = lst_to_table(data->prototype);
-			if (is_builtin(data, prototype) == ERROR)
+			int ret = is_builtin(data, prototype);
+			if (ret == -1)
 				return (ERROR);
 			/* execute the non-builtin commands */
-			else if(data->input)
+			else if (ret == 0)
 			{
 				pid_t h;
 				h = fork();
 				if (h == 0)
 				{
-					binarycmd(data->input);
+					binarycmd(*prototype);
 					printf("%s: %s: command not found\n", "minishell", data->input);
 				}
 				wait(NULL);
