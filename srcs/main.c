@@ -43,7 +43,6 @@ int	main(int argc, char **argv, const char **envp)
 			continue ;
 		if (execute(&data) == ERROR)
 			continue ;
-		/* code */
 	}
 	return (0);
 }

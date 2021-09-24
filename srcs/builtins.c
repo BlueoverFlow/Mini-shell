@@ -39,6 +39,12 @@ int	is_builtin(t_data *data, char **prototype)
 		in = 1;
 		out(data, ": command not found\n", 11);
 	}
+	else if (!ft_strcmp(prototype[0], "cd"))
+	{
+		in = 1;
+		cd(prototype[1]);
+	}
+	
 	// return ((data->exit_status != 0 ) ? ERROR : 1);
 	if (data->exit_status != 0)
 		return (ERROR);

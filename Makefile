@@ -20,7 +20,8 @@ SRCS =	main.c			\
 		echo.c			\
 		env.c			\
 		export.c		\
-		binarycmd.c
+		binarycmd.c		\
+		cd.c
 
 LIBFT =	libft/libft.a
 

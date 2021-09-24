@@ -109,10 +109,10 @@ int			echo(char **args);
 int			env(t_data *data, char **prototype);
 int			export(t_data *data, char **prototype);
 
-
 //======== binary =======
 
-int binarycmd(char *str);
+int			binarycmd(char *str);
+int	cd(char *prototype);
 
 //======================================================================
 
