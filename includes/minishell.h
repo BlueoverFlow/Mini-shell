@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlabrayj <mlabrayj@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mlabrayj <mlabrayj@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 08:15:35 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/07/06 13:26:21 by mlabrayj         ###   ########.fr       */
+/*   Updated: 2021/10/04 15:49:49 by mlabrayj         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@
 # include <errno.h>
 # include <sys/types.h>
 # include <signal.h>
+# include <readline/readline.h>
+# include <readline/history.h>
 
 //macros
 # define ERROR -1
@@ -29,7 +31,7 @@
 # define STD_APPENDED_INPUT 22
 # define PROMPT "minishell$ "
 # define UNQUOTED 0
-# define READ (write(STDERR_FILENO, PROMPT, 12) && get_next_line(STDIN_FILENO, &data.input) > 0 && ft_strcmp(data.input, "exit"))
+//# define READ (write(STDERR_FILENO, PROMPT, 12) && get_next_line(STDIN_FILENO, &data.input) > 0 && ft_strcmp(data.input, "exit"))
 
 typedef struct s_list_2
 {
@@ -53,6 +55,7 @@ typedef struct s_data
 	BOOL		passive;
 	char		*input;
 	char		*cmd_name;
+	char		*rd;
 }				t_data;
 
 typedef struct s_var

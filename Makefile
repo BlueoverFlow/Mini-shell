@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: mlabrayj <mlabrayj@student.42.fr>          +#+  +:+       +#+         #
+#    By: mlabrayj <mlabrayj@student.1337.ma>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/05/13 08:14:39 by ael-mezz          #+#    #+#              #
-#    Updated: 2021/07/05 14:45:38 by mlabrayj         ###   ########.fr        #
+#    Updated: 2021/10/04 15:49:40 by mlabrayj         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,7 +25,7 @@ SRCS =	main.c			\
 
 LIBFT =	libft/libft.a
 
-FLAGS = -g -fsanitize=address #-Wall -Werror -Wextra
+FLAGS = -g -lreadline -ledit #-Wall -Werror -Wextra -fsanitize=address
 
 SRCS_PATH =	./srcs
 
