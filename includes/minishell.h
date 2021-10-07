@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlabrayj <mlabrayj@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 08:15:35 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/04 15:49:49 by mlabrayj         ###   ########.fr       */
+/*   Updated: 2021/10/07 09:01:09 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <signal.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <dirent.h>
 
 //macros
 # define ERROR -1
@@ -31,7 +32,8 @@
 # define STD_APPENDED_INPUT 22
 # define PROMPT "minishell$ "
 # define UNQUOTED 0
-//# define READ (write(STDERR_FILENO, PROMPT, 12) && get_next_line(STDIN_FILENO, &data.input) > 0 && ft_strcmp(data.input, "exit"))
+# define NORMAL_ERR 0
+# define EXPORT_ERR 1
 
 typedef struct s_list_2
 {
@@ -53,16 +55,12 @@ typedef struct s_data
 	int			quoting_state;
 	int			exit_status;
 	BOOL		passive;
+	BOOL		is_builtin;
 	char		*input;
 	char		*cmd_name;
-	char		*rd;
+	BOOL		unset_cmd;
+	BOOL		var_with_equals_sign;
 }				t_data;
-
-typedef struct s_var
-{
-	int	_error;
-	int	_status;
-}	t_var;
 
 //==================== lst_utils.c ===============
 
@@ -94,7 +92,7 @@ char		*expand_env_var(t_data *data, char *value);
 
 //========== utils.c ===
 
-int			out(t_data *data, char *exit_message, int code);
+int			error_msg(t_data *data, char *exit_message, int code);
 int			is_backslashed(int i, char *str);
 int			find_char(char *str, char c);
 char		**ft_split_input(char const *s, char *separator);
@@ -107,15 +105,17 @@ int			execute(t_data *data);
 
 //========== builtins.c ===
 
-int			is_builtin(t_data *data, char **prototype);
-int			echo(char **args);
+int			builtin(t_data *data, char **prototype);
+int			echo(t_data *data, char **prototype);
 int			env(t_data *data, char **prototype);
 int			export(t_data *data, char **prototype);
+int			cd(t_data *data, char *prototype);
+int			unset(t_data *data, char **prototype);
+int			scan_env_vars(t_data *data, char **var, char **value);
 
-//======== binary =======
+//======== executables =======
 
-int			binarycmd(char *str);
-int	cd(char *prototype);
+int	run_executable(t_data *data ,char *prototype);
 
 //======================================================================
 

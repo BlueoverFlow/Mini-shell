@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlabrayj <mlabrayj@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 08:15:00 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/04 15:49:17 by mlabrayj         ###   ########.fr       */
+/*   Updated: 2021/10/06 12:52:43 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,28 +28,25 @@ static void	_init(t_data *data)
 	data->word = NULL;
 	data->quoting_state = UNQUOTED;
 	data->passive = FALSE;
+	data->unset_cmd = FALSE;
 }
 
 int	main(int argc, char **argv, const char **envp)
 {
 	t_data	data;
 	
-	argc = 0;
-	
 	global_init(&data, envp);
 	while (1)
 	{
-		data.rd = readline(PROMPT);
-		data.input = strdup(data.rd);
+		data.input = readline(PROMPT);
 
 		_init(&data);
-		//parser problem // solved by line 43
 		if (parser(&data) == ERROR)
 			continue ;
 		if (execute(&data) == ERROR)
 			continue ;
-		add_history(data.rd);
-		free(data.rd);
+		//add_history(data.rd);
+		// free(data.rd);
 	}
 	return (0);
 }

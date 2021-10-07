@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlabrayj <mlabrayj@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/18 17:20:29 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/03 18:38:31 by mlabrayj         ###   ########.fr       */
+/*   Updated: 2021/10/07 10:35:13 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,7 @@ static	int	theres_atoken(char *fragment)
 	i = -1;
 	while (fragment[++i])
 	{
-		if ((fragment[i] != ' ' && fragment[i] != '\t') \
-			|| ((fragment[i] == ' ' && is_backslashed(i, fragment)) \
-			|| (fragment[i] == '\t' && is_backslashed(i, fragment))))
+		if (fragment[i] != ' ' && fragment[i] != '\t')
 			return (1);
 	}
 	free(fragment);
@@ -54,7 +52,7 @@ static	int	*int_alloc(int i, t_data *data)
 
 	p = malloc(sizeof(int));
 	if (!p)
-		out(data, "ALlocation failure!\n", 0);
+		error_msg(data, "ALlocation failure!\n", NORMAL_ERR);
 	*p = i;
 	return (p);
 }
@@ -104,6 +102,17 @@ static int	fill_file_path(t_data *data, char *fragment, char *token, t_list_2 *l
 	return (0);
 }
 
+static	BOOL closed_quotes(char *input, int i)
+{
+	int j;
+
+	j = i;
+	while (input[++j])
+		if (input[j] == input[i])
+			return (TRUE);
+	return (FALSE);
+}
+
 void	define_quoting_state(t_data *data, char *input, int i)
 {
 	if (data->passive)
@@ -113,7 +122,8 @@ void	define_quoting_state(t_data *data, char *input, int i)
 	}
 	else if (input[i] == data->quoting_state)
 		data->passive = TRUE;
-	if (data->quoting_state == UNQUOTED && quoted_fragment(input[i]))
+	if (data->quoting_state == UNQUOTED && quoted_fragment(input[i])
+		&& closed_quotes(input, i))
 		data->quoting_state = input[i];
 }
 
@@ -149,7 +159,7 @@ int	make_branch(t_data *data, char *fragment)
 	tmp = data->passive;
 	token = ft_calloc(ft_strlen(fragment) + 1, sizeof(char));
 	if (!token)
-		out(data, "ALlocation failure!\n", 0);
+		error_msg(data, "ALlocation failure!\n", NORMAL_ERR);
 	define_quoting_state(data, data->input, i--);
 	while (fragment[++i] && !is_redirection(fragment, i, data->quoting_state))
 		token[i] = fragment[i];
@@ -239,13 +249,12 @@ int	parser(t_data *data)
 {
 	int		i;
 
-	
 	i = -1;
 	while (data->input[++i])
 	{
 		define_quoting_state(data, data->input, i);
 		if (build_tree(data, i) == ERROR)
-			return (out(data, "syntax error!\n", 1));
+			return (error_msg(data, "syntax error!\n", NORMAL_ERR));
 	}
 	return (1);
 }

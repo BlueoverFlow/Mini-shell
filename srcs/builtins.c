@@ -3,53 +3,29 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlabrayj <mlabrayj@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/14 14:23:07 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/07/10 09:52:42 by mlabrayj         ###   ########.fr       */
+/*   Updated: 2021/10/06 12:19:13 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int	is_builtin(t_data *data, char **prototype)
+int	builtin(t_data *data, char **prototype)
 {
-	int in;
-
-	in = 0;
-	if (ft_strcmp(prototype[0], "$?"))
-		data->exit_status = 0;
+	data->is_builtin = TRUE;
 	if (!ft_strcmp(prototype[0], "echo"))
-	{
-		in = 1;
-		echo(prototype);
-	}
+		echo(data, prototype);
 	else if (!ft_strcmp(prototype[0], "export"))
-	{
-		in = 1;
 		export(data, prototype);
-	}
 	else if (!ft_strcmp(prototype[0], "env"))
-	{
-		in = 1;
 		env(data, prototype);
-	}
-	else if (!ft_strcmp(prototype[0], "$?"))
-	{
-		in = 1;
-		out(data, ": command not found\n", 11);
-	}
 	else if (!ft_strcmp(prototype[0], "cd"))
-	{
-		in = 1;
-		cd(prototype[1]);
-	}
-	
-	// return ((data->exit_status != 0 ) ? ERROR : 1);
-	if (data->exit_status != 0)
-		return (ERROR);
-	else if (in)
-		return (1);
+		cd(data, prototype[1]);
+	else if (!ft_strcmp(prototype[0], "unset"))
+		unset(data, prototype);
 	else
-		return 0;
+		data->is_builtin = FALSE;
+	return ((data->exit_status != 0 ) ? ERROR : 1);
 }

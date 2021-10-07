@@ -3,29 +3,29 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlabrayj <mlabrayj@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/14 14:23:07 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/07/02 17:18:43 by mlabrayj         ###   ########.fr       */
+/*   Updated: 2021/10/06 09:21:27 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-static size_t	check_ifn(char **args)
+static size_t	n_option(char **prototype)
 {
 	size_t	i;
 	size_t	j;
 
 	i = 0;
-	while (args[++i])
+	while (prototype[++i])
 	{
 		j = 0;
-		if (args[i][j++] == '-' && args[i][j] && args[i][j] == 'n')
+		if (prototype[i][j++] == '-' && prototype[i][j] && prototype[i][j] == 'n')
 		{
-			while (args[i][j] == 'n')
+			while (prototype[i][j] == 'n')
 				j++;
-			if (args[i][j] && args[i][j] != 'n')
+			if (prototype[i][j] && prototype[i][j] != 'n')
 				return (1);
 		}
 		else
@@ -34,35 +34,29 @@ static size_t	check_ifn(char **args)
 	return (i);
 }
 
-int	echo(char **args)
+int	echo(t_data *data, char **prototype)
 {
 	size_t	i;
 	int		n;
-	t_var	d;
 
 	n = 1;
-	if (d._error != 1)
-		d._status = 0;
-	if (!args[1])
+	if (!prototype[1])
 	{
-		ft_putchar_fd('\n', 1);
-		return (1);
+		printf("\n");
+		return (0);
 	}
-	if (!ft_strcmp(args[1], " ") && !args[2])
-		return (1);
-	i = check_ifn(args);
+	i = n_option(prototype);
 	if (i > 1)
 		n = 0;
 	else
 		n = 1;
-	while (args[i])
+	while (prototype[i])
 	{
-		ft_putstr_fd(args[i], 1);
-		i++;
-		if (args[i])
-			ft_putchar_fd(' ', 1);
+		printf("%s", prototype[i++]);
+		if (prototype[i])
+			printf(" ");
 	}
 	if (n)
-		ft_putchar_fd('\n', 1);
+		printf("\n");
 	return (1);
 }

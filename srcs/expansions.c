@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expansions.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlabrayj <mlabrayj@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/15 15:32:25 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/07/03 13:26:13 by mlabrayj         ###   ########.fr       */
+/*   Updated: 2021/10/07 10:43:59 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ char	*expand_env_var(t_data *data, char *input)
 	i = -1;
 	new = ft_calloc(1, sizeof(*new));
 	if (!new)
-		out(data, "ALlocation failure!\n", 0);
+		error_msg(data, "ALlocation failure!\n", NORMAL_ERR);
 	data->quoting_state = UNQUOTED;
 	while (input[++i])
 	{
@@ -86,13 +86,13 @@ char	*expand_token(t_data *data, char *input)
 	data->quoting_state = UNQUOTED;
 	new = ft_calloc(ft_strlen(input) + 1, sizeof(*new));
 	if (!new)
-		out(data, "ALlocation failure!\n", 0);
+		error_msg(data, "ALlocation failure!\n", NORMAL_ERR);
 	i = -1;
 	while (input && input[++i])
 	{
 		define_quoting_state(data, input, i);
-		if ((data->quoting_state == UNQUOTED && is_special_char(i, input, special)) \
-			|| (data->quoting_state == '"' && is_special_char(i, input, special_2)) \
+		if ((data->quoting_state == UNQUOTED && is_special_char(i, input, special))
+			|| (data->quoting_state == '"' && is_special_char(i, input, special_2))
 			|| (data->quoting_state == '\'' && input[i] == '\''))
 			continue ;
 		new[j++] = input[i];

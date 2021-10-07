@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlabrayj <mlabrayj@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/24 13:29:24 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/07/05 14:45:33 by mlabrayj         ###   ########.fr       */
+/*   Updated: 2021/10/07 09:55:21 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,11 @@ static int	analyze_var(t_data *data, char *var)
 	int	i;
 
 	i = 0;
-	if (!ft_isalpha(var[0]))
+	if (!ft_isalpha(var[0]) && var[i] != '_')
 		return (ERROR);
 	while (var[++i])
-		if (!ft_isalpha(var[i]) && (var[i] == '+' && i != ft_strlen(var) - 1))
+		if (!ft_isalnum(var[i]) && (var[i] == '+' && i != ft_strlen(var) - 1)
+			&& var[i] != '_')
 			return (ERROR);
 	return (1);
 }
@@ -30,12 +31,15 @@ static int	check_export_syntax(t_data *data, char *prototype, char **var, char *
 	int	i;
 	int	l;
 
+	data->var_with_equals_sign = FALSE;
 	i = find_char(prototype, '=');
 	l = ft_strlen(prototype);
 	if (i == ERROR || i == l - 1)
 	{
 		*var = prototype;
 		*value = NULL;
+		if (i != ERROR)
+			data->var_with_equals_sign = TRUE;
 	}
 	else
 	{
@@ -59,7 +63,7 @@ static char	*quoting_var_value(t_data *data, char *line)
 		return (NULL);
 	new = ft_calloc(ft_strlen(line) + 3, sizeof (*new));
 	if (!new)
-		out(data, "ALlocation failure!\n", 0);
+		error_msg(data, "ALlocation failure!\n", NORMAL_ERR);
 	while (line[++i])
 	{
 		new[i + j] = line[i];
@@ -143,12 +147,26 @@ int	find_value(t_data *data, char *var, char **value)
 	return (!ret ? 1 : 0);
 }
 
+static int skip(t_data *data)
+{
+	if (data->exported->previous)
+		data->exported->previous->next = data->exported->next;
+	if (data->exported->next)
+		data->exported->next->previous = data->exported->previous;
+	free(data->exported->content);
+	return (0);
+}
+
 static int	already_exported(t_data *data, char **var, char **value, int i)
 {
 	char	*old_value;
 
 	if (find_value(data, *var, &old_value))
 	{
+		if (i == ERROR || data->unset_cmd)
+			return(skip(data));
+		if (data->var_with_equals_sign)
+			(*var)[ft_strlen(*var) - 1] = '=';
 		*value = ft_strjoin(old_value, *value + 1);
 		*value = expand_token(data, *value);
 		*var = ft_strjoin("declare -x ", *var);
@@ -159,12 +177,14 @@ static int	already_exported(t_data *data, char **var, char **value, int i)
 	return (0);
 }
 
-static int	scan_env_vars(t_data *data, char **var, char **value)
+int	scan_env_vars(t_data *data, char **var, char **value)
 {
 	t_list	*tmp;
 	char	*key;
 	int		i;
 
+	if (data->var_with_equals_sign)
+		(*var)[ft_strlen(*var) - 1] = '\0';
 	tmp = data->exported;
 	i = find_char(*var, '+');
 	if (i != ERROR)
@@ -179,16 +199,17 @@ static int	scan_env_vars(t_data *data, char **var, char **value)
 		data->exported = data->exported->next;
 	}
 	data->exported = tmp;
+	if (data->var_with_equals_sign)
+		(*var)[ft_strlen(*var)] = '=';
 	return (0);
 }
 
 int	export(t_data *data, char **prototype)
 {
-	static int	i;
+	static int	i = -1;
 	char		*var;
 	char		*value;
 
-	i = -1;
 	if (i == -1)
 	{
 		data->exported = NULL;
@@ -196,17 +217,15 @@ int	export(t_data *data, char **prototype)
 			insert_var(data, (char *)data->envp[i]);
 		increase_shelllvl(data);
 	}
-	if (!prototype)
-		return (1);
-	else if (!prototype[1] || !prototype[i][0])
+	if (!prototype[1] || !prototype[1][0])
 		print_list(data->exported);
 	else if (*prototype[1] == '-')
-		return (out(data, "options are unsupported!\n", 1));
+		return (error_msg(data, "options are unsupported!\n", NORMAL_ERR));
 	i = 0;
 	while (prototype[++i] && prototype[i][0])
 	{
 		if (check_export_syntax(data, prototype[i], &var, &value) == ERROR)
-			return (out(data, ft_strjoin(var, value), 3));
+			return (error_msg(data, ft_strjoin(var, value), EXPORT_ERR));
 		if (!scan_env_vars(data, &var, &value))
 			insert_var(data, ft_strjoin(var, value));
 	}

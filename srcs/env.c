@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlabrayj <mlabrayj@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/24 13:31:19 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/07/02 17:20:58 by mlabrayj         ###   ########.fr       */
+/*   Updated: 2021/10/05 12:23:27 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,15 @@ int	env(t_data *data, char **prototype)
 	int		j;
 
 	i = -1;
-	tmp = data->exported;
 	if (prototype[1])
-		return (out(data, "unsupported syntax!\n", 1));
+		return (error_msg(data, "unsupported syntax!\n", 1));
 	if (!data->exported)
 		export(data, NULL);
-	while (data->exported)
-		printf("%s + 11", data->exported->content);
+	tmp = data->exported;
+	while (tmp)
+	{
+		printf("%s\n", tmp->content + 11);
+		tmp = tmp->next;
+	}
 	return (1);
 }

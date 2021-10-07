@@ -3,31 +3,30 @@
 /*                                                        :::      ::::::::   */
 /*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlabrayj <mlabrayj@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/15 09:41:53 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/07/01 16:05:47 by mlabrayj         ###   ########.fr       */
+/*   Updated: 2021/10/07 10:23:34 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-int	out(t_data *data, char *exit_message, int code)
+int		error_msg(t_data *data, char *exit_message, int code)
 {
-	if (code <= 10)
-		data->exit_status = 1;
+	data->exit_status = 1;
 	ft_putstr_fd("minishell: ", STDERR_FILENO);
-	if (code == 11)
+	if (code == NORMAL_ERR)
+		ft_putstr_fd(exit_message, STDERR_FILENO);
+	else if (code == EXPORT_ERR)
 	{
-		ft_putnbr_fd(data->exit_status, STDERR_FILENO);
-		data->exit_status = 127;
-	}
-	else if (code == 3)
-		ft_putstr_fd("export: `", STDERR_FILENO);
-	ft_putstr_fd(exit_message, STDERR_FILENO);
-	if (code == 3)
+		if (data->unset_cmd)
+			ft_putstr_fd("unset: `", STDERR_FILENO);
+		else
+			ft_putstr_fd("export: `", STDERR_FILENO);
+		ft_putstr_fd(exit_message, STDERR_FILENO);
 		ft_putstr_fd("': not a valid identifier\n", STDERR_FILENO);
-	/* free memory */
+	}
 	return (ERROR);
 }
 

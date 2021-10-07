@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlabrayj <mlabrayj@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/17 10:06:45 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/03 18:39:20 by mlabrayj         ###   ########.fr       */
+/*   Updated: 2021/10/07 11:19:13 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,14 +53,10 @@ static void	expand_prototype(t_data *data, t_list *prototype)
 	expand_prototype(data, prototype->next);
 }
 
-static void	free_data(t_data data)
-{
-	free(data.input);
-}
-
 int	execute(t_data *data)
 {
 	char	**prototype;
+	pid_t	id;
 
 	while (data->piped)
 	{
@@ -72,22 +68,18 @@ int	execute(t_data *data)
 			command_name_to_lower_case(data);
 			expand_prototype(data, data->prototype);
 			prototype = lst_to_table(data->prototype);
-			int ret = is_builtin(data, prototype);
-			if (ret == -1)
+			if (builtin(data, prototype) == ERROR)
 				return (ERROR);
-			/* execute the non-builtin commands */
-			else if (ret == 0)
+			if (!data->is_builtin)
 			{
-				pid_t h;
-				h = fork();
-				if (h == 0)
+				id = fork();
+				if (id == 0)
 				{
-					binarycmd(*prototype);
-					printf("%s: %s: command not found\n", "minishell", data->input);
+					if (!run_executable(data, *prototype))
+						printf("%s: %s: command not found\n", "minishell", prototype[0]);
 				}
 				wait(NULL);
 			}
-			free_data(*data);
 		}
 		data->piped = data->piped->next;
 	}

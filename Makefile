@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: mlabrayj <mlabrayj@student.1337.ma>        +#+  +:+       +#+         #
+#    By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/05/13 08:14:39 by ael-mezz          #+#    #+#              #
-#    Updated: 2021/10/04 15:49:40 by mlabrayj         ###   ########.fr        #
+#    Updated: 2021/10/07 08:12:12 by ael-mezz         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,8 +20,9 @@ SRCS =	main.c			\
 		echo.c			\
 		env.c			\
 		export.c		\
-		binarycmd.c		\
-		cd.c
+		executables.c	\
+		cd.c			\
+		unset.c
 
 LIBFT =	libft/libft.a
 
@@ -44,6 +45,7 @@ SRCS := $(addprefix $(SRCS_PATH)/, $(SRCS))
 all: $(SRCS) $(HEADER)
 	@make -C libft && make bonus -C libft
 	@$(CC) $(SRCS) $(LIBFT) $(FLAGS) -o minishell
+	@./minishell
 
 clean:
 	@echo "cleaning..."
@@ -58,7 +60,4 @@ test:
 	@echo "...test...\n\n====================="
 	@./$(FILE)
 
-exec:
-	@./minishell
-
-re: fclean all exec
+re: fclean all

@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   binarycmd.c                                        :+:      :+:    :+:   */
+/*   executables.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlabrayj <mlabrayj@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/05 09:57:52 by mlabrayj          #+#    #+#             */
-/*   Updated: 2021/07/08 13:18:24 by mlabrayj         ###   ########.fr       */
+/*   Updated: 2021/10/05 12:44:28 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-char	*jointhreestr(char *path, char *bslash, char *cmd)
+static char	*jointhreestr(char *path, char *bslash, char *cmd)
 {
 	char	*joinpathslash;
 	char	*tmp;
@@ -24,7 +24,7 @@ char	*jointhreestr(char *path, char *bslash, char *cmd)
 	return (joinpathslash);
 }
 
-int	binarycmd(char *str)
+int	run_executable(t_data *data ,char *prototype)
 {
 	char	*path;
 	char	**r;
@@ -41,7 +41,7 @@ int	binarycmd(char *str)
 	k = (char **)malloc(sizeof(char *) * (i + 1));
 	while (j < i)
 	{
-		k[j] = jointhreestr(r[j], "/", str);
+		k[j] = jointhreestr(r[j], "/", prototype);
 		k[j + 1] = NULL;
 		if(!(execve(k[j], &k[j], NULL)))
 			return(0);

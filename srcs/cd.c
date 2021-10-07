@@ -3,23 +3,23 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlabrayj <mlabrayj@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/24 18:16:59 by mlabrayj          #+#    #+#             */
-/*   Updated: 2021/09/25 11:48:04 by mlabrayj         ###   ########.fr       */
+/*   Updated: 2021/10/06 09:31:49 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
-#include <dirent.h>
 
-int	cd(char *prototype)
+int	cd(t_data *data, char *prototype)
 {
 	struct dirent	*de;// Pointer for directory entry
     int				ret;
 	char			s[1000];
 	DIR				*dr;
 
+	printf("hello cd\n");
     // opendir() returns a pointer of DIR type. 
 	dr = opendir(".");
 	// printf("%s current\n", getcwd(s, 1000));
