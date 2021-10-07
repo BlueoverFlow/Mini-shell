@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 08:15:00 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/07 12:50:56 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/07 12:57:20 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,3 +52,25 @@ int	main(int argc, char **argv, const char **envp)
 	}
 	return (0);
 }
+// int	main(int argc, char **argv, const char **envp)
+// {
+// 	t_data	data;
+	
+// 	global_init(&data, envp);
+// 	while (1)
+// 	{
+// 		data.input = readline(PROMPT);
+// 		_init(&data);
+// 		if (!data.input || !*data.input	|| parser(&data) == ERROR || execute(&data) == ERROR)
+// 			;
+// 		if (data.input && *data.input)
+// 		{
+// 			add_history(data.input);
+// 			free(data.input);
+// 		}
+// 		else if (!data.input)
+// 			printf("\n");
+// 	}
+// 	return (0);
+// }
+
