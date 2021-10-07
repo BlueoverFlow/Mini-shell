@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/24 18:16:59 by mlabrayj          #+#    #+#             */
-/*   Updated: 2021/10/06 09:31:49 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/07 11:40:05 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ int	cd(t_data *data, char *prototype)
 	char			s[1000];
 	DIR				*dr;
 
-	printf("hello cd\n");
     // opendir() returns a pointer of DIR type. 
 	dr = opendir(".");
 	// printf("%s current\n", getcwd(s, 1000));
