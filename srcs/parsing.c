@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/18 17:20:29 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/07 10:35:13 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/07 18:44:33 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ static	int	fill_file_id(t_data *data, char **fragment, t_list_2 *last)
 
 static int	fill_file_path(t_data *data, char *fragment, char *token, t_list_2 *last)
 {
-	if (data->file && !last->content)
+	if (data->file && !last->content && (int)last->content_2 != STD_APPENDED_INPUT)
 	{
 		last->content = token;
 		return (1);

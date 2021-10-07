@@ -6,11 +6,18 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/24 13:29:24 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/07 09:55:21 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/07 18:36:27 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
+
+static int is_plus_sign(t_data *data, char *var, int i)
+{
+	if (var[i] == '+' && i == ft_strlen(var) - 1 && data->var_with_equals_sign)
+		return (1);
+	return (0);
+}
 
 static int	analyze_var(t_data *data, char *var)
 {
@@ -20,8 +27,7 @@ static int	analyze_var(t_data *data, char *var)
 	if (!ft_isalpha(var[0]) && var[i] != '_')
 		return (ERROR);
 	while (var[++i])
-		if (!ft_isalnum(var[i]) && (var[i] == '+' && i != ft_strlen(var) - 1)
-			&& var[i] != '_')
+		if (!ft_isalnum(var[i]) && !is_plus_sign(data, var, i) && var[i] != '_')
 			return (ERROR);
 	return (1);
 }
@@ -39,7 +45,10 @@ static int	check_export_syntax(t_data *data, char *prototype, char **var, char *
 		*var = prototype;
 		*value = NULL;
 		if (i != ERROR)
+		{
 			data->var_with_equals_sign = TRUE;
+			(*var)[ft_strlen(*var) - 1] = '\0';
+		}
 	}
 	else
 	{
@@ -183,8 +192,6 @@ int	scan_env_vars(t_data *data, char **var, char **value)
 	char	*key;
 	int		i;
 
-	if (data->var_with_equals_sign)
-		(*var)[ft_strlen(*var) - 1] = '\0';
 	tmp = data->exported;
 	i = find_char(*var, '+');
 	if (i != ERROR)
@@ -231,3 +238,4 @@ int	export(t_data *data, char **prototype)
 	}
 	return (1);
 }
+

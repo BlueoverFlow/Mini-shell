@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lst_utils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlabrayj <mlabrayj@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/14 08:37:34 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/07/03 13:45:21 by mlabrayj         ###   ########.fr       */
+/*   Updated: 2021/10/07 18:28:25 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,13 @@ int	ft_lst2size(t_list_2 *lst)
 		i++;
 	}
 	return (i);
+}
+
+t_list	*ft_lst_head(t_list *lst)
+{
+	while (lst->previous)
+		lst = lst->previous;
+	return (lst);
 }
 
 t_list_2	*ft_lst2last(t_list_2 *lst)

@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 08:15:35 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/07 09:01:09 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/07 18:29:10 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,7 @@ void		add_node(t_list_2 **alst, t_list_2 *new);
 t_list		*lst_elem(t_list *lst, int index);
 t_list		*ft_dlstnew(void *content);
 void		ft_dlst_delete_node(t_list *lst);
+t_list		*ft_lst_head(t_list *lst);
 
 //========parser.c ====
 

@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/06 11:44:55 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/07 08:39:46 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/07 16:59:11 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ static int check_syntax(t_data *data, char *var)
 	int	i;
 
 	i = 0;
+	data->var_with_equals_sign = FALSE;
 	if (!ft_isalpha(var[0]) && var[i] != '_')
 		return (ERROR);
 	while (var[++i])
