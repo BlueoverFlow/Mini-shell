@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: mlabrayj <mlabrayj@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/14 14:23:07 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/06 12:19:13 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/10 13:21:27 by mlabrayj         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@ int	builtin(t_data *data, char **prototype)
 		env(data, prototype);
 	else if (!ft_strcmp(prototype[0], "cd"))
 		cd(data, prototype[1]);
+	else if (!ft_strcmp(prototype[0], "CD") || !ft_strcmp(prototype[0], "Cd") || !ft_strcmp(prototype[0], "cD"))
+		return 0 ;
 	else if (!ft_strcmp(prototype[0], "unset"))
 		unset(data, prototype);
 	else

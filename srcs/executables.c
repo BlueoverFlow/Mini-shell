@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   executables.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: mlabrayj <mlabrayj@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/05 09:57:52 by mlabrayj          #+#    #+#             */
-/*   Updated: 2021/10/05 12:44:28 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/10 13:11:16 by mlabrayj         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,9 @@ int	run_executable(t_data *data ,char *prototype)
 		k[j + 1] = NULL;
 		if(!(execve(k[j], &k[j], NULL)))
 			return(0);
+		// char **s = {"-la", NULL};
+		// if(!(execve(k[j], s, NULL)))
+		// 	return(0);
 		free(k[j]);
 		j++;
 	}

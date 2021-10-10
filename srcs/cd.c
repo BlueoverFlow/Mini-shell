@@ -6,7 +6,7 @@
 /*   By: mlabrayj <mlabrayj@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/24 18:16:59 by mlabrayj          #+#    #+#             */
-/*   Updated: 2021/10/08 12:35:09 by mlabrayj         ###   ########.fr       */
+/*   Updated: 2021/10/10 13:19:26 by mlabrayj         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,10 @@ int	cd(t_data *data, char *prototype)
 	// closedir(dr);
 
 	if (prototype)
+	{
 		if (chdir(prototype))
 			printf("%s: %s%s No such file or directory\n", "minishell: cd" ,prototype,":");
+	}
 	else
 		chdir(getenv("HOME"));
 	return (0);
