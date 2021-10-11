@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/18 17:20:29 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/11 12:07:09 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/11 12:55:31 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -236,7 +236,7 @@ static int	fill_pipeline(t_data *data, int i)
 	if (data->word || !data->command)
 		if (fill_branch(data, i) == ERROR)
 			return (ERROR);
-	ft_lstadd_back(&data->piped_cmd, ft_lstnew(data->command));
+	ft_dlstadd_back(&data->piped_cmd, ft_dlstnew(data->command));
 	free_list(&data->word);
 	return (syntax_checking(data, i));
 }
