@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-mezz <ael-mezz@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/12 15:09:32 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/06/22 18:56:01 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/11 11:35:24 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@
 typedef struct s_list
 {
 	void			*content;
-	struct s_list	*next;
 	struct s_list	*previous;
+	struct s_list	*next;
 }					t_list;
 
 int					ft_strcmp(char *s1, char *s2);
@@ -81,5 +81,6 @@ int					ft_strlen_2d(char **str);
 int					free_2d(char **str);
 int					ft_strcmp(char *s1, char *s2);
 char				**realloc_2d(char **str, int d);
+char				*ft_strjoin_and_free(char *s1, char const *s2);
 
 #endif

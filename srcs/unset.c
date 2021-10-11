@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/06 11:44:55 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/07 16:59:11 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/11 12:14:32 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,20 +26,43 @@ static int check_syntax(t_data *data, char *var)
 	return (1);
 }
 
+static t_list *skip(t_list *lst, t_list *head)
+{
+	if (head == lst)
+		head = lst->next;
+	if (lst->previous)
+		lst->previous->next = lst->next;
+	if (lst->next)
+		lst->next->previous = lst->previous;
+	return (head);
+}
+
 int	unset(t_data *data, char **prototype)
 {
     int		i;
+    t_list  *tmp;
 
-	data->unset_cmd = TRUE;
     if (!data->exported)
-		export(data, NULL);
+		build_env_vars(data);
     i = 0;
 	while (prototype[++i] && prototype[i][0])
 	{
 		if (check_syntax(data, prototype[i]) == ERROR)
-			return (error_msg(data, prototype[i], EXPORT_ERR));
-		scan_env_vars(data, &prototype[i], NULL);
+			return (error_msg(data, prototype[i], UNSET_ERR));
+        tmp = data->exported;
+		while (tmp)
+        {
+            data->info = tmp->content;
+            if (!ft_strcmp(data->info->var, prototype[i]))
+            {
+                data->exported = skip(tmp, data->exported);
+                free(data->info->value);
+                free(data->info->var);
+                free(data->info);
+                break ;
+            }
+            tmp = tmp->next;
+        }
 	}
-	data->unset_cmd = FALSE;
     return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/15 15:32:25 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/07 10:43:59 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/11 11:41:09 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,13 +29,17 @@ static char	*assign_value(t_data *data, char *var)
 	t_list	*tmp;
 
 	if (!data->exported)
-		export(data, NULL);
+		build_env_vars(data);
 	tmp = data->exported;
 	value = NULL;
 	while (data->exported)
 	{
-		if (find_value(data, var, &value))
+		data->info = data->exported->content;
+		if (!ft_strcmp(data->info->var, var))
+		{
+			value = ft_strdup(data->info->var);
 			break ;
+		}
 		data->exported = data->exported->next;
 	}
 	data->exported = tmp;
@@ -43,7 +47,7 @@ static char	*assign_value(t_data *data, char *var)
 	return (value);
 }
 
-char	*expand_env_var(t_data *data, char *input)
+char	*expand_env_vars(t_data *data, char *input)
 {
 	int		i;
 	int		len;
@@ -51,9 +55,7 @@ char	*expand_env_var(t_data *data, char *input)
 	char	*new;
 
 	i = -1;
-	new = ft_calloc(1, sizeof(*new));
-	if (!new)
-		error_msg(data, "ALlocation failure!\n", NORMAL_ERR);
+	new = NULL;
 	data->quoting_state = UNQUOTED;
 	while (input[++i])
 	{
@@ -82,6 +84,8 @@ char	*expand_token(t_data *data, char *input)
 	char	special_2[3] = {'"', '\0'};
 	char	*new;
 
+	if (!input)
+		return (NULL);
 	j = 0;
 	data->quoting_state = UNQUOTED;
 	new = ft_calloc(ft_strlen(input) + 1, sizeof(*new));

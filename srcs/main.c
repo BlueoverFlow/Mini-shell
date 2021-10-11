@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 08:15:00 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/07 18:05:50 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/11 11:03:29 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,21 +14,21 @@
 
 static void	global_init(t_data *data, const char **envp)
 {
-	data->exit_status = 0;
 	data->garbage = NULL;
 	data->envp = envp;
+	data->exported = NULL;
 }
 
 static void	_init(t_data *data)
 {
-	data->piped = NULL;
-	data->prototype = NULL;
-	data->file = NULL;
-	data->branch = NULL;
+	data->piped_cmd = NULL;
 	data->word = NULL;
 	data->quoting_state = UNQUOTED;
 	data->passive = FALSE;
 	data->unset_cmd = FALSE;
+	data->command = NULL;
+	data->file_data = NULL;
+	data->exit_status = 0;
 }
 
 int	main(int argc, char **argv, const char **envp)

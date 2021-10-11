@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/14 08:37:34 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/07 18:28:25 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/08 12:59:55 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,66 +35,11 @@ t_list	*ft_lstprevious(t_list *lst)
 	return (lst);
 }
 
-int	ft_lst2size(t_list_2 *lst)
-{
-	int	i;
-
-	i = 0;
-	while (lst != NULL)
-	{
-		lst = lst->next;
-		i++;
-	}
-	return (i);
-}
-
 t_list	*ft_lst_head(t_list *lst)
 {
 	while (lst->previous)
 		lst = lst->previous;
 	return (lst);
-}
-
-t_list_2	*ft_lst2last(t_list_2 *lst)
-{
-	int	i;
-	int	j;
-
-	if (lst == NULL)
-		return (NULL);
-	i = ft_lst2size(lst);
-	j = 0;
-	while (j < i - 1)
-	{
-		lst = lst->next;
-		j++;
-	}
-	return (lst);
-}
-
-t_list_2	*build_node(void *content, void *content_2)
-{
-	t_list_2	*new;
-
-	new = malloc(sizeof(t_list_2));
-	if ((!new) || (!content && !content_2))
-		return (NULL);
-	new->content_2 = (void *)content_2;
-	new->content = (void *)content;
-	new->next = NULL;
-	return (new);
-}
-
-void	add_node(t_list_2 **alst, t_list_2 *new)
-{
-	if (alst == NULL)
-		return ;
-	if (*alst == NULL)
-	{
-		*alst = new;
-		return ;
-	}
-	ft_lst2last(*alst)->next = new;
 }
 
 t_list	*ft_dlstnew(void *content)

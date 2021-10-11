@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/18 17:20:29 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/07 18:44:33 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/11 12:07:09 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,26 +24,6 @@ static	int	theres_atoken(char *fragment)
 	}
 	free(fragment);
 	return (0);
-}
-
-static	int	find_chars(char *str, char *chars)
-{
-	int	i;
-	int	j;
-
-	i = -1;
-	if (str)
-	{
-		while (str[++i])
-		{
-			j = -1;
-			if (chars)
-				while (chars[++j])
-					if (str[i] == chars[j] && !is_backslashed(i, str))
-						return (i);
-		}
-	}
-	return (i);
 }
 
 static	int	*int_alloc(int i, t_data *data)
@@ -64,39 +44,58 @@ static	int	is_redirection(char *str, int i, int quoting_state)
 	return (0);
 }
 
-static	int	fill_file_id(t_data *data, char **fragment, t_list_2 *last)
+static int *allocate_int(int n)
 {
-	if (data->file && !last->content)
+	int *p;
+
+	p = malloc(sizeof(int));
+	*p = n;
+	return (p);
+}
+
+static	int	fill_file_id(t_data *data, char **fragment, t_list *last)
+{
+	if ((!data->command->file) || (data->command->file && !data->command->file))
+	{
+		data->file_data = malloc(sizeof(t_file_data));
+		data->file_data->id = -1;
+		data->file_data->path = NULL;
+	}
+	if (data->file_data && data->file_data->id != -1 && !data->file_data->path)
 		return (ERROR);
 	if ((*fragment)[0] == '>')
 	{
 		if ((*fragment)[1] && (*fragment)[1] == '>')
 		{
-			add_node(&data->file, build_node(NULL, int_alloc(STD_APPENDED_OUTPUT, data)));
+			data->file_data->id = APPENDED_REDIRECTED_OUTPUT;
 			*fragment += 1;
 		}
 		else
-			add_node(&data->file, build_node(NULL, int_alloc(STD_OUTPUT, data)));
+			data->file_data->id = REDIRECTED_OUTPUT;
 	}
 	else if ((*fragment)[0] == '<')
 	{
 		if ((*fragment)[1] && (*fragment)[1] == '<')
 		{
-			add_node(&data->file, build_node(NULL, int_alloc(STD_APPENDED_INPUT, data)));
+			data->file_data->id = HEREDOC;
 			*fragment += 1;
 		}
 		else
-			add_node(&data->file, build_node(NULL, int_alloc(STD_INPUT, data)));
+			data->file_data->id = REDIRECTED_INPUT;
 	}
 	*fragment += 1;
+	ft_lstadd_back(&data->command->file, ft_lstnew(data->file_data));
 	return (1);
 }
 
-static int	fill_file_path(t_data *data, char *fragment, char *token, t_list_2 *last)
+static int	fill_file_path(t_data *data, char *fragment, char *token, t_list *last)
 {
-	if (data->file && !last->content && (int)last->content_2 != STD_APPENDED_INPUT)
+	if (data->command->file && data->file_data && !data->file_data->path)
 	{
-		last->content = token;
+		if (!ft_strncmp(token, "|", 2))
+			return (error_msg(data, "syntax error near unexpected token `|'\n", NORMAL_ERR));
+		data->file_data->path = token;
+		data->file_data = NULL;
 		return (1);
 	}
 	return (0);
@@ -129,9 +128,10 @@ void	define_quoting_state(t_data *data, char *input, int i)
 
 static int	hundle_redirection(t_data *data, char *fragment, char *token, int i)
 {
-	t_list_2	*last;
+	t_list	*last;
+	int		ret;
 
-	last = ft_lst2last(data->file);
+	last = ft_lstlast(data->command->file);
 	if (fragment[i] && is_redirection(fragment, 0, UNQUOTED))
 	{
 		if (fill_file_id(data, &fragment, last) == ERROR)
@@ -139,8 +139,11 @@ static int	hundle_redirection(t_data *data, char *fragment, char *token, int i)
 	}
 	else
 	{
-		if (!fill_file_path(data, fragment, token, last))
-			ft_lstadd_back(&data->prototype, ft_lstnew(token));
+		ret = fill_file_path(data, fragment, token, last);
+		if (ret == ERROR)
+			return (ret);
+		else if (!ret)
+			ft_lstadd_back(&data->command->prototype, ft_lstnew(token));
 		fragment += i;
 	}
 	return (make_branch(data, fragment));
@@ -188,17 +191,18 @@ static char	*lst_to_word(t_list *lst)
 static int	syntax_checking(t_data *data, int i)
 {
 	int			l;
-	t_list_2	*last;
+	t_list		*last;
 
-	last = ft_lst2last(data->file);
+	if (data->command->file)
+	{
+		last = ft_lstlast(data->command->file);
+		data->file_data = last->content;
+	}
 	l = ft_strlen(data->input) - 1;
-	if ((last && last->content_2 && !last->content) || (data->input[l] == '|')
-		|| (data->quoting_state != UNQUOTED && \
-		!data->input[i + 1] && !data->passive))
+	if ((data->file_data && data->file_data->id != -1 && !data->file_data->path) || (data->input[l] == '|')
+		|| (data->quoting_state != UNQUOTED && !data->input[i + 1] && !data->passive))
 		l = ERROR;
-	data->file = NULL;
-	data->prototype = NULL;
-	data->branch = NULL;
+	data->command = NULL;
 	return (l);
 }
 
@@ -206,9 +210,15 @@ static int	fill_branch(t_data *data, int i)
 {
 	char	*fragment;
 
+	if (!data->command)
+	{
+		data->command = malloc(sizeof(t_command));
+		data->command->file = NULL;
+		data->command->prototype = NULL;
+	}
 	fragment = lst_to_word(data->word);
 	if (!theres_atoken(fragment))
-		return ((data->input[i + 1] || data->prototype) ? 1 : ERROR);
+		return ((data->input[i + 1] || data->command->prototype) ? 1 : ERROR);
 	if (make_branch(data, fragment) == ERROR)
 		return (ERROR);
 	free(fragment);
@@ -221,11 +231,12 @@ static int	fill_pipeline(t_data *data, int i)
 {
 	if (!data->input[i + 1])
 		ft_lstadd_back(&data->word, ft_lstnew(ft_substr(data->input, i, 1)));
-	if (data->word || !data->prototype)
+	if (data->input[i - 1] == '|')
+		return (ERROR);
+	if (data->word || !data->command)
 		if (fill_branch(data, i) == ERROR)
 			return (ERROR);
-	add_node(&data->branch, build_node(data->file, data->prototype));
-	ft_lstadd_back(&data->piped, ft_lstnew(data->branch));
+	ft_lstadd_back(&data->piped_cmd, ft_lstnew(data->command));
 	free_list(&data->word);
 	return (syntax_checking(data, i));
 }
@@ -245,6 +256,62 @@ static	int	build_tree(t_data *data, int i)
 	return (1);
 }
 
+static char input_stream_literal(t_data *data)
+{
+	static	int file_number = 0;
+	t_heredoc	heredoc_;
+
+	heredoc_.input = NULL;
+	file_number++;
+	heredoc_.file_name = ft_strjoin("/tmp/.heredoc_", ft_itoa(file_number));
+	if ((heredoc_.fd = open(heredoc_.file_name, O_CREAT | O_RDWR | O_APPEND, 777)) < 3)
+	{
+		free(heredoc_.file_name);
+		return (hundle_heredoc(data));
+	}
+	while (1)
+	{
+		heredoc_.input = readline("> ");
+		if (!ft_strcmp(data->file_data->path, heredoc_.input))
+			break ;
+		write(heredoc_.fd, heredoc_.input, ft_strlen(heredoc_.input));				
+		write(heredoc_.fd, "\n", 1);
+	}
+	free(heredoc_.input);
+	data->document = heredoc_.file_name;
+	close(heredoc_.fd);
+	return (1);
+}
+
+int	hundle_heredoc(t_data *data)
+{
+	static int	i = 1;
+	t_list		*tmp;
+	t_list		*tmp_2;
+
+	tmp = data->piped_cmd;
+	while (data->piped_cmd)
+	{
+		data->command = data->piped_cmd->content;
+		tmp_2 = data->command->file;
+		while (data->command->file)
+		{
+			data->file_data = data->command->file->content;
+			if (data->file_data->id == HEREDOC)
+			{
+				if (!i)
+					return (1);
+				input_stream_literal(data);
+			}
+			data->command->file = data->command->file->next;
+		}
+		data->command->file = tmp_2;
+		data->piped_cmd = data->piped_cmd->next;
+	}
+	data->piped_cmd = tmp;
+	return (1);
+}
+
 int	parser(t_data *data)
 {
 	int		i;
@@ -256,5 +323,5 @@ int	parser(t_data *data)
 		if (build_tree(data, i) == ERROR)
 			return (error_msg(data, "syntax error!\n", NORMAL_ERR));
 	}
-	return (1);
+	return (hundle_heredoc(data));
 }

@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/24 13:31:19 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/05 12:23:27 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/11 10:41:24 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,19 +15,20 @@
 int	env(t_data *data, char **prototype)
 {
 	t_list	*tmp;
-	int		i;
-	int		j;
+	char	*value;
 
-	i = -1;
-	if (prototype[1])
-		return (error_msg(data, "unsupported syntax!\n", 1));
+	if (prototype[1] && *prototype[1])
+		return (error_msg(data, "syntax error!\n", NORMAL_ERR));
 	if (!data->exported)
-		export(data, NULL);
+		build_env_vars(data);
 	tmp = data->exported;
-	while (tmp)
+	while (data->exported)
 	{
-		printf("%s\n", tmp->content + 11);
-		tmp = tmp->next;
+		data->info = data->exported->content;
+		if (data->info->value && *(data->info->value))
+			printf("%s=%s\n", data->info->var, data->info->value);
+		data->exported = data->exported->next;
 	}
+	data->exported = tmp;
 	return (1);
 }

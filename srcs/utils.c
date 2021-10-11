@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/15 09:41:53 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/07 10:23:34 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/11 12:14:17 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,15 +18,16 @@ int		error_msg(t_data *data, char *exit_message, int code)
 	ft_putstr_fd("minishell: ", STDERR_FILENO);
 	if (code == NORMAL_ERR)
 		ft_putstr_fd(exit_message, STDERR_FILENO);
-	else if (code == EXPORT_ERR)
+	else if (code > EXPORT_ERR)
 	{
-		if (data->unset_cmd)
+		if (code == UNSET_ERR)
 			ft_putstr_fd("unset: `", STDERR_FILENO);
-		else
-			ft_putstr_fd("export: `", STDERR_FILENO);
+		ft_putstr_fd("export: `", STDERR_FILENO);
 		ft_putstr_fd(exit_message, STDERR_FILENO);
 		ft_putstr_fd("': not a valid identifier\n", STDERR_FILENO);
 	}
+	else if (code == PERROR)
+		perror("");
 	return (ERROR);
 }
 

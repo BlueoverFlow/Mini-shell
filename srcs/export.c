@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/24 13:29:24 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/07 18:36:27 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/11 12:07:44 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static int is_plus_sign(t_data *data, char *var, int i)
 {
-	if (var[i] == '+' && i == ft_strlen(var) - 1 && data->var_with_equals_sign)
+	if (var[i] == '+' && i == ft_strlen(var) - 1 && data->info->value)
 		return (1);
 	return (0);
 }
@@ -32,96 +32,80 @@ static int	analyze_var(t_data *data, char *var)
 	return (1);
 }
 
-static int	check_export_syntax(t_data *data, char *prototype, char **var, char **value)
+static int	check_export_syntax(t_data *data, char *prototype)
 {
 	int	i;
 	int	l;
 
-	data->var_with_equals_sign = FALSE;
-	i = find_char(prototype, '=');
+	data->info = malloc(sizeof(t_info));
 	l = ft_strlen(prototype);
-	if (i == ERROR || i == l - 1)
+	i = find_char(prototype, '=');
+	if (i == ERROR)
 	{
-		*var = prototype;
-		*value = NULL;
-		if (i != ERROR)
-		{
-			data->var_with_equals_sign = TRUE;
-			(*var)[ft_strlen(*var) - 1] = '\0';
-		}
+		i = l;
+		data->info->value = NULL;
 	}
+	else if (i == l - 1)
+		data->info->value = ft_strdup("");
 	else
-	{
-		*var = ft_substr(prototype, 0, i);
-		*value = ft_substr(prototype, i, ft_strlen(prototype) - i);
-	}
-	if (analyze_var(data, *var) == ERROR)
+		data->info->value = ft_substr(prototype, i + 1, ft_strlen(prototype) - i);
+	data->info->var = ft_substr(prototype, 0, i);
+	if (analyze_var(data, data->info->var) == ERROR)
 		return (ERROR);
 	return (1);
 }
 
-static char	*quoting_var_value(t_data *data, char *line)
+static void export_print(t_data *data)
 {
-	char	*new;
-	int		i;
-	int		j;
+	t_list	*tmp;
 
-	j = 0;
-	i = -1;
-	if (!line)
-		return (NULL);
-	new = ft_calloc(ft_strlen(line) + 3, sizeof (*new));
-	if (!new)
-		error_msg(data, "ALlocation failure!\n", NORMAL_ERR);
-	while (line[++i])
+	tmp = data->exported;
+	while (tmp)
 	{
-		new[i + j] = line[i];
-		if ((line[i] == '=' && j == 0) || (!line[i + 1] && j == 1))
-		{
-			j++;
-			if (!line[i + 1] && j == 1)
-				new[i + j++] = '"';
-			new[i + j] = '"';
-		}
+		data->info = tmp->content;
+		if (data->info->value)
+			printf("declare -x %s=\"%s\"\n", data->info->var, data->info->value);
+		else
+			printf("declare -x %s\n", data->info->var);
+		tmp = tmp->next;
 	}
-	free(line);
-	return (new);
 }
 
 static void	increase_shelllvl(t_data *data)
 {
-	char	*tmp;
-	t_list	*lst_tmp;
+	t_list	*tmp;
 	int		level;
 
-	lst_tmp = data->exported;
+	tmp = data->exported;
 	while (data->exported)
 	{
-		tmp = ft_substr(data->exported->content, 11, 5);
-		if (!ft_strcmp(tmp, "SHLVL"))
+		data->info = data->exported->content;
+		if (!ft_strcmp(data->info->var, "SHLVL"))
 		{
-			level = ft_atoi(data->exported->content + 18);
-			level++;
-			((char *)(data->exported->content))[18] = '\0';
-			data->exported->content = ft_strjoin(data->exported->content, ft_itoa(level));
-			data->exported->content = ft_strjoin(data->exported->content, ft_strdup("\""));
+			if (data->info->value)
+			{
+				level = ft_atoi(data->info->value) + 1;
+				free(data->info->value);
+				data->info->value = ft_itoa(level);
+			}
 		}
 		data->exported = data->exported->next;
 	}
-	data->exported = lst_tmp;
+	data->exported = tmp;
 }
 
-static void	insert_var(t_data *data, char *var)
+static void sort_var(t_data *data)
 {
-	t_list	*last;
-	char	*new;
+	t_list			*last;
+	t_info			*info_1;
 
-	new = ft_strjoin("declare -x ", ft_strdup(var));
-	new = quoting_var_value(data, new);
-	ft_dlstadd_back(&data->exported, ft_dlstnew(new));
 	last = ft_lstlast(data->exported);
-	while (last->previous && ft_strcmp((char *)last->content + 11, (char *)last->previous->content + 11) < 0)
+	data->info = last->content;
+	while (last->previous)
 	{
+		info_1 = last->previous->content;
+		if (ft_strcmp(data->info->var, info_1->var) > 0)
+			break ;
 		if (last->previous->previous)
 			last->previous->previous->next = last;
 		last->previous->next = last->next;
@@ -129,76 +113,62 @@ static void	insert_var(t_data *data, char *var)
 		last->previous = last->next->previous;
 		if (last->next->next)
 			last->next->next->previous = last->next;
-		last->next->previous = last;
+		last->next->previous = last;	
 	}
 	if (!last->previous)
 		data->exported = last;
 }
 
-int	find_value(t_data *data, char *var, char **value)
+static void	insert_var(t_data *data, char *input)
 {
-	int		l;
-	int		i;
-	int		ret;
-	char	*key;
+	int				i;
+	t_info			*info_1;
+	t_list			*tmp;
 
-	i = find_char(data->exported->content, '=');
-	l = ft_strlen(data->exported->content);
-	key = ft_substr(data->exported->content, 11, (i == ERROR ? l - 11: i - 11));
-	if (!(ret = ft_strcmp(key, var)))
+	if (input)
 	{
-		if (i == ERROR)
-			*value = NULL;
-		else
-			*value = ft_substr(data->exported->content, i, l - i);
+		i = find_char(input, '=');
+		data->info = malloc(sizeof(t_info));
+		data->info->var = ft_substr(input, 0, i);
+		data->info->value = ft_substr(input, i + 1, ft_strlen(input) - i);
 	}
-	free(key);
-	return (!ret ? 1 : 0);
+	ft_dlstadd_back(&data->exported, ft_dlstnew(data->info));
+	sort_var(data);
 }
 
-static int skip(t_data *data)
-{
-	if (data->exported->previous)
-		data->exported->previous->next = data->exported->next;
-	if (data->exported->next)
-		data->exported->next->previous = data->exported->previous;
-	free(data->exported->content);
-	return (0);
-}
-
-static int	already_exported(t_data *data, char **var, char **value, int i)
+static int	already_exported(t_data *data, int i, t_info *info_1)
 {
 	char	*old_value;
 
-	if (find_value(data, *var, &old_value))
+	if (!ft_strcmp(info_1->var, data->info->var))
 	{
-		if (i == ERROR || data->unset_cmd)
-			return(skip(data));
-		if (data->var_with_equals_sign)
-			(*var)[ft_strlen(*var) - 1] = '=';
-		*value = ft_strjoin(old_value, *value + 1);
-		*value = expand_token(data, *value);
-		*var = ft_strjoin("declare -x ", *var);
-		*value = quoting_var_value(data, *value);
-		data->exported->content = ft_strjoin(*var, *value);
+		if (i == ERROR)
+		{
+			free(info_1->value);
+			info_1->value = NULL;
+		}
+		info_1->value = ft_strjoin_and_free(info_1->value, data->info->value);
+		info_1->value = expand_token(data, info_1->value);
 		return (1);
 	}
 	return (0);
 }
 
-int	scan_env_vars(t_data *data, char **var, char **value)
+int	scan_env_vars(t_data *data)
 {
+	t_info	*info_1;
 	t_list	*tmp;
 	char	*key;
 	int		i;
 
 	tmp = data->exported;
-	i = find_char(*var, '+');
+	i = find_char(data->info->var, '+');
 	if (i != ERROR)
-		(*var)[ft_strlen(*var) - 1] = '\0';
+		data->info->var[ft_strlen(data->info->var) - 1] = '\0';
 	while (data->exported)
 	{
-		if (already_exported(data, var, value, i))
+		info_1 = data->exported->content;
+		if (already_exported(data, i, info_1))
 		{
 			data->exported = tmp;
 			return (1);
@@ -206,16 +176,12 @@ int	scan_env_vars(t_data *data, char **var, char **value)
 		data->exported = data->exported->next;
 	}
 	data->exported = tmp;
-	if (data->var_with_equals_sign)
-		(*var)[ft_strlen(*var)] = '=';
 	return (0);
 }
 
-int	export(t_data *data, char **prototype)
+void	build_env_vars(t_data *data)
 {
 	static int	i = -1;
-	char		*var;
-	char		*value;
 
 	if (i == -1)
 	{
@@ -224,17 +190,24 @@ int	export(t_data *data, char **prototype)
 			insert_var(data, (char *)data->envp[i]);
 		increase_shelllvl(data);
 	}
+}
+
+int	export(t_data *data, char **prototype)
+{
+	int		i;
+
+	i = 0;
+	build_env_vars(data);
 	if (!prototype[1] || !prototype[1][0])
-		print_list(data->exported);
+		export_print(data);
 	else if (*prototype[1] == '-')
 		return (error_msg(data, "options are unsupported!\n", NORMAL_ERR));
-	i = 0;
 	while (prototype[++i] && prototype[i][0])
 	{
-		if (check_export_syntax(data, prototype[i], &var, &value) == ERROR)
-			return (error_msg(data, ft_strjoin(var, value), EXPORT_ERR));
-		if (!scan_env_vars(data, &var, &value))
-			insert_var(data, ft_strjoin(var, value));
+		if (check_export_syntax(data, prototype[i]) == ERROR)
+			return (error_msg(data, NULL, EXPORT_ERR));
+		if (!scan_env_vars(data))
+			insert_var(data, NULL);
 	}
 	return (1);
 }

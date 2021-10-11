@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 08:15:35 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/07 18:29:10 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/11 12:13:52 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,40 +26,68 @@
 # define TRUE 1
 # define FALSE 0
 # define BOOL int
-# define STD_OUTPUT 1
-# define STD_INPUT 0
-# define STD_APPENDED_OUTPUT 11
-# define STD_APPENDED_INPUT 22
+# define REDIRECTED_OUTPUT 1
+# define REDIRECTED_INPUT 0
+# define HEREDOC 11
+# define APPENDED_REDIRECTED_OUTPUT 22
 # define PROMPT "minishell$ "
 # define UNQUOTED 0
 # define NORMAL_ERR 0
 # define EXPORT_ERR 1
+# define UNSET_ERR 2
+# define PERROR 2
 
-typedef struct s_list_2
+typedef struct s_heredoc
 {
-	void			*content;
-	void			*content_2;
-	struct s_list_2	*next;
-}	t_list_2;
+	int			fd;
+	char		*input;
+	char		*file_name;
+	t_list		*tmp;
+}				t_heredoc;
+
+typedef struct s_file_data
+{
+	char		*path;
+	int			id;	
+}				t_file_data;
+
+typedef struct s_command
+{
+	t_list		*prototype;
+	t_list		*file;
+}				t_command;
+
+typedef struct s_info
+{
+	char	*var;
+	char	*value;
+}				t_info;
 
 typedef struct s_data
 {
-	t_list		*garbage;
-	t_list		*piped;
-	t_list		*word;
-	t_list		*prototype;
-	t_list		*exported;
-	t_list_2	*file;
-	t_list_2	*branch;
-	const char	**envp;
-	int			quoting_state;
-	int			exit_status;
-	BOOL		passive;
-	BOOL		is_builtin;
-	char		*input;
-	char		*cmd_name;
-	BOOL		unset_cmd;
-	BOOL		var_with_equals_sign;
+	t_list			*garbage;
+	t_list			*piped_cmd;
+	t_command		*command;
+	t_list			*word;
+	t_info			*info;
+	t_list			*exported;
+	t_file_data		*file_data;
+	const char		**envp;
+	int				quoting_state;
+	int				exit_status;
+	BOOL			passive;
+	BOOL			is_builtin;
+	char			*input;
+	char			*cmd_name;
+	BOOL			unset_cmd;
+	BOOL			var_with_equals_sign;
+	BOOL			is_env;
+	BOOL			infile;
+	BOOL			outfile;
+	char			*executable;
+	char			**local_env;
+	char			*document;
+	int				fd;
 }				t_data;
 
 //==================== lst_utils.c ===============
@@ -71,10 +99,6 @@ void		ft_dlstadd_back(t_list **alst, t_list *new);
 void		print_content_list(t_list *lst);
 void		print_lines(t_data data);
 int			tokens_analyser(t_data *data);
-t_list_2	*build_node(void *content, void *content_2);
-t_list_2	*ft_lst2last(t_list_2 *lst);
-int			ft_lst2size(t_list_2 *lst);
-void		add_node(t_list_2 **alst, t_list_2 *new);
 t_list		*lst_elem(t_list *lst, int index);
 t_list		*ft_dlstnew(void *content);
 void		ft_dlst_delete_node(t_list *lst);
@@ -85,11 +109,12 @@ t_list		*ft_lst_head(t_list *lst);
 int			parser(t_data *data);
 int			make_branch(t_data *data, char *fragment);
 void		define_quoting_state(t_data *data, char *input, int i);
+int			hundle_heredoc(t_data *data);
 
 //======expansions.c ===
 
 char		*expand_token(t_data *data, char *input);
-char		*expand_env_var(t_data *data, char *value);
+char		*expand_env_vars(t_data *data, char *value);
 
 //========== utils.c ===
 
@@ -104,7 +129,7 @@ int			find_value(t_data *data, char *var, char **value);
 
 int			execute(t_data *data);
 
-//========== builtins.c ===
+//========== builtins ===
 
 int			builtin(t_data *data, char **prototype);
 int			echo(t_data *data, char **prototype);
@@ -112,11 +137,15 @@ int			env(t_data *data, char **prototype);
 int			export(t_data *data, char **prototype);
 int			cd(t_data *data, char *prototype);
 int			unset(t_data *data, char **prototype);
-int			scan_env_vars(t_data *data, char **var, char **value);
 
 //======== executables =======
 
-int	run_executable(t_data *data ,char *prototype);
+int	run_executable(t_data *data , char **prototype);
+
+//======== export =======
+
+void	build_env_vars(t_data *data);
+int		scan_env_vars(t_data *data);
 
 //======================================================================
 

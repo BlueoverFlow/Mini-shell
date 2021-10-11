@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlabrayj <mlabrayj@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/23 12:56:41 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/07/01 15:59:13 by mlabrayj         ###   ########.fr       */
+/*   Updated: 2021/10/11 11:29:51 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,16 +16,16 @@ static int	normi(char **newline, char *reader, char **buffer, char **tmp)
 {
 	if (reader)
 	{
-		*newline = ft_strndup2(*buffer, reader - *buffer);
+		*newline = ft_strndup(*buffer, reader - *buffer);
 		if (!*newline)
 			return (0);
 		*tmp = *buffer;
-		*buffer = ft_strdup2(reader + 1);
+		*buffer = ft_strdup(reader + 1);
 		if (!*buffer)
 			return (0);
 	}
 	else
-		*newline = ft_strdup2(*buffer);
+		*newline = ft_strdup(*buffer);
 	return (1);
 }
 
@@ -62,7 +62,7 @@ int	get_buffer(char **buffer, char *reader, int fd, int *ret)
 		{
 			reader[*ret] = '\0';
 			oldbuffer = *buffer;
-			*buffer = ft_strjoin2(*buffer, reader);
+			*buffer = ft_strjoin(*buffer, reader);
 			if (!*buffer)
 				return (0);
 			free(oldbuffer);
@@ -95,6 +95,6 @@ int	get_next_line(int fd, char **line)
 		else
 			return (0);
 	}
-	*line = ft_strdup2("");
+	*line = ft_strdup("");
 	return (0);
 }

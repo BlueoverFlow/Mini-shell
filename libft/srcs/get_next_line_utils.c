@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/01/23 13:52:45 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/06/05 10:13:01 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/11 11:29:51 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,18 +22,7 @@ char	*is_str2(size_t size)
 	return (str);
 }
 
-char	*ft_strdup2(char *s1)
-{
-	char	*dest;
-
-	dest = (char *)malloc(sizeof(char) * (ft_strlen(s1) + 1));
-	if (!dest)
-		return (NULL);
-	ft_strcpy(dest, s1);
-	return (dest);
-}
-
-char	*ft_strndup2(const char *s, size_t n)
+char	*ft_strndup(const char *s, size_t n)
 {
 	unsigned int	i;
 	char			*cpy;
@@ -68,30 +57,4 @@ char	*ft_strchr2(const char *s, int c)
 		return (str);
 	else
 		return (NULL);
-}
-
-char	*ft_strjoin2(char *s1, char *s2)
-{
-	char	*dst;
-	char	*str1;
-	char	*str2;
-	size_t	len;
-
-	if (!s1)
-	{
-		s1 = ft_strdup2(s2);
-		return (s1);
-	}
-	str1 = (char *)s1;
-	str2 = (char *)s2;
-	len = ft_strlen(str1) + ft_strlen(str2);
-	dst = (char *)malloc(sizeof(char) * (len + 1));
-	if (!dst)
-		return (NULL);
-	while (*str1)
-		*(dst++) = *(str1++);
-	while (*str2)
-		*(dst++) = *(str2++);
-	*dst = '\0';
-	return (dst - len);
 }
