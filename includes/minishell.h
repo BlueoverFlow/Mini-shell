@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 08:15:35 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/11 12:13:52 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/11 15:18:01 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,9 @@
 # define PROMPT "minishell$ "
 # define UNQUOTED 0
 # define NORMAL_ERR 0
-# define EXPORT_ERR 1
-# define UNSET_ERR 2
-# define PERROR 2
+# define PERROR 5
+# define EXPORT_ERR 6
+# define UNSET_ERR 7
 
 typedef struct s_heredoc
 {
@@ -72,6 +72,7 @@ typedef struct s_data
 	t_info			*info;
 	t_list			*exported;
 	t_file_data		*file_data;
+	int				ends_2[2];
 	const char		**envp;
 	int				quoting_state;
 	int				exit_status;

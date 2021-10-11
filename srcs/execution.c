@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/17 10:06:45 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/11 12:54:38 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/11 18:32:07 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ static char	*ft_getenv(t_data *data, char *var)
 	char	*key;
 
 	if (!data->exported)
-		export(data, NULL);
+		build_env_vars(data);
 	tmp = data->exported;
 	while (tmp)
 	{
@@ -84,9 +84,8 @@ static int compare_files(t_data *data, DIR *dir, char *prototype, char *tree)
 	{
 		if (!ft_strcmp(prototype, list->d_name))
 		{
-			closedir(dir);
-			data->executable = ft_strjoin(tree, "/");
-			data->executable = ft_strjoin(data->executable, prototype);
+			closedir(dir);		
+			data->executable = ft_strjoin_and_free(ft_strjoin_and_free(tree, "/"), prototype);		
 			return (1);
 		}
 		list = readdir(dir);
@@ -98,9 +97,9 @@ static int compare_files(t_data *data, DIR *dir, char *prototype, char *tree)
 
 static int file_search(t_data *data, char *prototype)
 {
+	char	**tree;
 	char	*path;
 	DIR		*dir;
-	char	**tree;
 	int		i;
 
 	if (!(path = ft_getenv(data, "PATH")))
@@ -114,94 +113,102 @@ static int file_search(t_data *data, char *prototype)
 			return (1);
 	}
 	free_2d(tree);
-	return (0);
+	return (error_msg(data, ft_strjoin(prototype, ": command not found\n"), NORMAL_ERR));
 }
 
-static int give_input(t_data *data, int *ends_2)
+static int give_input(t_data *data)
 {
 	t_list *tmp;
+	int		fd;
 
-	data->fd = -1;
-	tmp = data->command->file;
+	fd = -2;
 	if (data->outfile)
 	{
-		while (tmp && data->infile)
+		tmp = data->command->file;
+		while (tmp && data->outfile)
 		{
 			data->file_data = tmp->content;
 			if (data->file_data->id == REDIRECTED_OUTPUT)
 			{
-				if ((data->fd = open(data->file_data->path, O_CREAT | O_WRONLY | O_APPEND | O_TRUNC, 666) < 3))
+				if ((fd = open(data->file_data->path, O_CREAT | O_WRONLY | O_APPEND | O_TRUNC, 666) < 3))
 				{
 					return(error_msg(data, NULL, PERROR));
 				}
-				if (data->infile-- > 1)
-					close(data->fd);
+				if (data->outfile-- > 1)
+					close(fd);
 			}
 			else if (data->file_data->id == APPENDED_REDIRECTED_OUTPUT)
 			{
-				if ((data->fd = open(data->file_data->path, O_CREAT | O_WRONLY | O_APPEND, 666) < 3))
+				if ((fd = open(data->file_data->path, O_CREAT | O_WRONLY | O_APPEND, 666) < 3))
 				{
 					return(error_msg(data, NULL, PERROR));
 				}
-				if (data->infile-- > 1)
-					close(data->fd);
+				if (data->outfile-- > 1)
+					close(fd);
 			}
 		}
 	}
-	if (data->fd == -1)
-	{
-		data->fd = ends_2[1];
-		if (!data->piped_cmd->next)
-			data->fd = STDOUT_FILENO;
-	}
-	if (dup2(STDOUT_FILENO, data->fd) == -1)
-	{
-		return(error_msg(data, NULL, PERROR));
-	}
-	return (data->fd);
+	return (fd);
 }
 
-static int take_ouput(t_data *data, int *ends)
+static int take_ouput(t_data *data)
 {
 	t_list *tmp;
-	static int i = 0;
+	int		fd; 
 
-	data->fd = -1;
-	tmp = data->command->file;
+	fd = -2;
 	if (data->infile)
 	{
-		close(ends[0]);
+		tmp = data->command->file;
 		while (tmp && data->infile)
 		{
 			data->file_data = tmp->content;
 			if (data->file_data->id == REDIRECTED_INPUT)
 			{
-				if ((data->fd = open(data->file_data->path, O_RDONLY) < 3))
+				if ((fd = open(data->file_data->path, O_RDONLY) < 3))
 				{
 					return(error_msg(data, NULL, PERROR));
 				}
 				if (data->infile-- > 1)
-					close(data->fd);
+					close(fd);
 			}
 			else if (data->file_data->id == HEREDOC)
 			{
-				if ((data->fd = open(data->document, O_RDONLY) < 3))
+				if ((fd = open(data->document, O_RDONLY) < 3))
 				{
 					return(error_msg(data, NULL, PERROR));
 				}
 				if (data->infile-- > 1)
-					close(data->fd);
+					close(fd);
 			}
 		}
 	}
-	if (data->fd == -1)
-		data->fd = ends[0];
-	if (dup2(data->fd, STDIN_FILENO) == -1)
+	return (fd);
+}
+
+static int	duplicate(t_data *data, int fd_in, int fd_out, int *ends)
+{
+	if (fd_in == ERROR || fd_out == ERROR)
+		return (ERROR);
+	if (fd_in == -2)
+		fd_in = ends[0];
+	if (fd_out == -2)
+		fd_out = data->ends_2[1];
+	if (data->piped_cmd->previous)
 	{
-		return(error_msg(data, NULL, PERROR));
+		if (dup2(fd_in, STDIN_FILENO) == -1)
+		{
+			return(error_msg(data, NULL, PERROR));
+		}
 	}
-	i++;
-	return (data->fd);
+	if (data->piped_cmd->next)
+	{
+		if (dup2(fd_out, STDOUT_FILENO) == -1)
+		{
+			return(error_msg(data, NULL, PERROR));
+		}
+	}
+	return (1);
 }
 
 static int check_the_ends(t_data *data)
@@ -226,63 +233,76 @@ static int check_the_ends(t_data *data)
 	return (1);
 }
 
-static int	new_child(t_data *data, char **prototype, int *ends)
+static void close_fds(t_data *data, int *ends)
 {
-	int		ends_2[2];
+	close(ends[0]);
+	close(ends[1]);
+	close(data->ends_2[0]);
+	close(data->ends_2[1]);
+}
+
+static int call_the_daughter(t_data *data, char **prototype, int *ends)
+{
+	check_the_ends(data);
+	if (duplicate(data, take_ouput(data), give_input(data), ends) == ERROR
+	|| builtin(data, prototype) == ERROR
+	|| (!data->is_builtin && file_search(data, prototype[0]) == ERROR))
+	{
+		return (ERROR);
+	}
+	close_fds(data, ends);
+	if (!data->is_builtin && execve(data->executable, prototype, NULL))
+	{
+		return (error_msg(data, NULL, PERROR));
+	}
+	return (1);
+}
+
+static int	pipe_and_fork(t_data *data, char **prototype)
+{
+	pid_t id;
+
+	if (data->piped_cmd->next)
+	{
+		if (pipe(data->ends_2) == -1)
+		{
+			return(error_msg(data, NULL, PERROR));
+		}
+	}
+	if ((id = fork()) == ERROR)
+	{
+		return(error_msg(data, NULL, PERROR));
+	}
+	return (id);
+}
+
+static int	sugar_dady(t_data *data, char **prototype, int *ends)
+{
 	pid_t	id;
 	int		stat;
+	t_list	*tmp;
 
 	if (data->piped_cmd)
 	{
 		data->command = data->piped_cmd->content;
+		command_name_to_lower_case(data);
 		expand_prototype(data, data->command->prototype);
 		prototype = lst_to_table(data->command->prototype);
-		if (data->piped_cmd->next)
-		{
-			if (pipe(ends_2) == -1)
-			{
-				return (error_msg(data, ft_strjoin(prototype[0], ": command not found\n"), NORMAL_ERR));
-			}
-		}
-		if (file_search(data, prototype[0]) == ERROR)
-		{
-			return (ERROR);
-		}
-		if (!data->executable)
-		{
-			return (error_msg(data, ft_strjoin(prototype[0], ": command not found\n"), NORMAL_ERR));
-		}
-		if ((id = fork()) == ERROR)
-		{
-			return(error_msg(data, NULL, PERROR));
-		}
-		fprintf(stderr, "%s\n", data->executable);
-		fflush(stderr);
-		check_the_ends(data);
-		fprintf(stderr, "%d\n", data->infile);
-		fprintf(stderr, "%d\n\n", data->outfile);
-		take_ouput(data, ends);
-		give_input(data, ends_2);
+		id = pipe_and_fork(data, prototype);
 		if (id == 0)
-		{
-			if (execve(data->executable, prototype, NULL))
-			{
-				return (error_msg(data, NULL, PERROR));
-			}
-		}
+			call_the_daughter(data, prototype, ends);
 		waitpid(id, &stat, 0);
 		if (WIFEXITED(stat))
 			data->exit_status = WEXITSTATUS(stat);
-		if (!data->infile)
-			close(ends[0]);
 		if (data->piped_cmd->next)
 		{
 			data->piped_cmd = data->piped_cmd->next;
-			if (new_child(data, prototype, ends_2) == ERROR)
+			if (sugar_dady(data, prototype, data->ends_2) == ERROR)
 			{
 				return (ERROR);
 			}
 		}
+		close_fds(data, ends);
 	}
 	return (1);
 }
@@ -293,7 +313,7 @@ int	execute(t_data *data)
 	pid_t	id;
 	int		ends[2];
 	
-	if (new_child(data, prototype, ends) == ERROR)
+	if (sugar_dady(data, prototype, ends) == ERROR)
 		return (ERROR);
 	return (1);
 }
