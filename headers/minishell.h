@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 08:15:35 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/11 15:18:01 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/15 11:05:07 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@
 # define PERROR 5
 # define EXPORT_ERR 6
 # define UNSET_ERR 7
+# define NO_FILE -2
 
 typedef struct s_heredoc
 {
@@ -72,14 +73,14 @@ typedef struct s_data
 	t_info			*info;
 	t_list			*exported;
 	t_file_data		*file_data;
-	int				ends_2[2];
+	int				end[2];
 	const char		**envp;
+	pid_t			id;
 	int				quoting_state;
 	int				exit_status;
 	BOOL			passive;
 	BOOL			is_builtin;
 	char			*input;
-	char			*cmd_name;
 	BOOL			unset_cmd;
 	BOOL			var_with_equals_sign;
 	BOOL			is_env;
@@ -88,10 +89,9 @@ typedef struct s_data
 	char			*executable;
 	char			**local_env;
 	char			*document;
-	int				fd;
 }				t_data;
 
-//==================== lst_utils.c ===============
+//==================== utils ===================================
 
 void		free_list(t_list **lst);
 void		print_list(t_list *lst);
@@ -104,21 +104,6 @@ t_list		*lst_elem(t_list *lst, int index);
 t_list		*ft_dlstnew(void *content);
 void		ft_dlst_delete_node(t_list *lst);
 t_list		*ft_lst_head(t_list *lst);
-
-//========parser.c ====
-
-int			parser(t_data *data);
-int			make_branch(t_data *data, char *fragment);
-void		define_quoting_state(t_data *data, char *input, int i);
-int			hundle_heredoc(t_data *data);
-
-//======expansions.c ===
-
-char		*expand_token(t_data *data, char *input);
-char		*expand_env_vars(t_data *data, char *value);
-
-//========== utils.c ===
-
 int			error_msg(t_data *data, char *exit_message, int code);
 int			is_backslashed(int i, char *str);
 int			find_char(char *str, char c);
@@ -126,28 +111,29 @@ char		**ft_split_input(char const *s, char *separator);
 BOOL		quoted_fragment(char c);
 int			find_value(t_data *data, char *var, char **value);
 
-//=========== execution.c ===
+//======== parsing ============================================
+
+int			parser(t_data *data);
+int			make_branch(t_data *data, char *fragment);
+void		define_quoting_state(t_data *data, char *input, int i);
+int			hundle_heredoc(t_data *data);
+char		*expand_token(t_data *data, char *input);
+char		*expand_env_vars(t_data *data, char *value);
+
+
+//=========== execution ========================================
 
 int			execute(t_data *data);
 
-//========== builtins ===
-
-int			builtin(t_data *data, char **prototype);
-int			echo(t_data *data, char **prototype);
-int			env(t_data *data, char **prototype);
-int			export(t_data *data, char **prototype);
-int			cd(t_data *data, char *prototype);
-int			unset(t_data *data, char **prototype);
-
-//======== executables =======
-
-int	run_executable(t_data *data , char **prototype);
-
-//======== export =======
-
+int		builtin(t_data *data, char **prototype);
+int		echo(t_data *data, char **prototype);
+int		env(t_data *data, char **prototype);
+int		export(t_data *data, char **prototype);
+int		cd(t_data *data, char *prototype);
+int		unset(t_data *data, char **prototype);
 void	build_env_vars(t_data *data);
 int		scan_env_vars(t_data *data);
-
-//======================================================================
+char	**scan_command(t_data *data);
+int		file_search(t_data *data, char *prototype);
 
 #endif

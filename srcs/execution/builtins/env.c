@@ -6,11 +6,11 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/24 13:31:19 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/11 10:41:24 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/15 10:05:39 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../../../headers/minishell.h"
 
 int	env(t_data *data, char **prototype)
 {

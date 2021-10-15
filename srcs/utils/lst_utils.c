@@ -6,11 +6,11 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/14 08:37:34 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/08 12:59:55 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/15 10:06:31 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../../headers/minishell.h"
 
 void	free_list(t_list **lst)
 {

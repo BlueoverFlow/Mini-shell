@@ -6,11 +6,11 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/14 14:23:07 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/06 09:21:27 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/15 10:05:35 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../../../headers/minishell.h"
 
 static size_t	n_option(char **prototype)
 {

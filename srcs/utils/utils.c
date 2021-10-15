@@ -6,11 +6,11 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/15 09:41:53 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/11 13:26:08 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/15 10:06:37 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../../headers/minishell.h"
 
 int		error_msg(t_data *data, char *exit_message, int code)
 {
@@ -28,6 +28,7 @@ int		error_msg(t_data *data, char *exit_message, int code)
 	}
 	else if (code == PERROR)
 		perror("");
+	data->exit_status = 1;
 	return (ERROR);
 }
 

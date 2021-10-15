@@ -6,11 +6,11 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/18 17:20:29 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/11 12:55:31 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/15 13:12:46 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../../headers/minishell.h"
 
 static	int	theres_atoken(char *fragment)
 {
@@ -55,7 +55,7 @@ static int *allocate_int(int n)
 
 static	int	fill_file_id(t_data *data, char **fragment, t_list *last)
 {
-	if ((!data->command->file) || (data->command->file && !data->command->file))
+	if ((!data->command->file) || (data->command->file && !data->file_data->path))
 	{
 		data->file_data = malloc(sizeof(t_file_data));
 		data->file_data->id = -1;
@@ -256,7 +256,7 @@ static	int	build_tree(t_data *data, int i)
 	return (1);
 }
 
-static char input_stream_literal(t_data *data)
+static int input_stream_literal(t_data *data)
 {
 	static	int file_number = 0;
 	t_heredoc	heredoc_;
@@ -264,7 +264,7 @@ static char input_stream_literal(t_data *data)
 	heredoc_.input = NULL;
 	file_number++;
 	heredoc_.file_name = ft_strjoin("/tmp/.heredoc_", ft_itoa(file_number));
-	if ((heredoc_.fd = open(heredoc_.file_name, O_CREAT | O_RDWR | O_APPEND, 777)) < 3)
+	if ((heredoc_.fd = open(heredoc_.file_name, O_CREAT | O_RDWR | O_APPEND, 0666)) < 3)
 	{
 		free(heredoc_.file_name);
 		return (hundle_heredoc(data));

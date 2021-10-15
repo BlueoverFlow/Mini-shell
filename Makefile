@@ -6,22 +6,24 @@
 #    By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/05/13 08:14:39 by ael-mezz          #+#    #+#              #
-#    Updated: 2021/10/10 09:17:28 by ael-mezz         ###   ########.fr        #
+#    Updated: 2021/10/15 11:05:43 by ael-mezz         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-SRCS =	main.c			\
-		lst_utils.c		\
-		parsing.c		\
-		utils.c			\
-		expansions.c	\
-		execution.c		\
-		builtins.c		\
-		echo.c			\
-		env.c			\
-		export.c		\
-		cd.c			\
-		unset.c
+SRCS =	main.c								\
+		utils/lst_utils.c					\
+		utils/utils.c						\
+		parsing/parsing.c					\
+		parsing/expansions.c				\
+		execution/execution.c				\
+		execution/scan_command.c			\
+		execution/find_executable.c			\
+		execution/builtins/builtins.c		\
+		execution/builtins/echo.c			\
+		execution/builtins/env.c			\
+		execution/builtins/export.c			\
+		execution/builtins/cd.c				\
+		execution/builtins/unset.c
 
 LIBFT =	libft/libft.a
 
@@ -37,7 +39,7 @@ OBJ = $(SRCS:.c=.o)
 
 OBJ_DIR = mv *.o srcs
 
-HEADER = includes/minishell.h
+HEADER = headers/minishell.h
 
 SRCS := $(addprefix $(SRCS_PATH)/, $(SRCS))
 

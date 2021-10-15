@@ -6,11 +6,11 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/15 15:32:25 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/11 11:41:09 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/15 10:06:21 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../../headers/minishell.h"
 
 static int	is_special_char(int i, char *input, char *special)
 {
@@ -32,6 +32,8 @@ static char	*assign_value(t_data *data, char *var)
 		build_env_vars(data);
 	tmp = data->exported;
 	value = NULL;
+	if (!ft_strcmp(var, "?"))
+		return(ft_itoa(data->exit_status));
 	while (data->exported)
 	{
 		data->info = data->exported->content;

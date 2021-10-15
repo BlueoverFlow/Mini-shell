@@ -6,17 +6,18 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 08:15:00 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/11 11:03:29 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/15 11:11:44 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/minishell.h"
+#include "../headers/minishell.h"
 
 static void	global_init(t_data *data, const char **envp)
 {
 	data->garbage = NULL;
 	data->envp = envp;
 	data->exported = NULL;
+	data->exit_status = 0;
 }
 
 static void	_init(t_data *data)
