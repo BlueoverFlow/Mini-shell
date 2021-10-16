@@ -6,13 +6,13 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/14 14:23:07 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/15 10:05:21 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/16 09:03:00 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../headers/minishell.h"
 
-int	builtin(t_data *data, char **prototype)
+void	builtin(t_data *data, char **prototype)
 {
 	data->is_builtin = TRUE;
 	data->is_env = FALSE;
@@ -28,5 +28,4 @@ int	builtin(t_data *data, char **prototype)
 		unset(data, prototype);
 	else
 		data->is_builtin = FALSE;
-	return ((data->exit_status != 0 ) ? ERROR : 1);
 }

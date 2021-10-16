@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 08:15:00 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/15 11:11:44 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/16 08:42:45 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,9 @@
 static void	global_init(t_data *data, const char **envp)
 {
 	data->garbage = NULL;
-	data->envp = envp;
 	data->exported = NULL;
 	data->exit_status = 0;
+	build_env_vars(data, envp);
 }
 
 static void	_init(t_data *data)
@@ -29,7 +29,8 @@ static void	_init(t_data *data)
 	data->unset_cmd = FALSE;
 	data->command = NULL;
 	data->file_data = NULL;
-	data->exit_status = 0;
+	data->end[1] = -1;
+	data->end[1] = -1;
 }
 
 int	main(int argc, char **argv, const char **envp)

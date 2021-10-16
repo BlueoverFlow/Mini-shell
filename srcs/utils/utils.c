@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/15 09:41:53 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/15 10:06:37 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/16 09:14:53 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,8 @@ int		error_msg(t_data *data, char *exit_message, int code)
 	{
 		if (code == UNSET_ERR)
 			ft_putstr_fd("unset: `", STDERR_FILENO);
-		ft_putstr_fd("export: `", STDERR_FILENO);
+		else
+			ft_putstr_fd("export: `", STDERR_FILENO);
 		ft_putstr_fd(exit_message, STDERR_FILENO);
 		ft_putstr_fd("': not a valid identifier\n", STDERR_FILENO);
 	}

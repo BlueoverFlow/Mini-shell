@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/06 11:44:55 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/15 10:05:52 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/16 08:22:27 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,6 @@ int	unset(t_data *data, char **prototype)
     int		i;
     t_list  *tmp;
 
-    if (!data->exported)
-		build_env_vars(data);
     i = 0;
 	while (prototype[++i] && prototype[i][0])
 	{

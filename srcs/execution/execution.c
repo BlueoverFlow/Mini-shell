@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/17 10:06:45 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/15 12:52:25 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/16 09:04:31 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,8 +145,7 @@ static int call_the_daughter(t_data *data, char **prototype, int read_end)
 		perror("minishell: ");
 		exit(EXIT_FAILURE);
 	}
-	if (builtin(data, prototype) == ERROR)
-		exit (EXIT_FAILURE);
+	builtin(data, prototype);
 	if (!data->is_builtin && file_search(data, prototype[0]) == ERROR)
 		exit (EXIT_FAILURE);
 	if (!data->is_builtin && execve(data->executable, prototype, NULL))
@@ -178,14 +177,29 @@ static void close_fds_and_wait(t_data *data)
 		data->exit_status = WEXITSTATUS(stat);
 }
 
+static int simple_command(t_data *data, char **prototype)
+{
+	if (!data->piped_cmd->next)
+	{
+		prototype = scan_command(data);
+		builtin(data, prototype);
+		if (data->is_builtin)
+			return (1);
+		free_2d(prototype);
+	}
+	return (0);
+}
+
 int	execute(t_data *data)
 {
 	char	**prototype;
 	int		read_end;
+	int		ret;
 
 	read_end = -1;
-	data->end[1] = -1;
-	data->end[1] = -1;
+	ret = simple_command(data, prototype);
+	if (ret)
+		return (ret);
 	while (data->piped_cmd)
 	{
 		prototype = scan_command(data);

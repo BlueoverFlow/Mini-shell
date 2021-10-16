@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 08:15:35 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/15 11:05:07 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/16 09:03:14 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,6 @@ typedef struct s_data
 	t_list			*exported;
 	t_file_data		*file_data;
 	int				end[2];
-	const char		**envp;
 	pid_t			id;
 	int				quoting_state;
 	int				exit_status;
@@ -120,20 +119,18 @@ int			hundle_heredoc(t_data *data);
 char		*expand_token(t_data *data, char *input);
 char		*expand_env_vars(t_data *data, char *value);
 
-
 //=========== execution ========================================
 
 int			execute(t_data *data);
-
-int		builtin(t_data *data, char **prototype);
-int		echo(t_data *data, char **prototype);
-int		env(t_data *data, char **prototype);
-int		export(t_data *data, char **prototype);
-int		cd(t_data *data, char *prototype);
-int		unset(t_data *data, char **prototype);
-void	build_env_vars(t_data *data);
-int		scan_env_vars(t_data *data);
-char	**scan_command(t_data *data);
-int		file_search(t_data *data, char *prototype);
+void		builtin(t_data *data, char **prototype);
+int			echo(t_data *data, char **prototype);
+int			env(t_data *data, char **prototype);
+int			export(t_data *data, char **prototype);
+int			cd(t_data *data, char *prototype);
+int			unset(t_data *data, char **prototype);
+void		build_env_vars(t_data *data, const char **envp);
+int			scan_env_vars(t_data *data);
+char		**scan_command(t_data *data);
+int			file_search(t_data *data, char *prototype);
 
 #endif

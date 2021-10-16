@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/24 13:31:19 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/15 10:05:39 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/16 08:22:37 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,6 @@ int	env(t_data *data, char **prototype)
 
 	if (prototype[1] && *prototype[1])
 		return (error_msg(data, "syntax error!\n", NORMAL_ERR));
-	if (!data->exported)
-		build_env_vars(data);
 	tmp = data->exported;
 	while (data->exported)
 	{

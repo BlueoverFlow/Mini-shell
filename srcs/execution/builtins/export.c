@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/24 13:29:24 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/15 10:05:43 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/16 10:11:29 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,13 +142,16 @@ static int	already_exported(t_data *data, int i, t_info *info_1)
 
 	if (!ft_strcmp(info_1->var, data->info->var))
 	{
-		if (i == ERROR)
+		if (data->info->value)
 		{
-			free(info_1->value);
-			info_1->value = NULL;
+			if (i == ERROR)
+			{
+				free(info_1->value);
+				info_1->value = NULL;
+			}
+			info_1->value = ft_strjoin_and_free(info_1->value, data->info->value);
+			info_1->value = expand_token(data, info_1->value);
 		}
-		info_1->value = ft_strjoin_and_free(info_1->value, data->info->value);
-		info_1->value = expand_token(data, info_1->value);
 		return (1);
 	}
 	return (0);
@@ -179,17 +182,15 @@ int	scan_env_vars(t_data *data)
 	return (0);
 }
 
-void	build_env_vars(t_data *data)
+void	build_env_vars(t_data *data, const char **envp)
 {
-	static int	i = -1;
+	int i;
 
-	if (i == -1)
-	{
-		data->exported = NULL;
-		while (data->envp[++i])
-			insert_var(data, (char *)data->envp[i]);
-		increase_shelllvl(data);
-	}
+	i = -1;
+	data->exported = NULL;
+	while (envp[++i])
+		insert_var(data, (char *)envp[i]);
+	increase_shelllvl(data);
 }
 
 int	export(t_data *data, char **prototype)
@@ -197,7 +198,6 @@ int	export(t_data *data, char **prototype)
 	int		i;
 
 	i = 0;
-	build_env_vars(data);
 	if (!prototype[1] || !prototype[1][0])
 		export_print(data);
 	else if (*prototype[1] == '-')
@@ -205,7 +205,7 @@ int	export(t_data *data, char **prototype)
 	while (prototype[++i] && prototype[i][0])
 	{
 		if (check_export_syntax(data, prototype[i]) == ERROR)
-			return (error_msg(data, NULL, EXPORT_ERR));
+			return (error_msg(data, prototype[i], EXPORT_ERR));
 		if (!scan_env_vars(data))
 			insert_var(data, NULL);
 	}

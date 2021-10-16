@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/15 11:04:30 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/15 12:18:21 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/16 08:50:19 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,6 @@ static char	*ft_getenv(t_data *data, char *var)
 	char	*value;
 	char	*key;
 
-	if (!data->exported)
-		build_env_vars(data);
 	tmp = data->exported;
 	while (tmp)
 	{

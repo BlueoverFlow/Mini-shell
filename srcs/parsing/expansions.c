@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/15 15:32:25 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/15 10:06:21 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/16 08:23:09 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,6 @@ static char	*assign_value(t_data *data, char *var)
 	char	*value;
 	t_list	*tmp;
 
-	if (!data->exported)
-		build_env_vars(data);
 	tmp = data->exported;
 	value = NULL;
 	if (!ft_strcmp(var, "?"))

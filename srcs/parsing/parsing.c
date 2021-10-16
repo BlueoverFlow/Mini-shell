@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/18 17:20:29 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/15 13:12:46 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/16 07:35:58 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ static int *allocate_int(int n)
 
 static	int	fill_file_id(t_data *data, char **fragment, t_list *last)
 {
-	if ((!data->command->file) || (data->command->file && !data->file_data->path))
+	if ((!data->command->file) || (data->command->file && !data->file_data))
 	{
 		data->file_data = malloc(sizeof(t_file_data));
 		data->file_data->id = -1;
