@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 08:15:35 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/16 09:03:14 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/19 17:11:24 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,13 +38,13 @@
 # define UNSET_ERR 7
 # define NO_FILE -2
 
-typedef struct s_heredoc
+typedef struct s_h_d
 {
 	int			fd;
 	char		*input;
 	char		*file_name;
 	t_list		*tmp;
-}				t_heredoc;
+}				t_h_d;
 
 typedef struct s_file_data
 {
@@ -109,6 +109,12 @@ int			find_char(char *str, char c);
 char		**ft_split_input(char const *s, char *separator);
 BOOL		quoted_fragment(char c);
 int			find_value(t_data *data, char *var, char **value);
+int			theres_atoken(char *fragment);
+int			is_redirection(char *str, int i, int quoting_state);
+BOOL		closed_quotes(char *input, int i);
+char		*lst_to_word(t_list *lst);
+
+
 
 //======== parsing ============================================
 
@@ -117,7 +123,8 @@ int			make_branch(t_data *data, char *fragment);
 void		define_quoting_state(t_data *data, char *input, int i);
 int			hundle_heredoc(t_data *data);
 char		*expand_token(t_data *data, char *input);
-char		*expand_env_vars(t_data *data, char *value);
+char		*expand_env_vars(t_data *data, char *input);
+int			hundle_redirection(t_data *data, char *fragment, char *token, int i);
 
 //=========== execution ========================================
 
@@ -132,5 +139,6 @@ void		build_env_vars(t_data *data, const char **envp);
 int			scan_env_vars(t_data *data);
 char		**scan_command(t_data *data);
 int			file_search(t_data *data, char *prototype);
+char		*ft_getenv(t_data *data, char *var);
 
 #endif

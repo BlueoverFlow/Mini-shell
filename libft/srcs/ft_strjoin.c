@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/15 10:53:26 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/11 11:36:25 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/19 11:54:24 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	return (ft_strcat(nstr, s2));
 }
 
-char	*ft_strjoin_and_free(char *s1, char const *s2)
+char	*ft_strjoin_and_free_s1(char *s1, char const *s2)
 {
 	char	*nstr;
 
@@ -43,4 +43,23 @@ char	*ft_strjoin_and_free(char *s1, char const *s2)
 	nstr = ft_strcpy(nstr, s1);
 	free(s1);
 	return (ft_strcat(nstr, s2));
+}
+
+char	*ft_strjoin_and_free_all(char *s1, char *s2)
+{
+	char	*nstr;
+
+	if (!s1)
+		return ((char *)s2);
+	else if (!s2)
+		return ((char *)s1);
+	nstr = (char *)malloc(sizeof(char) * (ft_strlen(s1)
+				+ ft_strlen(s2) + 1));
+	if (!nstr)
+		return (NULL);
+	nstr = ft_strcpy(nstr, s1);
+	nstr = ft_strcat(nstr, s2);
+	free(s1);
+	free(s2);
+	return (nstr);
 }

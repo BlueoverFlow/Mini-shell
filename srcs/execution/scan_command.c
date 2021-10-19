@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/15 10:58:05 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/15 11:03:45 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/19 13:16:29 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,22 +46,28 @@ static char	**lst_to_table(t_list *lst)
 	return (table);
 }
 
-static void	expand_prototype(t_data *data, t_list *prototype)
+static void	expand_prototype(t_data *data)
 {
-	if (!prototype)
+	if (!data->command->prototype)
 		return ;
-	prototype->content = expand_token(data, prototype->content);
-	prototype->content = expand_env_vars(data, prototype->content);
-	expand_prototype(data, prototype->next);
+	data->command->prototype->content
+		= expand_env_vars(data, data->command->prototype->content);
+	data->command->prototype->content
+		= expand_token(data, data->command->prototype->content);
+	data->command->prototype = data->command->prototype->next;
+	expand_prototype(data);
 }
 
 char **scan_command(t_data *data)
 {
-	char **prototype;
+	t_list	*tmp;
+	char	**prototype;
 
 	data->command = data->piped_cmd->content;
+	tmp = data->command->prototype;
 	command_name_to_lower_case(data);
-	expand_prototype(data, data->command->prototype);
+	expand_prototype(data);
+	data->command->prototype = tmp;
 	prototype = lst_to_table(data->command->prototype);
 	return (prototype);
 }

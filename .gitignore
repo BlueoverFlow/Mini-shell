@@ -5,5 +5,4 @@ test
 TEST_DIRECTORY
 .devcontainer
 Dockerfile
-notes.txt
 minishell

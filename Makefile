@@ -6,15 +6,20 @@
 #    By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/05/13 08:14:39 by ael-mezz          #+#    #+#              #
-#    Updated: 2021/10/15 11:05:43 by ael-mezz         ###   ########.fr        #
+#    Updated: 2021/10/19 17:21:21 by ael-mezz         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 SRCS =	main.c								\
 		utils/lst_utils.c					\
 		utils/utils.c						\
+		utils/utils_2.c						\
+		utils/parsing.utils.c				\
 		parsing/parsing.c					\
 		parsing/expansions.c				\
+		parsing/expand_env_vars.c			\
+		parsing/heredoc_parsing.c			\
+		parsing/redirections.c				\
 		execution/execution.c				\
 		execution/scan_command.c			\
 		execution/find_executable.c			\

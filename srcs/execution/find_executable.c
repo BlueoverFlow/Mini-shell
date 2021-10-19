@@ -6,13 +6,13 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/15 11:04:30 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/16 08:50:19 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/19 11:53:44 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../headers/minishell.h"
 
-static char	*ft_getenv(t_data *data, char *var)
+char	*ft_getenv(t_data *data, char *var)
 {
 	t_list *tmp;
 	char	*value;
@@ -42,7 +42,7 @@ static int compare_files(t_data *data, DIR *dir, char *prototype, char *tree)
 		if (!ft_strcmp(prototype, list->d_name))
 		{
 			closedir(dir);
-			data->executable = ft_strjoin_and_free(ft_strjoin_and_free(tree, "/"), prototype);		
+			data->executable = ft_strjoin_and_free_s1(ft_strjoin_and_free_s1(tree, "/"), prototype);		
 			return (1);
 		}
 		list = readdir(dir);

@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/24 13:29:24 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/16 10:11:29 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/19 11:53:44 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,8 +149,7 @@ static int	already_exported(t_data *data, int i, t_info *info_1)
 				free(info_1->value);
 				info_1->value = NULL;
 			}
-			info_1->value = ft_strjoin_and_free(info_1->value, data->info->value);
-			info_1->value = expand_token(data, info_1->value);
+			info_1->value = ft_strjoin_and_free_s1(info_1->value, data->info->value);
 		}
 		return (1);
 	}
@@ -211,4 +210,3 @@ int	export(t_data *data, char **prototype)
 	}
 	return (1);
 }
-
