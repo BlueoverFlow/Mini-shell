@@ -38,6 +38,16 @@ fix leaked memory ------------------------------------------------
 norme the code ---------------------------------------------------
 fix errors -------------------------------------------------------
 
+======= 21/10/2021 =======
+targets:
+you need to use exit. replace all prototype with data->prototype
+fix pipes and redirections ---------------------------------------
+add signals ------------------------------------------------------
+protect mallocs --------------------------------------------------
+fix leaked memory ------------------------------------------------
+norme the code ---------------------------------------------------
+fix errors -------------------------------------------------------
+
 
 
 
@@ -50,15 +60,3 @@ fix errors -------------------------------------------------------
 ======= 22/10/2021 ======= END of PROJECT
 target:
 push -------------------------------------------------------------
-
-
-     achraf   $bp
-minishell$ echo  "$a"f$b
-     achraf   f
-minishell$ echo  $af$b
-
-minishell$ echo  $a$b
-achraf
-minishell$ export b="     damn"
-minishell$ echo  $a$b
-cdamn

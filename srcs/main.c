@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 08:15:00 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/20 09:35:01 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/20 16:23:29 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,17 +28,19 @@ static void	_init(t_data *data)
 	data->word = NULL;
 	data->quoting_state = UNQUOTED;
 	data->passive = FALSE;
-	data->unset_cmd = FALSE;
 	data->command = NULL;
 	data->file_data = NULL;
-	data->end[1] = -1;
-	data->end[1] = -1;
+	data->end[1] = ERROR;
+	data->end[0] = ERROR;
+	data->fd[0] = ERROR;
+	data->fd[1] = ERROR;
+	data->fd[2] = ERROR;
+	data->fd[3] = ERROR;
 }
 
 int	main(int argc, char **argv, const char **envp)
 {
 	t_data	data;
-	
 	global_init(&data, argc, argv, envp);
 	while (1)
 	{

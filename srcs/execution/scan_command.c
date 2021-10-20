@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/15 10:58:05 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/19 13:16:29 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/20 18:39:23 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,16 +58,14 @@ static void	expand_prototype(t_data *data)
 	expand_prototype(data);
 }
 
-char **scan_command(t_data *data)
+void	scan_command(t_data *data)
 {
 	t_list	*tmp;
-	char	**prototype;
 
 	data->command = data->piped_cmd->content;
 	tmp = data->command->prototype;
 	command_name_to_lower_case(data);
 	expand_prototype(data);
 	data->command->prototype = tmp;
-	prototype = lst_to_table(data->command->prototype);
-	return (prototype);
+	data->prototype = lst_to_table(data->command->prototype);
 }

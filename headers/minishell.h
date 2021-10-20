@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 08:15:35 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/20 09:36:14 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/20 18:41:44 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,12 @@
 # include <dirent.h>
 
 //macros
+# define M_FILEERR 300
+# define M_BADACCES 301
+# define EXECUTABLE_ERRS 302
+# define M_NOVALID 303
+# define M_NOCMD 304
+# define M_NOENT 305
 # define ERROR -1
 # define TRUE 1
 # define FALSE 0
@@ -49,7 +55,8 @@ typedef struct s_h_d
 typedef struct s_file_data
 {
 	char		*path;
-	int			id;	
+	char		*path_2;
+	int			id;
 }				t_file_data;
 
 typedef struct s_command
@@ -74,15 +81,15 @@ typedef struct s_data
 	t_list			*exported;
 	t_file_data		*file_data;
 	pid_t			id;
+	int				fd[4];
+	int				end[2];
 	BOOL			passive;
 	BOOL			is_builtin;
-	BOOL			unset_cmd;
 	BOOL			err_path_env;
 	BOOL			var_with_equals_sign;
-	BOOL			is_env;
 	BOOL			infile;
 	BOOL			outfile;
-	int				end[2];
+	BOOL			simple_cmd;
 	int				argc;
 	int				quoting_state;
 	int				exit_status;
@@ -90,6 +97,7 @@ typedef struct s_data
 	char			*executable;
 	char			**local_env;
 	char			*document;
+	char			**prototype;
 	char			**argv;
 }				t_data;
 
@@ -106,7 +114,7 @@ t_list		*lst_elem(t_list *lst, int index);
 t_list		*ft_dlstnew(void *content);
 void		ft_dlst_delete_node(t_list *lst);
 t_list		*ft_lst_head(t_list *lst);
-int			error_msg(t_data *data, char *exit_message, int code);
+void		error_msg(t_data *data, int errno_code, char *file);
 int			is_backslashed(int i, char *str);
 int			find_char(char *str, char c);
 char		**ft_split_input(char const *s, char *separator);
@@ -117,6 +125,8 @@ int			is_redirection(char *str, int i, int quoting_state);
 BOOL		closed_quotes(char *input, int i);
 char		*lst_to_word(t_list *lst);
 int			syntax_checking(t_data *data, int i);
+void		close_fds(t_data *data);
+void		close_fds_and_wait(t_data *data);
 
 
 
@@ -133,16 +143,19 @@ int			hundle_redirection(t_data *data, char *fragment, char *token, int i);
 //=========== execution ========================================
 
 int			execute(t_data *data);
-void		builtin(t_data *data, char **prototype);
-int			echo(char **prototype);
-int			env(t_data *data, char **prototype);
-int			export(t_data *data, char **prototype);
-int			cd(char *prototype);
-int			unset(t_data *data, char **prototype);
+int			builtin(t_data *data);
+int			echo(t_data *data);
+int			env(t_data *data);
+int			export(t_data *data);
+int			cd(t_data *data);
+int			unset(t_data *data);
 void		build_env_vars(t_data *data, const char **envp);
 int			scan_env_vars(t_data *data);
-char		**scan_command(t_data *data);
-int			file_search_using_path_var(t_data *data, char *prototype);
+
+void		scan_command(t_data *data);
+int			file_search_using_path_var(t_data *data);
 char		*ft_getenv(t_data *data, char *var);
+int			stream_source(t_data *data, int read_end);
+void		assign_exit_status(t_data *data);
 
 #endif
