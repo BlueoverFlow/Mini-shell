@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/15 09:41:53 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/16 09:14:53 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/20 09:35:34 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ static int	separator_search(const char *s, char *separator, int c)
 			|| s[c] != separator[i])
 			j++;
 	}
-	if (j == ft_strlen(separator))
+	if (j == (int)ft_strlen(separator))
 		return (0);
 	return (1);
 }
@@ -76,7 +76,6 @@ static size_t	ft_countwords(char const *s, char *separator)
 {
 	int		start;
 	size_t	count;
-	int		i;
 
 	count = 0;
 	start = 0;

@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 16:33:54 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/19 16:57:27 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/20 09:28:13 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ static void	assign_redirection_id(t_data *data, char *fragment)
 	}
 }
 
-static	int	fill_file_id(t_data *data, char **fragment, t_list *last)
+static	int	fill_file_id(t_data *data, char **fragment)
 {
 	if ((!data->command->file) || (data->command->file && !data->file_data))
 	{
@@ -49,8 +49,7 @@ static	int	fill_file_id(t_data *data, char **fragment, t_list *last)
 	return (1);
 }
 
-static int	fill_file_path(t_data *data, char *fragment,
-	char *token, t_list *last)
+static int	fill_file_path(t_data *data, char *token)
 {
 	if (data->command->file && data->file_data && !data->file_data->path)
 	{
@@ -72,12 +71,12 @@ int	hundle_redirection(t_data *data, char *fragment, char *token, int i)
 	last = ft_lstlast(data->command->file);
 	if (fragment[i] && is_redirection(fragment, 0, UNQUOTED))
 	{
-		if (fill_file_id(data, &fragment, last) == ERROR)
+		if (fill_file_id(data, &fragment) == ERROR)
 			return (ERROR);
 	}
 	else
 	{
-		ret = fill_file_path(data, fragment, token, last);
+		ret = fill_file_path(data, token);
 		if (ret == ERROR)
 			return (ret);
 		else if (!ret)

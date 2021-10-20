@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 08:15:35 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/19 17:11:24 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/20 09:36:14 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,21 +73,24 @@ typedef struct s_data
 	t_info			*info;
 	t_list			*exported;
 	t_file_data		*file_data;
-	int				end[2];
 	pid_t			id;
-	int				quoting_state;
-	int				exit_status;
 	BOOL			passive;
 	BOOL			is_builtin;
-	char			*input;
 	BOOL			unset_cmd;
+	BOOL			err_path_env;
 	BOOL			var_with_equals_sign;
 	BOOL			is_env;
 	BOOL			infile;
 	BOOL			outfile;
+	int				end[2];
+	int				argc;
+	int				quoting_state;
+	int				exit_status;
+	char			*input;
 	char			*executable;
 	char			**local_env;
 	char			*document;
+	char			**argv;
 }				t_data;
 
 //==================== utils ===================================
@@ -113,6 +116,7 @@ int			theres_atoken(char *fragment);
 int			is_redirection(char *str, int i, int quoting_state);
 BOOL		closed_quotes(char *input, int i);
 char		*lst_to_word(t_list *lst);
+int			syntax_checking(t_data *data, int i);
 
 
 
@@ -130,15 +134,15 @@ int			hundle_redirection(t_data *data, char *fragment, char *token, int i);
 
 int			execute(t_data *data);
 void		builtin(t_data *data, char **prototype);
-int			echo(t_data *data, char **prototype);
+int			echo(char **prototype);
 int			env(t_data *data, char **prototype);
 int			export(t_data *data, char **prototype);
-int			cd(t_data *data, char *prototype);
+int			cd(char *prototype);
 int			unset(t_data *data, char **prototype);
 void		build_env_vars(t_data *data, const char **envp);
 int			scan_env_vars(t_data *data);
 char		**scan_command(t_data *data);
-int			file_search(t_data *data, char *prototype);
+int			file_search_using_path_var(t_data *data, char *prototype);
 char		*ft_getenv(t_data *data, char *var);
 
 #endif

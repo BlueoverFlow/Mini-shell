@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/15 11:04:30 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/19 11:53:44 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/20 09:32:55 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,7 @@
 
 char	*ft_getenv(t_data *data, char *var)
 {
-	t_list *tmp;
-	char	*value;
-	char	*key;
+	t_list	*tmp;
 
 	tmp = data->exported;
 	while (tmp)
@@ -32,7 +30,7 @@ char	*ft_getenv(t_data *data, char *var)
 	return (NULL);
 }
 
-static int compare_files(t_data *data, DIR *dir, char *prototype, char *tree)
+static BOOL	compare_files(t_data *data, DIR *dir, char *prototype, char *tree)
 {
 	struct dirent	*list;
 
@@ -42,33 +40,40 @@ static int compare_files(t_data *data, DIR *dir, char *prototype, char *tree)
 		if (!ft_strcmp(prototype, list->d_name))
 		{
 			closedir(dir);
-			data->executable = ft_strjoin_and_free_s1(ft_strjoin_and_free_s1(tree, "/"), prototype);		
-			return (1);
+			data->executable = ft_strjoin_and_free_s1
+				(ft_strjoin(tree, "/"), prototype);
+			return (TRUE);
 		}
 		list = readdir(dir);
 	}
 	data->executable = NULL;
 	closedir(dir);
-	return (0);
+	return (FALSE);
 }
 
-int file_search(t_data *data, char *prototype)
+BOOL	file_search_using_path_var(t_data *data, char *prototype)
 {
 	char	**tree;
 	char	*path;
 	DIR		*dir;
 	int		i;
 
-	if (!(path = ft_getenv(data, "PATH")))
-		return (error_msg(data, ft_strjoin(prototype, ": no such file or directory\n"), NORMAL_ERR));
+	path = ft_getenv(data, "PATH");
+	if (!path)
+	{
+		data->err_path_env = TRUE;
+		return (ERROR);
+	}
 	tree = ft_split(path, ':');
 	i = -1;
 	while (tree[++i])
 	{
 		dir = opendir(tree[i]);
+		if (!dir)
+			break ;
 		if (compare_files(data, dir, prototype, tree[i]))
-			return (1);
+			return (TRUE);
 	}
 	free_2d(tree);
-	return (error_msg(data, ft_strjoin(prototype, ": command not found\n"), NORMAL_ERR));
+	return (FALSE);
 }

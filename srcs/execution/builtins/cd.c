@@ -6,13 +6,13 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/24 18:16:59 by mlabrayj          #+#    #+#             */
-/*   Updated: 2021/10/15 10:05:31 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/20 09:38:19 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../headers/minishell.h"
 
-int	cd(t_data *data, char *prototype)
+int	cd(char *prototype)
 {
 	// struct dirent	*de;// Pointer for directory entry
     // int				ret;

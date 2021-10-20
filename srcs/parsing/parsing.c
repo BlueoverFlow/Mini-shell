@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/18 17:20:29 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/19 17:22:33 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/20 09:27:40 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@ int	make_branch(t_data *data, char *fragment)
 	char	*token;
 	int		tmp;
 	int		i;
-	int		ret;
 
 	i = 0;
 	if (!*fragment)

@@ -6,13 +6,13 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/18 09:45:38 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/19 16:32:39 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/20 09:28:35 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../headers/minishell.h"
 
-static char	*concate_value(t_data *data, char *new, char *s)
+static char	*concate_value(char *new, char *s)
 {
 	int			i;
 	char		**fragment;
@@ -70,7 +70,7 @@ static char	*assign_var_and_value(t_data *data, char *input, char *new, int *i)
 	if (assign.value)
 	{
 		if (data->quoting_state == UNQUOTED)
-			new = concate_value(data, new, assign.value);
+			new = concate_value(new, assign.value);
 		else
 			new = ft_strjoin_and_free_s1(new, assign.value);
 	}

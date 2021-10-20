@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/17 10:06:45 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/19 13:23:50 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/20 09:41:27 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,14 +146,14 @@ static int call_the_daughter(t_data *data, char **prototype, int read_end)
 		exit(EXIT_FAILURE);
 	}
 	builtin(data, prototype);
-	if (!data->is_builtin && file_search(data, prototype[0]) == ERROR)
+	if (file_search_using_path_var(data, prototype[0]) == ERROR)
 		exit (EXIT_FAILURE);
 	if (!data->is_builtin && execve(data->executable, prototype, NULL))
 		perror("minishell: ");
 	exit(EXIT_FAILURE);
 }
 
-static int	pipe_and_fork(t_data *data, char **prototype)
+static int	pipe_and_fork(t_data *data)
 {
 	if (data->piped_cmd->next)
 	{
@@ -181,11 +181,12 @@ static int simple_command(t_data *data, char **prototype)
 {
 	if (!data->piped_cmd->next)
 	{
-		prototype = scan_command(data);
 		builtin(data, prototype);
 		if (data->is_builtin)
+		{
+			free_2d(prototype);
 			return (1);
-		free_2d(prototype);
+		}
 	}
 	return (0);
 }
@@ -197,13 +198,13 @@ int	execute(t_data *data)
 	int		ret;
 
 	read_end = -1;
+	prototype = scan_command(data);
 	ret = simple_command(data, prototype);
 	if (ret)
 		return (ret);
 	while (data->piped_cmd)
 	{
-		prototype = scan_command(data);
-		if (pipe_and_fork(data, prototype) == ERROR)
+		if (pipe_and_fork(data) == ERROR)
 			return (ERROR);
 		read_end = data->end[0];
 		if (data->id == 0)

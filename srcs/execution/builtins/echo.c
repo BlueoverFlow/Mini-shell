@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/14 14:23:07 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/15 10:05:35 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/20 09:38:26 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static size_t	n_option(char **prototype)
 	return (i);
 }
 
-int	echo(t_data *data, char **prototype)
+int	echo(char **prototype)
 {
 	size_t	i;
 	int		n;

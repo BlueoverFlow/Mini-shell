@@ -6,7 +6,7 @@
 #    By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/05/13 08:14:39 by ael-mezz          #+#    #+#              #
-#    Updated: 2021/10/19 17:21:21 by ael-mezz         ###   ########.fr        #
+#    Updated: 2021/10/20 09:38:35 by ael-mezz         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ SRCS =	main.c								\
 		utils/lst_utils.c					\
 		utils/utils.c						\
 		utils/utils_2.c						\
-		utils/parsing.utils.c				\
+		utils/parsing_utils.c				\
 		parsing/parsing.c					\
 		parsing/expansions.c				\
 		parsing/expand_env_vars.c			\
@@ -32,7 +32,7 @@ SRCS =	main.c								\
 
 LIBFT =	libft/libft.a
 
-FLAGS = -g -lreadline -ledit #-Wall -Werror -Wextra -fsanitize=address
+FLAGS = -g -lreadline -ledit -Wall -Werror -Wextra #-fsanitize=address
 
 SRCS_PATH =	./srcs
 

@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/24 13:29:24 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/19 11:53:44 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/20 09:29:52 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static int is_plus_sign(t_data *data, char *var, int i)
 {
-	if (var[i] == '+' && i == ft_strlen(var) - 1 && data->info->value)
+	if (var[i] == '+' && i == (int)ft_strlen(var) - 1 && data->info->value)
 		return (1);
 	return (0);
 }
@@ -122,8 +122,6 @@ static void sort_var(t_data *data)
 static void	insert_var(t_data *data, char *input)
 {
 	int				i;
-	t_info			*info_1;
-	t_list			*tmp;
 
 	if (input)
 	{
@@ -138,8 +136,6 @@ static void	insert_var(t_data *data, char *input)
 
 static int	already_exported(t_data *data, int i, t_info *info_1)
 {
-	char	*old_value;
-
 	if (!ft_strcmp(info_1->var, data->info->var))
 	{
 		if (data->info->value)
@@ -160,7 +156,6 @@ int	scan_env_vars(t_data *data)
 {
 	t_info	*info_1;
 	t_list	*tmp;
-	char	*key;
 	int		i;
 
 	tmp = data->exported;
