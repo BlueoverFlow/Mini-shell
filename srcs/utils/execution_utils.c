@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/20 14:22:16 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/20 18:37:37 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/21 12:16:55 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,43 +47,57 @@ void	close_fds_and_wait(t_data *data)
 		data->exit_status = WEXITSTATUS(stat);
 }
 
-void	error_msg(t_data *data, int errno_code, char *file)
+static void error_prompt(t_data *data, char *arg)
 {
 	ft_putstr_fd("minishell: ", STDERR_FILENO);
-	ft_putstr_fd(data->prototype, STDERR_FILENO);
-	ft_putstr_fd(": ", STDERR_FILENO);
-	ft_putstr_fd(file, STDERR_FILENO);
-	if (errno_code == M_NOCMD || errno_code == M_NOENT)
+	if (arg)
+	{
+		ft_putstr_fd(data->prototype[0], STDERR_FILENO);
+		ft_putstr_fd(": `", STDERR_FILENO);
+		ft_putstr_fd(arg, STDERR_FILENO);
+		ft_putstr_fd("': ", STDERR_FILENO);
+	}
+}
+
+int	error_msg(t_data *data, int errno_code, char *file)
+{
+	error_prompt(data, file);
+	if (errno_code == M_NOCMD || errno_code == M_NOEXENT)
 	{
 		if (errno_code == M_NOCMD)
 			ft_putstr_fd("command not found\n", STDERR_FILENO);
 		else
 			ft_putstr_fd("No such file or directory\n", STDERR_FILENO);
-		data->exit_status = 127;
+		return (127);
 	}
-	else if (errno_code == M_FILEERR || errno_code == M_NOVALID)
+	else if (errno_code == M_ARGERR || errno_code == M_NOVALID)
 	{
 		if (errno_code == M_NOVALID)
 			ft_putstr_fd("not a valid identifier\n", STDERR_FILENO);
 		else
-			perror(" ");
-		data->exit_status = 1;
+			perror(NULL);
 	}
 	else if (errno_code == M_BADACCES)
 	{
-		perror(" ");
-		data->exit_status = 126;
+		perror(NULL);
+		return (126);
 	}
+	else if (errno_code == M_STXERR)
+	{
+		ft_putstr_fd("syntax error!\n", STDERR_FILENO);
+		return (258);
+	}
+	return (1);
 }
 
-void	assign_exit_status(t_data *data, char *prototype)
+void	execve_errs(t_data *data)
 {
 	if ((errno == ENOENT || errno == EFAULT)
-		&& ((prototype[0] == '~' || prototype[0] == '.'
-			|| prototype[0] == '/') || data->err_path_env))
-		error_msg(data, M_NOENT, data->prototype[0]);
+		&& ((data->prototype[0][0] == '~' || data->prototype[0][0] == '.'
+			|| data->prototype[0][0] == '/') || data->err_path_env))
+		exit(error_msg(data, M_NOEXENT, data->prototype[0]));
 	else if (errno == ENOENT || errno == EFAULT)
-		error_msg(data, M_NOCMD, data->prototype[0]);
+		exit(error_msg(data, M_NOCMD, data->prototype[0]));
 	else if (is_directory(data->executable) || errno == EACCES)
-		error_msg(data, M_BADACCES, data->prototype[0]);
+		exit(error_msg(data, M_BADACCES, data->prototype[0]));
 }

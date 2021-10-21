@@ -6,13 +6,13 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/24 13:29:24 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/20 09:29:52 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/21 08:34:45 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../headers/minishell.h"
 
-static int is_plus_sign(t_data *data, char *var, int i)
+static int	is_plus_sign(t_data *data, char *var, int i)
 {
 	if (var[i] == '+' && i == (int)ft_strlen(var) - 1 && data->info->value)
 		return (1);
@@ -32,14 +32,14 @@ static int	analyze_var(t_data *data, char *var)
 	return (1);
 }
 
-static int	check_export_syntax(t_data *data, char *prototype)
+static int	check_export_syntax(t_data *data, int j)
 {
 	int	i;
 	int	l;
 
 	data->info = malloc(sizeof(t_info));
-	l = ft_strlen(prototype);
-	i = find_char(prototype, '=');
+	l = ft_strlen(data->prototype[j]);
+	i = find_char(data->prototype[j], '=');
 	if (i == ERROR)
 	{
 		i = l;
@@ -48,14 +48,15 @@ static int	check_export_syntax(t_data *data, char *prototype)
 	else if (i == l - 1)
 		data->info->value = ft_strdup("");
 	else
-		data->info->value = ft_substr(prototype, i + 1, ft_strlen(prototype) - i);
-	data->info->var = ft_substr(prototype, 0, i);
+		data->info->value
+			= ft_substr(data->prototype[j], i + 1, l - i);
+	data->info->var = ft_substr(data->prototype[j], 0, i);
 	if (analyze_var(data, data->info->var) == ERROR)
 		return (ERROR);
 	return (1);
 }
 
-static void export_print(t_data *data)
+static void	export_print(t_data *data)
 {
 	t_list	*tmp;
 
@@ -94,7 +95,7 @@ static void	increase_shelllvl(t_data *data)
 	data->exported = tmp;
 }
 
-static void sort_var(t_data *data)
+static void	sort_var(t_data *data)
 {
 	t_list			*last;
 	t_info			*info_1;
@@ -113,7 +114,7 @@ static void sort_var(t_data *data)
 		last->previous = last->next->previous;
 		if (last->next->next)
 			last->next->next->previous = last->next;
-		last->next->previous = last;	
+		last->next->previous = last;
 	}
 	if (!last->previous)
 		data->exported = last;
@@ -145,7 +146,8 @@ static int	already_exported(t_data *data, int i, t_info *info_1)
 				free(info_1->value);
 				info_1->value = NULL;
 			}
-			info_1->value = ft_strjoin_and_free_s1(info_1->value, data->info->value);
+			info_1->value
+				= ft_strjoin_and_free_s1(info_1->value, data->info->value);
 		}
 		return (1);
 	}
@@ -178,7 +180,7 @@ int	scan_env_vars(t_data *data)
 
 void	build_env_vars(t_data *data, const char **envp)
 {
-	int i;
+	int	i;
 
 	i = -1;
 	data->exported = NULL;
@@ -187,21 +189,21 @@ void	build_env_vars(t_data *data, const char **envp)
 	increase_shelllvl(data);
 }
 
-int	export(t_data *data, char **prototype)
+int	export(t_data *data)
 {
 	int		i;
 
 	i = 0;
-	if (!prototype[1] || !prototype[1][0])
+	if (!data->prototype[1] || !data->prototype[1][0])
 		export_print(data);
-	else if (*prototype[1] == '-')
-		return (error_msg(data, "options are unsupported!\n", NORMAL_ERR));
-	while (prototype[++i] && prototype[i][0])
+	else if (*(data->prototype)[1] == '-')
+		return (error_msg(data, M_STXERR, NULL));
+	while (data->prototype[++i] && data->prototype[i][0])
 	{
-		if (check_export_syntax(data, prototype[i]) == ERROR)
-			return (error_msg(data, prototype[i], EXPORT_ERR));
+		if (check_export_syntax(data, i) == ERROR)
+			return (error_msg(data, M_NOVALID, data->prototype[i]));
 		if (!scan_env_vars(data))
 			insert_var(data, NULL);
 	}
-	return (1);
+	return (EXIT_SUCCESS);
 }

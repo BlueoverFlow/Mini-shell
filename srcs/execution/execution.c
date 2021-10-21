@@ -6,68 +6,61 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/17 10:06:45 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/20 18:48:21 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/21 12:24:04 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../headers/minishell.h"
 
-static int daughter_process(t_data *data, int read_end)
+static void	daughter_process(t_data *data, int read_end)
 {
-	if (stream_source(data, read_end) == ERROR
-		|| builtin(data) == ERROR)
-	{
-		perror("minishell: ");
+	if (stream_source(data, read_end, FALSE) || builtin(data))
 		exit(EXIT_FAILURE);
-	}
-	builtin(data);
-	if (!data->is_builtin)
-	{
-		if (file_search_using_path_var(data) == ERROR)
-			exit (EXIT_FAILURE);
-		if (execve(data->executable, data->prototype, NULL))
-			assign_exit_status(data);
-	}
-	exit(EXIT_FAILURE);
+	if (data->is_builtin == TRUE)
+		exit(EXIT_SUCCESS);
+	if (!file_search_using_path_var(data))
+		data->executable = data->prototype[0];
+	if (execve(data->executable, data->prototype, NULL))
+		execve_errs(data);
 }
 
 static int	pipe_and_fork(t_data *data)
 {
 	if (data->piped_cmd->next)
 	{
-		if (pipe(data->end) == -1)
-			return(ERROR);
+		if (pipe(data->end) == ERROR)
+			return(EXIT_FAILURE);
 	}
 	data->id = fork();
 	if (data->id == ERROR)
-		return(ERROR);
-	return (1);
+		return(EXIT_FAILURE);
+	return (EXIT_SUCCESS);
 }
 
 static int simple_command(t_data *data)
 {
-	int ret;
+	int	ret;
 
-	ret = 0;
-	data->simple_cmd = FALSE;
+	ret = FALSE;
 	if (!data->piped_cmd->next)
 	{
-		data->simple_cmd = TRUE;
-		if (stream_source(data, 0) == ERROR
-			|| builtin(data) == ERROR)
-		{
-			data->exit_status = 1;
-			ret = ERROR;
-		}
-		if (data->is_builtin)
+		if (stream_source(data, 0, TRUE) || builtin(data))
+			ret = EXIT_FAILURE;
+		else if (data->is_builtin == TRUE)
 		{
 			free_2d(data->prototype);
-			ret = 1;
+			ret = TRUE;
 		}
 		if (data->fd[0] != ERROR)
-			dup2(data->fd[2], STDIN_FILENO);
+		{
+			if (dup2(data->fd[2], STDIN_FILENO) == ERROR)
+				return (error_msg(data, M_ARGERR, NULL));
+		}
 		if (data->fd[1] != ERROR)
-			dup2(data->fd[3], STDOUT_FILENO);
+		{
+			if (dup2(data->fd[3], STDOUT_FILENO) == ERROR)
+				return (error_msg(data, M_ARGERR, NULL));
+		}
 		close_fds(data);
 	}
 	return (ret);
@@ -82,11 +75,17 @@ int	execute(t_data *data)
 	scan_command(data);
 	ret = simple_command(data);
 	if (ret)
+	{
+		if (ret == EXIT_FAILURE)
+			data->exit_status = ret;
+		else
+			ret = EXIT_SUCCESS;
 		return (ret);
+	}
 	while (data->piped_cmd)
 	{
-		if (pipe_and_fork(data) == ERROR)
-			return (ERROR);
+		if (pipe_and_fork(data))
+			error_msg(data, M_ARGERR, NULL);
 		if (data->id == 0)
 			daughter_process(data, read_end);
 		read_end = data->end[0];
@@ -94,5 +93,5 @@ int	execute(t_data *data)
 		data->piped_cmd = data->piped_cmd->next;
 	}
 	close_fds_and_wait(data);
-	return (1);
+	return (EXIT_SUCCESS);
 }

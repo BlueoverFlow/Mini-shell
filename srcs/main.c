@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 08:15:00 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/20 16:23:29 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/21 12:27:49 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,10 @@ int	main(int argc, char **argv, const char **envp)
 	{
 		data.input = readline(PROMPT);
 		_init(&data);
-		if (!data.input || !*data.input	|| parser(&data) == ERROR || execute(&data) == ERROR)
+		if (!data.input || !*data.input || parser(&data) || execute(&data))
 			;
+		else
+			data.exit_status = 0;
 		if (data.input && *data.input)
 		{
 			add_history(data.input);

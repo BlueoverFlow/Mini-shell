@@ -6,13 +6,13 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/24 18:16:59 by mlabrayj          #+#    #+#             */
-/*   Updated: 2021/10/20 09:38:19 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/21 09:41:30 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../headers/minishell.h"
 
-int	cd(char *prototype)
+int	cd(t_data *data)
 {
 	// struct dirent	*de;// Pointer for directory entry
     // int				ret;
@@ -44,12 +44,12 @@ int	cd(char *prototype)
 	// // }
 	// closedir(dr);
 
-	if (prototype)
+	if (data->prototype[1])
 	{
-		if (chdir(prototype))
-			printf("%s: %s%s No such file or directory\n", "minishell: cd" ,prototype,":");
+		if (chdir(data->prototype[1]))
+			return (error_msg(data, M_ARGERR, data->prototype[1]));
 	}
 	else
 		chdir(getenv("HOME"));
-	return (0);
+	return (EXIT_SUCCESS);
 }

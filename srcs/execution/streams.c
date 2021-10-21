@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/20 11:00:30 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/20 17:18:27 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/21 09:39:15 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ static int	open_file(t_data *data, int *stream_type)
 		flags = O_CREAT | O_WRONLY | O_TRUNC;
 	else
 		flags = O_CREAT | O_WRONLY | O_APPEND;
-	return (fd = open(data->file_data->path, flags, S_IRWXU));
+	return (fd = open(path, flags, S_IRWXU));
 }
 
 static void	close_unnecessary_fds(t_data *data, int file, int stream_type)
@@ -83,28 +83,28 @@ static int	cmd_input_output(t_data *data)
 		data->file_data = tmp->content;
 		file = open_file(data, &stream_type);
 		if (file < 3)
-			return (ERROR);
+			return (error_msg(data, M_ARGERR, NULL));
 		close_unnecessary_fds(data, file, stream_type);
 		tmp = tmp->next;
 	}
-	return (1);
+	return (EXIT_SUCCESS);
 }
 
-int	stream_source(t_data *data, int read_end)
+int	stream_source(t_data *data, int read_end, BOOL	simple_cmd)
 {
 	scan_files_list(data);
 	data->fd[2] = dup(STDIN_FILENO);
 	data->fd[3] = dup(STDOUT_FILENO);
-	if (cmd_input_output(data) == ERROR || data->fd[2] == ERROR
+	if (cmd_input_output(data) || data->fd[2] == ERROR
 		|| data->fd[3] == ERROR)
-		return (ERROR);
+		return (EXIT_FAILURE);
 	if (data->piped_cmd
 		&& (data->piped_cmd->previous || data->fd[0] != ERROR))
 	{
 		if (data->fd[0] == ERROR)
 			data->fd[0] = read_end;
 		if (dup2(data->fd[0], STDIN_FILENO) == ERROR)
-			return (ERROR);
+			return (EXIT_FAILURE);
 	}
 	if (data->piped_cmd
 		&& (data->piped_cmd->next || data->fd[1] != ERROR))
@@ -114,7 +114,7 @@ int	stream_source(t_data *data, int read_end)
 		if (dup2(data->fd[1], STDOUT_FILENO) == ERROR)
 			return (ERROR);
 	}
-	if (!data->simple_cmd)
+	if (simple_cmd == FALSE)
 		close_fds(data);
-	return (1);
+	return (EXIT_SUCCESS);
 }

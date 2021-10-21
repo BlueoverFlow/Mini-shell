@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 16:33:54 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/20 09:28:13 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/21 10:10:00 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,14 +39,14 @@ static	int	fill_file_id(t_data *data, char **fragment)
 		data->file_data->path = NULL;
 	}
 	if (data->file_data && data->file_data->id != -1 && !data->file_data->path)
-		return (ERROR);
+		return (EXIT_FAILURE);
 	assign_redirection_id(data, *fragment);
 	(*fragment)++;
 	if (data->file_data->id == HEREDOC
 		|| data->file_data->id == APPENDED_REDIRECTED_OUTPUT)
 		(*fragment)++;
 	ft_lstadd_back(&data->command->file, ft_lstnew(data->file_data));
-	return (1);
+	return (EXIT_SUCCESS);
 }
 
 static int	fill_file_path(t_data *data, char *token)
@@ -54,13 +54,12 @@ static int	fill_file_path(t_data *data, char *token)
 	if (data->command->file && data->file_data && !data->file_data->path)
 	{
 		if (!ft_strncmp(token, "|", 2))
-			return (error_msg(data, "syntax error near unexpected token `|'\n"
-					, NORMAL_ERR));
+			return (EXIT_FAILURE);
 		data->file_data->path = token;
 		data->file_data = NULL;
-		return (1);
+		return (TRUE);
 	}
-	return (0);
+	return (EXIT_SUCCESS);
 }
 
 int	hundle_redirection(t_data *data, char *fragment, char *token, int i)
@@ -71,13 +70,13 @@ int	hundle_redirection(t_data *data, char *fragment, char *token, int i)
 	last = ft_lstlast(data->command->file);
 	if (fragment[i] && is_redirection(fragment, 0, UNQUOTED))
 	{
-		if (fill_file_id(data, &fragment) == ERROR)
-			return (ERROR);
+		if (fill_file_id(data, &fragment))
+			return (EXIT_FAILURE);
 	}
 	else
 	{
 		ret = fill_file_path(data, token);
-		if (ret == ERROR)
+		if (ret == EXIT_FAILURE)
 			return (ret);
 		else if (!ret)
 			ft_lstadd_back(&data->command->prototype, ft_lstnew(token));

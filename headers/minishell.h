@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 08:15:35 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/20 18:41:44 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/21 12:05:25 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,15 +22,15 @@
 # include <dirent.h>
 
 //macros
-# define M_FILEERR 300
+# define M_ARGERR 300
 # define M_BADACCES 301
-# define EXECUTABLE_ERRS 302
-# define M_NOVALID 303
-# define M_NOCMD 304
-# define M_NOENT 305
-# define ERROR -1
-# define TRUE 1
+# define M_NOVALID 302
+# define M_NOCMD 303
+# define M_NOEXENT 304
+# define M_STXERR 305
+# define TRUE 10
 # define FALSE 0
+# define ERROR -1
 # define BOOL int
 # define REDIRECTED_OUTPUT 1
 # define REDIRECTED_INPUT 0
@@ -89,7 +89,6 @@ typedef struct s_data
 	BOOL			var_with_equals_sign;
 	BOOL			infile;
 	BOOL			outfile;
-	BOOL			simple_cmd;
 	int				argc;
 	int				quoting_state;
 	int				exit_status;
@@ -114,7 +113,6 @@ t_list		*lst_elem(t_list *lst, int index);
 t_list		*ft_dlstnew(void *content);
 void		ft_dlst_delete_node(t_list *lst);
 t_list		*ft_lst_head(t_list *lst);
-void		error_msg(t_data *data, int errno_code, char *file);
 int			is_backslashed(int i, char *str);
 int			find_char(char *str, char c);
 char		**ft_split_input(char const *s, char *separator);
@@ -151,11 +149,11 @@ int			cd(t_data *data);
 int			unset(t_data *data);
 void		build_env_vars(t_data *data, const char **envp);
 int			scan_env_vars(t_data *data);
-
 void		scan_command(t_data *data);
 int			file_search_using_path_var(t_data *data);
 char		*ft_getenv(t_data *data, char *var);
-int			stream_source(t_data *data, int read_end);
-void		assign_exit_status(t_data *data);
+int			stream_source(t_data *data, int read_end, BOOL	simple_cmd);
+void		execve_errs(t_data *data);
+int			error_msg(t_data *data, int errno_code, char *file);
 
 #endif

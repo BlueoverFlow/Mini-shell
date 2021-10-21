@@ -6,18 +6,18 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/24 13:31:19 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/20 09:38:51 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/21 08:32:56 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../headers/minishell.h"
 
-int	env(t_data *data, char **prototype)
+int	env(t_data *data)
 {
 	t_list	*tmp;
 
-	if (prototype[1] && *prototype[1])
-		return (error_msg(data, "syntax error!\n", NORMAL_ERR));
+	if (data->prototype[1] && data->prototype[1][0])
+		return (error_msg(data, M_STXERR, NULL));
 	tmp = data->exported;
 	while (data->exported)
 	{
@@ -27,5 +27,5 @@ int	env(t_data *data, char **prototype)
 		data->exported = data->exported->next;
 	}
 	data->exported = tmp;
-	return (1);
+	return (EXIT_SUCCESS);
 }

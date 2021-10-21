@@ -6,31 +6,31 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 16:44:54 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/19 16:51:35 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/21 10:05:33 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../headers/minishell.h"
 
-int	theres_atoken(char *fragment)
+BOOL	theres_atoken(char *fragment)
 {
 	int	i;
 
 	i = -1;
 	while (fragment[++i])
 	{
-		if (fragment[i] != ' ' && fragment[i] != '\t')
-			return (1);
+		if (fragment[i] != ' ')
+			return (TRUE);
 	}
 	free(fragment);
-	return (0);
+	return (FALSE);
 }
 
-int	is_redirection(char *str, int i, int quoting_state)
+BOOL	is_redirection(char *str, int i, int quoting_state)
 {
 	if ((str[i] == '>' || str[i] == '<') && quoting_state == UNQUOTED)
-		return (1);
-	return (0);
+		return (TRUE);
+	return (FALSE);
 }
 
 BOOL	closed_quotes(char *input, int i)

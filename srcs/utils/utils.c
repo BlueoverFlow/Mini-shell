@@ -6,13 +6,11 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/15 09:41:53 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/20 18:29:43 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/21 09:44:36 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../headers/minishell.h"
-
-
 
 int	is_backslashed(int i, char *str)
 {
