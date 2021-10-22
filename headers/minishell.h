@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 08:15:35 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/22 11:35:15 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/22 13:36:41 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,7 @@ typedef struct s_data
 	char			*document;
 	char			**prototype;
 	char			**argv;
+	char *const		*envp;
 }				t_data;
 
 //==================== utils ===================================
@@ -155,7 +156,7 @@ int			env(t_data *data);
 int			export(t_data *data);
 int			cd(t_data *data);
 int			unset(t_data *data);
-void		build_env_vars(t_data *data, const char **envp);
+void		build_env_vars(t_data *data, char *const	*envp);
 int			scan_env_vars(t_data *data);
 void		scan_command(t_data *data);
 int			file_search_using_path_var(t_data *data);

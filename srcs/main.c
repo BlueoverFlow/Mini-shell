@@ -6,19 +6,20 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 08:15:00 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/22 11:59:11 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/22 13:43:42 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../headers/minishell.h"
 
-static void	global_init(t_data *data, int argc, char **argv ,const char **envp)
+static void	global_init(t_data *data, int argc, char **argv , char *const	*envp)
 {
 	data->garbage = NULL;
 	data->exported = NULL;
 	data->exit_status = 0;
 	data->argc = argc;
 	data->argv = argv;
+	data->envp = envp;
 	build_env_vars(data, envp);
 }
 
@@ -39,7 +40,7 @@ static void	_init(t_data *data)
 	data->fd[3] = ERROR;
 }
 
-int	main(int argc, char **argv, const char **envp)
+int	main(int argc, char **argv, char *const envp[])
 {
 	t_data	data;
 	global_init(&data, argc, argv, envp);

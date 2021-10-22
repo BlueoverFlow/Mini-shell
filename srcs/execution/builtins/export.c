@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/24 13:29:24 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/21 08:34:45 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/22 13:36:27 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -178,7 +178,7 @@ int	scan_env_vars(t_data *data)
 	return (0);
 }
 
-void	build_env_vars(t_data *data, const char **envp)
+void	build_env_vars(t_data *data, char *const	*envp)
 {
 	int	i;
 
