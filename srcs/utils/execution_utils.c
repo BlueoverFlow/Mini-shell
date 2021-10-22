@@ -6,13 +6,13 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/20 14:22:16 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/22 12:26:19 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/22 17:31:31 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../headers/minishell.h"
 
-static int	is_directory(char *file)
+static BOOL	is_directory(char *file)
 {
 	int	fd;
 
@@ -21,9 +21,9 @@ static int	is_directory(char *file)
 	{
 		close (fd);
 		errno = EISDIR;
-		return (1);
+		return (TRUE);
 	}
-	return (0);
+	return (FALSE);
 }
 
 void	close_fds(t_data *data)
@@ -83,7 +83,7 @@ int	error_msg(t_data *data, int errno_code, char *file)
 	}
 	else if (errno_code == M_BADACCES)
 	{
-		perror(NULL);
+		ft_putstr_fd("can't access\n", STDERR_FILENO);
 		return (126);
 	}
 	else if (errno_code == M_STXERR)
@@ -96,12 +96,18 @@ int	error_msg(t_data *data, int errno_code, char *file)
 
 void	execve_errs(t_data *data)
 {
-	if ((errno == ENOENT || errno == EFAULT)
-		&& ((data->prototype[0][0] == '~' || data->prototype[0][0] == '.'
-			|| data->prototype[0][0] == '/') || data->err_path_env))
-		exit(error_msg(data, M_NOEXENT, NULL));
+	BOOL	directory;
+
+	if (errno == EACCES)
+		exit(error_msg(data, M_BADACCES, NULL));
+	else if (data->prototype[0][0] == '~' || data->prototype[0][0] == '.'
+			|| data->prototype[0][0] == '/' || data->err_path_env)
+		{
+			if (directory)
+				exit(error_msg(data, M_BADACCES, NULL));
+			else if (errno == ENOENT || errno == EFAULT)
+				exit(error_msg(data, M_NOEXENT, NULL));
+		}
 	else if (errno == ENOENT || errno == EFAULT)
 		exit(error_msg(data, M_NOCMD, NULL));
-	else if (is_directory(data->executable) || errno == EACCES)
-		exit(error_msg(data, M_BADACCES, NULL));
 }
