@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 17:20:15 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/21 10:59:12 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/22 10:04:10 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,5 +28,6 @@ int	syntax_checking(t_data *data, int i)
 		|| (data->quoting_state != UNQUOTED
 			&& !data->input[i + 1] && !data->passive))
 		return (EXIT_FAILURE);
+	data->command = NULL;
 	return (EXIT_SUCCESS);
 }

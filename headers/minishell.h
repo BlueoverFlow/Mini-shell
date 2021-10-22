@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 08:15:35 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/21 12:05:25 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/22 11:35:15 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@
 # define TRUE 10
 # define FALSE 0
 # define ERROR -1
-# define BOOL int
 # define REDIRECTED_OUTPUT 1
 # define REDIRECTED_INPUT 0
 # define HEREDOC 11
@@ -43,6 +42,13 @@
 # define EXPORT_ERR 6
 # define UNSET_ERR 7
 # define NO_FILE -2
+
+typedef	int BOOL;
+
+typedef struct	s_process
+{
+	pid_t	id;
+}				t_process;
 
 typedef struct s_h_d
 {
@@ -79,8 +85,10 @@ typedef struct s_data
 	t_list			*word;
 	t_info			*info;
 	t_list			*exported;
-	t_file_data		*file_data;
+	t_list			*lst_child_id;
 	pid_t			id;
+	t_process		*process;
+	t_file_data		*file_data;
 	int				fd[4];
 	int				end[2];
 	BOOL			passive;

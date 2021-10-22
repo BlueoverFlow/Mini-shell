@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/18 09:45:38 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/20 09:28:35 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/22 10:24:37 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,11 +61,16 @@ static char	*assign_var_and_value(t_data *data, char *input, char *new, int *i)
 
 	len = find_len(data, input, *i);
 	assign.var = ft_substr(input, *i + 1, len);
-	if (!ft_strcmp(assign.var, "?"))
+	if (!ft_strncmp(assign.var, "?", 1))
+	{
 		assign.value = ft_itoa(data->exit_status);
+		(*i)++;
+	}
 	else
+	{
 		assign.value = ft_getenv(data, assign.var);
-	*i += ft_strlen(assign.var);
+		*i += ft_strlen(assign.var);
+	}
 	free(assign.var);
 	if (assign.value)
 	{

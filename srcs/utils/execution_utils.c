@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/20 14:22:16 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/21 12:16:55 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/22 12:26:19 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,12 @@ void	close_fds_and_wait(t_data *data)
 	int		stat;
 
 	close_fds(data);
-	waitpid(-1, &stat, 0);
-	waitpid(data->id, &stat, 0);
+	while (data->lst_child_id)
+	{
+		data->process = data->lst_child_id->content;
+		waitpid(data->process->id, &stat, 0);
+		data->lst_child_id = data->lst_child_id->next;
+	}
 	if (WIFEXITED(stat))
 		data->exit_status = WEXITSTATUS(stat);
 }
@@ -50,10 +54,10 @@ void	close_fds_and_wait(t_data *data)
 static void error_prompt(t_data *data, char *arg)
 {
 	ft_putstr_fd("minishell: ", STDERR_FILENO);
+	ft_putstr_fd(data->prototype[0], STDERR_FILENO);
+	ft_putstr_fd(": `", STDERR_FILENO);
 	if (arg)
 	{
-		ft_putstr_fd(data->prototype[0], STDERR_FILENO);
-		ft_putstr_fd(": `", STDERR_FILENO);
 		ft_putstr_fd(arg, STDERR_FILENO);
 		ft_putstr_fd("': ", STDERR_FILENO);
 	}
@@ -95,9 +99,9 @@ void	execve_errs(t_data *data)
 	if ((errno == ENOENT || errno == EFAULT)
 		&& ((data->prototype[0][0] == '~' || data->prototype[0][0] == '.'
 			|| data->prototype[0][0] == '/') || data->err_path_env))
-		exit(error_msg(data, M_NOEXENT, data->prototype[0]));
+		exit(error_msg(data, M_NOEXENT, NULL));
 	else if (errno == ENOENT || errno == EFAULT)
-		exit(error_msg(data, M_NOCMD, data->prototype[0]));
+		exit(error_msg(data, M_NOCMD, NULL));
 	else if (is_directory(data->executable) || errno == EACCES)
-		exit(error_msg(data, M_BADACCES, data->prototype[0]));
+		exit(error_msg(data, M_BADACCES, NULL));
 }

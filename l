@@ -1,0 +1,13 @@
+Makefile
+README.md
+README.md 
+TESTING
+achraf
+headers
+l
+libft
+minishell
+minishell.dSYM
+notes.txt
+pff
+srcs

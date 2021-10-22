@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/18 17:20:29 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/21 12:37:30 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/22 10:22:00 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ static int	fill_branch(t_data *data, int i)
 
 static int	fill_pipeline(t_data *data, int i)
 {
-	if (!data->input[i + 1])
+	if (!data->input[i + 1] && data->input[i] != ' ')
 		ft_lstadd_back(&data->word, ft_lstnew(ft_substr(data->input, i, 1)));
 	if (data->input[i - 1] == '|')
 		return (EXIT_FAILURE);
