@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 08:15:00 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/22 16:17:43 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/23 10:38:26 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ static void	_init(t_data *data)
 	data->lst_child_id = NULL;
 	data->quoting_state = UNQUOTED;
 	data->passive = FALSE;
+	data->prototype = NULL;
 	data->command = NULL;
 	data->file_data = NULL;
 	data->end[1] = ERROR;

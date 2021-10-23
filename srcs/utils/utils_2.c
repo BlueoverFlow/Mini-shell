@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 16:44:54 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/21 10:05:33 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/23 08:59:25 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,10 @@ BOOL	theres_atoken(char *fragment)
 	return (FALSE);
 }
 
-BOOL	is_redirection(char *str, int i, int quoting_state)
+BOOL	is_redirection(t_data *data, char *str, int i)
 {
-	if ((str[i] == '>' || str[i] == '<') && quoting_state == UNQUOTED)
+	define_quoting_state(data, str, i);
+	if ((str[i] == '>' || str[i] == '<') && data->quoting_state == UNQUOTED)
 		return (TRUE);
 	return (FALSE);
 }

@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/18 09:45:38 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/22 10:24:37 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/23 09:47:17 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,21 +36,18 @@ static char	*concate_value(char *new, char *s)
 static int	find_len(t_data *data, char *input, int i)
 {
 	int	len;
-	int	tmp_len;
+	int	len_2;
+	int	len_3;
 
-	len = find_char(input + i + 1, data->quoting_state);
-	tmp_len = find_char(input + i + 1, '$');
+	len = find_char(input + i + 1, '\'');
+	len_2 = find_char(input + i + 1, '"');
+	if ((len_2 < len && len_2 != ERROR) || len == ERROR)
+		len = len_2;
+	len_3 = find_char(input + i + 1, '$');
+	if ((len_3 < len && len_3 != ERROR) || len == ERROR)
+		len = len_3;
 	if (len == ERROR)
-	{
-		len = tmp_len;
-		if (len == ERROR)
-			len = ft_strlen(input) - i - 1;
-	}
-	else if (tmp_len != ERROR)
-	{
-		if (tmp_len < len)
-			len = tmp_len;
-	}
+		len = ft_strlen(input) - i - 1;
 	return (len);
 }
 

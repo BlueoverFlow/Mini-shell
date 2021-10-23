@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 08:15:35 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/22 13:36:41 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/23 07:56:53 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,7 +128,7 @@ char		**ft_split_input(char const *s, char *separator);
 BOOL		quoted_fragment(char c);
 int			find_value(t_data *data, char *var, char **value);
 int			theres_atoken(char *fragment);
-int			is_redirection(char *str, int i, int quoting_state);
+BOOL		is_redirection(t_data *data, char *str, int i);
 BOOL		closed_quotes(char *input, int i);
 char		*lst_to_word(t_list *lst);
 int			syntax_checking(t_data *data, int i);

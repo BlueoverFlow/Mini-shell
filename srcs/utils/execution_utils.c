@@ -6,25 +6,11 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/20 14:22:16 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/22 17:31:31 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/23 08:31:04 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../headers/minishell.h"
-
-static BOOL	is_directory(char *file)
-{
-	int	fd;
-
-	fd = open(file, O_DIRECTORY);
-	if (fd >= 3)
-	{
-		close (fd);
-		errno = EISDIR;
-		return (TRUE);
-	}
-	return (FALSE);
-}
 
 void	close_fds(t_data *data)
 {
@@ -54,10 +40,14 @@ void	close_fds_and_wait(t_data *data)
 static void error_prompt(t_data *data, char *arg)
 {
 	ft_putstr_fd("minishell: ", STDERR_FILENO);
-	ft_putstr_fd(data->prototype[0], STDERR_FILENO);
-	ft_putstr_fd(": `", STDERR_FILENO);
+	if (data->prototype)
+	{
+		ft_putstr_fd(data->prototype[0], STDERR_FILENO);
+		ft_putstr_fd(": ", STDERR_FILENO);
+	}
 	if (arg)
 	{
+		ft_putstr_fd("'", STDERR_FILENO);
 		ft_putstr_fd(arg, STDERR_FILENO);
 		ft_putstr_fd("': ", STDERR_FILENO);
 	}
@@ -83,7 +73,7 @@ int	error_msg(t_data *data, int errno_code, char *file)
 	}
 	else if (errno_code == M_BADACCES)
 	{
-		ft_putstr_fd("can't access\n", STDERR_FILENO);
+		ft_putstr_fd("can't access/execute\n", STDERR_FILENO);
 		return (126);
 	}
 	else if (errno_code == M_STXERR)
@@ -98,16 +88,12 @@ void	execve_errs(t_data *data)
 {
 	BOOL	directory;
 
-	if (errno == EACCES)
-		exit(error_msg(data, M_BADACCES, NULL));
-	else if (data->prototype[0][0] == '~' || data->prototype[0][0] == '.'
-			|| data->prototype[0][0] == '/' || data->err_path_env)
-		{
-			if (directory)
-				exit(error_msg(data, M_BADACCES, NULL));
-			else if (errno == ENOENT || errno == EFAULT)
+	if ((errno == ENOENT || errno == EFAULT)
+			&& (data->prototype[0][0] == '~' || data->prototype[0][0] == '.'
+				|| data->prototype[0][0] == '/' || data->err_path_env))
 				exit(error_msg(data, M_NOEXENT, NULL));
-		}
 	else if (errno == ENOENT || errno == EFAULT)
 		exit(error_msg(data, M_NOCMD, NULL));
+	else if (errno == EACCES)
+		exit(error_msg(data, M_BADACCES, NULL));
 }

@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/18 17:20:29 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/22 10:22:00 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/23 09:00:31 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,15 +18,13 @@ int	make_branch(t_data *data, char *fragment)
 	int		tmp;
 	int		i;
 
-	i = 0;
+	i = -1;
 	if (!*fragment)
 		return (EXIT_SUCCESS);
-	tmp = data->passive;
+	data->quoting_state = UNQUOTED;
 	token = ft_calloc(ft_strlen(fragment) + 1, sizeof(char));
-	define_quoting_state(data, data->input, i--);
-	while (fragment[++i] && !is_redirection(fragment, i, data->quoting_state))
+	while (fragment[++i] && !is_redirection(data, fragment, i))
 		token[i] = fragment[i];
-	data->passive = tmp;
 	return (hundle_redirection(data, fragment, token, i));
 }
 
@@ -57,7 +55,7 @@ static int	fill_branch(t_data *data, int i)
 
 static int	fill_pipeline(t_data *data, int i)
 {
-	if (!data->input[i + 1] && data->input[i] != ' ')
+	if (!data->input[i + 1] && data->input[i] != ' ' && data->input[i] != '|')
 		ft_lstadd_back(&data->word, ft_lstnew(ft_substr(data->input, i, 1)));
 	if (data->input[i - 1] == '|')
 		return (EXIT_FAILURE);
