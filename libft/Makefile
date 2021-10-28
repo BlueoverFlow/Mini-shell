@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ael-mezz <ael-mezz@student.42.fr>          +#+  +:+       +#+         #
+#    By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/10/21 12:57:37 by ael-mezz          #+#    #+#              #
-#    Updated: 2021/06/23 18:10:24 by ael-mezz         ###   ########.fr        #
+#    Updated: 2021/10/28 07:39:12 by ael-mezz         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -81,10 +81,8 @@ BONUS_SRCS =		srcs/ft_lstnew_bonus.c			\
 
 BONUS_OBJ = $(BONUS_SRCS:.c=.o)
 
-all: $(NAME)
 
 $(NAME): $(SRCS) $(HEADER)
-	@echo "\"libft.a\" in process..."
 	@$(CC) $(FLAGS) $(SRCS)
 	@$(OBJ_DIR)
 	@ar -rc $(NAME) $(OBJ)
@@ -95,6 +93,8 @@ bonus: $(BONUS_SRCS) $(HEADER)
 	@$(OBJ_DIR)
 	@ar -rc $(NAME) $(BONUS_OBJ)
 	@ranlib $(NAME)
+
+all: $(NAME) bonus
 
 clean:
 	@$(RM) srcs/*.o

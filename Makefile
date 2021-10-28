@@ -6,9 +6,11 @@
 #    By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/05/13 08:14:39 by ael-mezz          #+#    #+#              #
-#    Updated: 2021/10/22 11:01:07 by ael-mezz         ###   ########.fr        #
+#    Updated: 2021/10/28 07:38:05 by ael-mezz         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
+
+NAME = minishell
 
 SRCS =	main.c								\
 		utils/lst_utils.c					\
@@ -50,10 +52,12 @@ HEADER = headers/minishell.h
 
 SRCS := $(addprefix $(SRCS_PATH)/, $(SRCS))
 
-all: $(SRCS) $(HEADER)
-	@make -C libft && make bonus -C libft
+$(NAME): $(SRCS) $(HEADER)
+	@make all -C libft
 	@$(CC) $(SRCS) $(LIBFT) $(FLAGS) -o minishell
 	@./minishell
+
+all: $(NAME)
 
 clean:
 	@echo "cleaning..."

@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/14 14:23:07 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/24 08:25:54 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/28 07:43:01 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,10 +53,11 @@ int	echo(t_data *data)
 		n = 1;
 	while (data->prototype[i])
 	{
-		printf("%s", data->prototype[i++]);
+		ft_putstr_fd(data->prototype[i++], STDOUT_FILENO);
 		if (data->prototype[i])
-			printf(" ");
-		fflush(stdout);
+			ft_putstr_fd(" ", STDOUT_FILENO);
 	}
+	if (n)
+		ft_putstr_fd("\n", STDOUT_FILENO);
 	return (EXIT_SUCCESS);
 }

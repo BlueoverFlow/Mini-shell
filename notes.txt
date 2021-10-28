@@ -50,7 +50,17 @@ fix errors -------------------------------------------------------
 
 ======= 21/10/2021 =======
 targets:
-fix pipes and redirections ---------------------------------------
+fix pipes and redirections --------------------------------------- DONE
+add signals ------------------------------------------------------
+protect mallocs --------------------------------------------------
+fix leaked memory ------------------------------------------------
+norme the code ---------------------------------------------------
+fix errors -------------------------------------------------------
+
+
+======= 24/10/2021 =======
+targets:
+need to replace lst of ids with int *id --------------------------
 add signals ------------------------------------------------------
 protect mallocs --------------------------------------------------
 fix leaked memory ------------------------------------------------
@@ -62,47 +72,3 @@ fix errors -------------------------------------------------------
 
 
 
-
-
-
-
-======= 22/10/2021 ======= END of PROJECT
-target:
-push -------------------------------------------------------------
-
-
-static void piped_commands(t_data *data)
-{
-	int read_end;
-	
-	read_end = -1;
-	while (data->piped_cmd)
-	{
-		scan_command(data);
-		if (pipe_and_fork(data))
-			error_msg(data, M_ARGERR, NULL);
-		if (data->process->id == 0)
-			daughter_process(data, read_end);
-		read_end = data->end[0];
-		close(data->end[1]);
-		data->piped_cmd = data->piped_cmd->next;
-	}
-}
-
-int execute(t_data *data)
-{
-	int ret;
-
-	ret = simple_command(data);
-	if (!ret)
-	{
-		if (ret == EXIT_FAILURE)
-			data->exit_status = ret;
-		else
-			ret = EXIT_SUCCESS;
-		return (ret);
-	}
-	piped_commands(data);
-	close_fds_and_wait(data);
-	return (EXIT_SUCCESS);
-}
