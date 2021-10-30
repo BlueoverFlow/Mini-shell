@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/18 09:45:38 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/23 09:47:17 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/30 17:24:23 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ static char	*concate_value(char *new, char *s)
 	return (new);
 }
 
-static int	find_len(t_data *data, char *input, int i)
+static int	find_len(char *input, int i)
 {
 	int	len;
 	int	len_2;
@@ -56,7 +56,7 @@ static char	*assign_var_and_value(t_data *data, char *input, char *new, int *i)
 	t_info	assign;
 	int		len;
 
-	len = find_len(data, input, *i);
+	len = find_len(input, *i);
 	assign.var = ft_substr(input, *i + 1, len);
 	if (!ft_strncmp(assign.var, "?", 1))
 	{
@@ -79,7 +79,7 @@ static char	*assign_var_and_value(t_data *data, char *input, char *new, int *i)
 	return (new);
 }
 
-static BOOL	is_env_var(t_data *data, char *input, char **new, int *i)
+static t_BOOL	is_env_var(t_data *data, char *input, char **new, int *i)
 {
 	if (data->quoting_state != '\'' && input[*i + 1]
 		&& input[*i] == '$' && (ft_isalnum(input[*i + 1])

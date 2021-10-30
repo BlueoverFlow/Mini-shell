@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/15 10:58:05 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/20 18:39:23 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/30 17:22:13 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,10 @@ static void	command_name_to_lower_case(t_data *data)
 		command_name[j] = ft_tolower(command_name[j]);
 	if (!ft_strcmp(command_name, "export") || !ft_strcmp(command_name, "cd")
 		|| !ft_strcmp(command_name, "exit"))
-			data->command->prototype->content = tmp;
+	{
+		free(data->command->prototype->content);
+		data->command->prototype->content = tmp;
+	}
 	else
 		free(tmp);
 }

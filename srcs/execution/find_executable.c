@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/15 11:04:30 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/22 16:18:18 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/30 17:24:23 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ char	*ft_getenv(t_data *data, char *var)
 	return (NULL);
 }
 
-static BOOL	compare_files(t_data *data, DIR *dir, char *tree)
+static t_BOOL	compare_files(t_data *data, DIR *dir, char *tree)
 {
 	struct dirent	*list;
 
@@ -51,7 +51,7 @@ static BOOL	compare_files(t_data *data, DIR *dir, char *tree)
 	return (FALSE);
 }
 
-BOOL	file_search_using_path_var(t_data *data)
+t_BOOL	file_search_using_path_var(t_data *data)
 {
 	char	**tree;
 	char	*path;

@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/18 17:20:29 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/23 09:00:31 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/30 18:33:49 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 int	make_branch(t_data *data, char *fragment)
 {
 	char	*token;
-	int		tmp;
 	int		i;
 
 	i = -1;
@@ -88,6 +87,7 @@ int	parser(t_data *data)
 	int		ret;
 
 	i = -1;
+	ret = 0;
 	while (data->input[++i])
 	{
 		define_quoting_state(data, data->input, i);

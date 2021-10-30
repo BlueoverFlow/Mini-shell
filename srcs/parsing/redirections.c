@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 16:33:54 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/23 10:52:47 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/30 15:39:35 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,6 @@ static int	fill_file_path(t_data *data, char *token)
 {
 	if (data->command->file && data->file_data && !data->file_data->path)
 	{
-		if (!ft_strncmp(token, "|", 2))
-			return (EXIT_FAILURE);
 		token = expand_env_vars(data, token);
 		token = expand_token(data, token);
 		data->file_data->path = token;
@@ -73,7 +71,10 @@ int	hundle_redirection(t_data *data, char *fragment, char *token, int i)
 	if (fragment[i] == '>' || fragment[i] == '<')
 	{
 		if (fill_file_id(data, &fragment))
+		{
+			free(token);
 			return (EXIT_FAILURE);
+		}
 	}
 	else
 	{

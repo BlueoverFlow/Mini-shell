@@ -6,13 +6,13 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/14 14:23:07 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/24 09:14:45 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/30 16:58:19 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../headers/minishell.h"
 
-int		builtin(t_data *data)
+int	builtin(t_data *data)
 {
 	data->is_builtin = TRUE;
 	if (!ft_strcmp(data->prototype[0], "echo"))

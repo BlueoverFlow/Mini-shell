@@ -1,25 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cd.c                                               :+:      :+:    :+:   */
+/*   free_2d.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/09/24 18:16:59 by mlabrayj          #+#    #+#             */
-/*   Updated: 2021/10/30 16:58:52 by ael-mezz         ###   ########.fr       */
+/*   Created: 2021/10/30 17:39:23 by ael-mezz          #+#    #+#             */
+/*   Updated: 2021/10/30 17:39:41 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../../headers/minishell.h"
+#include "../includes/libft.h"
 
-int	cd(t_data *data)
+int	free_2d(char **str)
 {
-	if (data->prototype[1])
-	{
-		if (chdir(data->prototype[1]))
-			return (error_msg(data, M_ARGERR, data->prototype[1]));
-	}
-	else
-		chdir(getenv("HOME"));
-	return (EXIT_SUCCESS);
+	int	i;
+
+	i = 0;
+	while (str[i] != NULL)
+		free(str[i++]);
+	free(str);
+	return (0);
 }

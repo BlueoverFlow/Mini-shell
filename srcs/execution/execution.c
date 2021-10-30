@@ -6,31 +6,13 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/17 10:06:45 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/24 11:58:30 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/30 18:30:32 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../headers/minishell.h"
 
-static char	**env_array(t_data *data)
-{
-	char 		**envp;
-	int			i;
-
-	i = 0;
-	envp = malloc(sizeof(*envp) * (ft_lstsize(data->exported) + 1));
-	while (data->exported)
-	{
-		data->info = data->exported->content;
-		envp[i++] = ft_strjoin_and_free_s1
-			(ft_strjoin(data->info->var, "="), data->info->value);
-		data->exported = data->exported->next;
-	}
-	envp[i] = NULL;
-	return (envp);
-}
-
-static void daughter_process(t_data *data, int read_end)
+static void	daughter_process(t_data *data, int read_end)
 {
 	if (stream_source(data, read_end, FALSE) || builtin(data))
 		exit(EXIT_FAILURE);
@@ -38,11 +20,12 @@ static void daughter_process(t_data *data, int read_end)
 		exit(EXIT_SUCCESS);
 	if (!file_search_using_path_var(data))
 		data->executable = data->prototype[0];
-	if (execve(data->executable, data->prototype, (char *const *)env_array(data)))
+	if (execve(data->executable, data->prototype,
+			(char *const *)env_array(data)))
 		execve_errs(data);
 }
 
-static int pipe_and_fork(t_data *data)
+static int	pipe_and_fork(t_data *data)
 {
 	if (data->piped_cmd->next)
 	{
@@ -58,9 +41,9 @@ static int pipe_and_fork(t_data *data)
 	return (EXIT_SUCCESS);
 }
 
-static int simple_command(t_data *data)
+static int	simple_command(t_data *data)
 {
-	int ret;
+	int	ret;
 
 	ret = FALSE;
 	if (!data->piped_cmd->next)
@@ -86,10 +69,10 @@ static int simple_command(t_data *data)
 	return (ret);
 }
 
-static void piped_commands(t_data *data)
+static void	piped_commands(t_data *data)
 {
-	int read_end;
-	
+	int	read_end;
+
 	read_end = -1;
 	while (data->piped_cmd)
 	{
@@ -101,12 +84,13 @@ static void piped_commands(t_data *data)
 		read_end = data->end[0];
 		close(data->end[1]);
 		data->piped_cmd = data->piped_cmd->next;
+		free_2d(data->prototype);
 	}
 }
 
-int execute(t_data *data)
+int	execute(t_data *data)
 {
-	int ret;
+	int	ret;
 
 	ret = simple_command(data);
 	if (ret)

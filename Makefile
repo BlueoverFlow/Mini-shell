@@ -6,7 +6,7 @@
 #    By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/05/13 08:14:39 by ael-mezz          #+#    #+#              #
-#    Updated: 2021/10/28 07:38:05 by ael-mezz         ###   ########.fr        #
+#    Updated: 2021/10/30 18:32:47 by ael-mezz         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,9 +15,10 @@ NAME = minishell
 SRCS =	main.c								\
 		utils/lst_utils.c					\
 		utils/utils.c						\
-		utils/utils_2.c						\
 		utils/parsing_utils.c				\
 		utils/execution_utils.c				\
+		utils/execution_utils_2.c			\
+		utils/export_utils.c				\
 		parsing/parsing.c					\
 		parsing/expansions.c				\
 		parsing/expand_env_vars.c			\
@@ -34,23 +35,19 @@ SRCS =	main.c								\
 		execution/builtins/cd.c				\
 		execution/builtins/unset.c
 
+SRCS_PATH =	./srcs
+
+SRCS := $(addprefix $(SRCS_PATH)/, $(SRCS))
+
 LIBFT =	libft/libft.a
 
-FLAGS = -g -lreadline -ledit #-Wall -Werror -Wextra #-fsanitize=address
-
-SRCS_PATH =	./srcs
+FLAGS = -g -lreadline -ledit -Wall -Werror -Wextra #-fsanitize=address
 
 CC = gcc
 
 RM = rm -rf
 
-OBJ = $(SRCS:.c=.o)
-
-OBJ_DIR = mv *.o srcs
-
 HEADER = headers/minishell.h
-
-SRCS := $(addprefix $(SRCS_PATH)/, $(SRCS))
 
 $(NAME): $(SRCS) $(HEADER)
 	@make all -C libft

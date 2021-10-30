@@ -6,18 +6,11 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/24 13:29:24 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/22 13:36:27 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/30 18:01:52 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../headers/minishell.h"
-
-static int	is_plus_sign(t_data *data, char *var, int i)
-{
-	if (var[i] == '+' && i == (int)ft_strlen(var) - 1 && data->info->value)
-		return (1);
-	return (0);
-}
 
 static int	analyze_var(t_data *data, char *var)
 {
@@ -56,85 +49,6 @@ static int	check_export_syntax(t_data *data, int j)
 	return (1);
 }
 
-static void	export_print(t_data *data)
-{
-	t_list	*tmp;
-
-	tmp = data->exported;
-	while (tmp)
-	{
-		data->info = tmp->content;
-		if (data->info->value)
-			printf("declare -x %s=\"%s\"\n", data->info->var, data->info->value);
-		else
-			printf("declare -x %s\n", data->info->var);
-		tmp = tmp->next;
-	}
-}
-
-static void	increase_shelllvl(t_data *data)
-{
-	t_list	*tmp;
-	int		level;
-
-	tmp = data->exported;
-	while (data->exported)
-	{
-		data->info = data->exported->content;
-		if (!ft_strcmp(data->info->var, "SHLVL"))
-		{
-			if (data->info->value)
-			{
-				level = ft_atoi(data->info->value) + 1;
-				free(data->info->value);
-				data->info->value = ft_itoa(level);
-			}
-		}
-		data->exported = data->exported->next;
-	}
-	data->exported = tmp;
-}
-
-static void	sort_var(t_data *data)
-{
-	t_list			*last;
-	t_info			*info_1;
-
-	last = ft_lstlast(data->exported);
-	data->info = last->content;
-	while (last->previous)
-	{
-		info_1 = last->previous->content;
-		if (ft_strcmp(data->info->var, info_1->var) > 0)
-			break ;
-		if (last->previous->previous)
-			last->previous->previous->next = last;
-		last->previous->next = last->next;
-		last->next = last->previous;
-		last->previous = last->next->previous;
-		if (last->next->next)
-			last->next->next->previous = last->next;
-		last->next->previous = last;
-	}
-	if (!last->previous)
-		data->exported = last;
-}
-
-static void	insert_var(t_data *data, char *input)
-{
-	int				i;
-
-	if (input)
-	{
-		i = find_char(input, '=');
-		data->info = malloc(sizeof(t_info));
-		data->info->var = ft_substr(input, 0, i);
-		data->info->value = ft_substr(input, i + 1, ft_strlen(input) - i);
-	}
-	ft_dlstadd_back(&data->exported, ft_dlstnew(data->info));
-	sort_var(data);
-}
-
 static int	already_exported(t_data *data, int i, t_info *info_1)
 {
 	if (!ft_strcmp(info_1->var, data->info->var))
@@ -154,7 +68,7 @@ static int	already_exported(t_data *data, int i, t_info *info_1)
 	return (0);
 }
 
-int	scan_env_vars(t_data *data)
+static int	scan_env_vars(t_data *data)
 {
 	t_info	*info_1;
 	t_list	*tmp;
@@ -176,17 +90,6 @@ int	scan_env_vars(t_data *data)
 	}
 	data->exported = tmp;
 	return (0);
-}
-
-void	build_env_vars(t_data *data, char *const	*envp)
-{
-	int	i;
-
-	i = -1;
-	data->exported = NULL;
-	while (envp[++i])
-		insert_var(data, (char *)envp[i]);
-	increase_shelllvl(data);
 }
 
 int	export(t_data *data)

@@ -5,146 +5,76 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/05/15 09:41:53 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/21 09:44:36 by ael-mezz         ###   ########.fr       */
+/*   Created: 2021/10/19 16:44:54 by ael-mezz          #+#    #+#             */
+/*   Updated: 2021/10/30 17:24:23 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../headers/minishell.h"
 
-int	is_backslashed(int i, char *str)
-{
-	int	special;
-	int	d;
-
-	special = FALSE;
-	if (i == 0)
-		return (0);
-	d = i - 1;
-	while (d >= 0 && str[d] == '\\')
-		d--;
-	while (++d <= i - 1)
-	{
-		if (str[d] == '\\' && special == FALSE)
-			special = TRUE;
-		else if (str[d] == '\\' && special == TRUE)
-			special = FALSE;
-	}
-	return (special);
-}
-
-static int	separator_search(const char *s, char *separator, int c)
+t_BOOL	theres_atoken(char *fragment)
 {
 	int	i;
-	int	j;
 
 	i = -1;
-	j = 0;
-	while (separator[++i])
+	while (fragment[++i])
 	{
-		if ((s[c] == separator[i] && is_backslashed(c, (char *)s)) \
-			|| s[c] != separator[i])
-			j++;
+		if (fragment[i] != ' ')
+			return (TRUE);
 	}
-	if (j == (int)ft_strlen(separator))
-		return (0);
-	return (1);
+	free(fragment);
+	return (FALSE);
 }
 
-static size_t	ft_countwords(char const *s, char *separator)
+t_BOOL	is_redirection(t_data *data, char *str, int i)
 {
-	int		start;
-	size_t	count;
-
-	count = 0;
-	start = 0;
-	while (s[start])
-	{
-		while (separator_search(s, separator, start) && s[start])
-			start++;
-		if (s[start])
-			count++;
-		while (!separator_search(s, separator, start) && s[start])
-			start++;
-	}
-	return (count);
-}
-
-static char	**ft_koalloc(char **ptr, size_t i)
-{
-	i += 1;
-	while (ptr[--i] != NULL)
-		free(ptr[i]);
-	free(ptr);
-	return (NULL);
-}
-
-static char	**spliter(char const *s, char **ptr, char *separator, size_t cw)
-{
-	size_t	i;
-	int		start;
-	int		len;
-	int		j;
-
-	i = -1;
-	start = 0;
-	len = 0;
-	while (s[start] && ++i < cw)
-	{
-		while (separator_search(s, separator, start) && s[start])
-			start++;
-		j = -1;
-		while (!separator_search(s, separator, start) && s[start])
-		{
-			len++;
-			start++;
-		}
-		start -= len;
-		ptr[i] = ft_calloc(len + 1, sizeof(char));
-		if (!ptr[i])
-			return (ft_koalloc(ptr, i));
-		ft_memcpy(ptr[i], s + start, len);
-		start += len;
-		len = 0;
-	}
-	return (ptr);
-}
-
-char	**ft_split_input(char const *s, char *separator)
-{
-	char		**ptr;
-	size_t		cw;
-
-	if (s == NULL)
-		return (NULL);
-	cw = ft_countwords(s, separator);
-	ptr = (char **)malloc(sizeof(char *) * (cw + 1));
-	if (!ptr)
-		return (NULL);
-	ptr[cw] = NULL;
-	return (spliter(s, ptr, separator, cw));
-}
-
-BOOL	quoted_fragment(char c)
-{
-	if (c == '\'' || c == '\"')
+	define_quoting_state(data, str, i);
+	if ((str[i] == '>' || str[i] == '<') && data->quoting_state == UNQUOTED)
 		return (TRUE);
 	return (FALSE);
 }
 
-int	find_char(char *str, char c)
+t_BOOL	closed_quotes(char *input, int i)
 {
-	int	i;
+	int	j;
+
+	j = i;
+	while (input[++j])
+	{
+		if (input[j] == input[i])
+			return (TRUE);
+	}
+	return (FALSE);
+}
+
+void	define_quoting_state(t_data *data, char *input, int i)
+{
+	if (data->passive)
+	{
+		data->quoting_state = UNQUOTED;
+		data->passive = FALSE;
+	}
+	else if (input[i] == data->quoting_state)
+		data->passive = TRUE;
+	if (data->quoting_state == UNQUOTED && quoted_fragment(input[i])
+		&& closed_quotes(input, i))
+		data->quoting_state = input[i];
+}
+
+char	*lst_to_word(t_list *lst)
+{
+	int		l;
+	char	*str;
+	int		i;
 
 	i = 0;
-	if (str)
+	l = ft_lstsize(lst);
+	str = malloc(sizeof(*str) * (l + 1));
+	while (lst)
 	{
-		while (str[i])
-		{
-			if (str[i] == c)
-				return (i);
-			i++;
-		}
+		str[i++] = *(char *)lst->content;
+		lst = lst->next;
 	}
-	return (-1);
+	str[i] = '\0';
+	return (str);
 }

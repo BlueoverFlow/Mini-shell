@@ -6,13 +6,13 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/06 11:44:55 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/21 09:42:32 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/30 17:07:49 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../headers/minishell.h"
 
-static int check_syntax(t_data *data, char *var)
+static int	check_syntax(t_data *data, char *var)
 {
 	int	i;
 
@@ -26,7 +26,7 @@ static int check_syntax(t_data *data, char *var)
 	return (1);
 }
 
-static t_list *skip(t_list *lst, t_list *head)
+static t_list	*skip(t_list *lst, t_list *head)
 {
 	if (head == lst)
 		head = lst->next;
@@ -39,28 +39,28 @@ static t_list *skip(t_list *lst, t_list *head)
 
 int	unset(t_data *data)
 {
-    int		i;
-    t_list  *tmp;
+	int		i;
+	t_list	*tmp;
 
-    i = 0;
+	i = 0;
 	while (data->prototype[++i] && data->prototype[i][0])
 	{
 		if (check_syntax(data, data->prototype[i]) == ERROR)
 			return (error_msg(data, M_NOVALID, data->prototype[i]));
-        tmp = data->exported;
+		tmp = data->exported;
 		while (tmp)
-        {
-            data->info = tmp->content;
-            if (!ft_strcmp(data->info->var, data->prototype[i]))
-            {
-                data->exported = skip(tmp, data->exported);
-                free(data->info->value);
-                free(data->info->var);
-                free(data->info);
-                break ;
-            }
-            tmp = tmp->next;
-        }
+		{
+			data->info = tmp->content;
+			if (!ft_strcmp(data->info->var, data->prototype[i]))
+			{
+				data->exported = skip(tmp, data->exported);
+				free(data->info->value);
+				free(data->info->var);
+				free(data->info);
+				break ;
+			}
+			tmp = tmp->next;
+		}
 	}
-    return (EXIT_SUCCESS);
+	return (EXIT_SUCCESS);
 }
