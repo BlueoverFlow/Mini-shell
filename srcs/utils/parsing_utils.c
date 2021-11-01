@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 17:20:15 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/30 17:24:23 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/31 10:25:02 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	find_char(char *str, char c)
 	return (-1);
 }
 
-t_BOOL	quoted_fragment(char c)
+BOOL	quoted_fragment(char c)
 {
 	if (c == '\'' || c == '\"')
 		return (TRUE);

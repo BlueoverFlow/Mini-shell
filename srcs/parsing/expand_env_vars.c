@@ -6,19 +6,20 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/18 09:45:38 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/30 17:24:23 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/11/01 08:21:20 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../headers/minishell.h"
 
-static char	*concate_value(char *new, char *s)
+static char	*value_concatenation(char *new, char *s)
 {
 	int			i;
 	char		**fragment;
 
 	i = 0;
 	fragment = ft_split(s, ' ');
+	free(s);
 	new = ft_strjoin_and_free_all(new, ft_strdup("\""));
 	if (ft_strlen(new) != 1 && *s == ' ')
 		fragment[0] = ft_strjoin_and_free_all(ft_strdup(" "), fragment[0]);
@@ -72,14 +73,14 @@ static char	*assign_var_and_value(t_data *data, char *input, char *new, int *i)
 	if (assign.value)
 	{
 		if (data->quoting_state == UNQUOTED)
-			new = concate_value(new, assign.value);
+			new = value_concatenation(new, assign.value);
 		else
-			new = ft_strjoin_and_free_s1(new, assign.value);
+			new = ft_strjoin_and_free_all(new, assign.value);
 	}
 	return (new);
 }
 
-static t_BOOL	is_env_var(t_data *data, char *input, char **new, int *i)
+static BOOL	is_env_var(t_data *data, char *input, char **new, int *i)
 {
 	if (data->quoting_state != '\'' && input[*i + 1]
 		&& input[*i] == '$' && (ft_isalnum(input[*i + 1])
@@ -109,7 +110,7 @@ char	*expand_env_vars(t_data *data, char *input)
 		define_quoting_state(data, input, i);
 		if ((input[i] == '\"' && data->quoting_state == '\"')
 			|| !is_env_var(data, input, &new, &i))
-			new = ft_strjoin(new, ft_substr(input, i, 1));
+			new = ft_strjoin_and_free_all(new, ft_substr(input, i, 1));
 	}
 	free(input);
 	return (new);

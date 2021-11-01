@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 08:15:00 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/30 18:14:19 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/11/01 09:35:42 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,11 +44,20 @@ static void	_init(t_data *data)
 static void	free_leaks(t_data data)
 {
 	t_list	*tmp;
+	t_list	*tmp_2;
 
 	tmp = data.piped_cmd;
 	while (data.piped_cmd)
 	{
 		data.command = data.piped_cmd->content;
+		tmp_2 = data.command->file;
+		while (tmp_2)
+		{
+			data.file_data = tmp_2->content;
+			free(data.file_data->path);
+			free(data.file_data->path_2);
+			tmp_2 = tmp_2->next;
+		}
 		free_list(&data.command->prototype);
 		free_list(&data.command->file);
 		data.piped_cmd = data.piped_cmd->next;

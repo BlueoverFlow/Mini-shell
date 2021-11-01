@@ -6,11 +6,28 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/30 16:54:46 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/30 18:21:51 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/11/01 13:32:43 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../headers/minishell.h"
+
+void	free_command_struct(t_data data)
+{
+	t_list	*tmp;
+
+	tmp = data.command->file;
+	while (tmp)
+	{
+		data.file_data = tmp->content;
+		free(data.file_data->path);
+		free(data.file_data->path_2);
+		tmp = tmp->next;
+	}
+	free_list(&data.command->prototype);
+	free_list(&data.command->file);
+	free(data.command);
+}
 
 int	is_plus_sign(t_data *data, char *var, int i)
 {

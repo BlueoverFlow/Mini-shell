@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 16:48:47 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/21 09:44:11 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/10/31 09:40:20 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ static int	input_stream_literal(t_data *data)
 			break ;
 		write(h_d.fd, h_d.input, ft_strlen(h_d.input));
 		write(h_d.fd, "\n", 1);
+		free(h_d.input);
 	}
 	free(h_d.input);
 	data->file_data->path_2 = h_d.file_name;

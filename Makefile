@@ -6,7 +6,7 @@
 #    By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/05/13 08:14:39 by ael-mezz          #+#    #+#              #
-#    Updated: 2021/10/30 18:32:47 by ael-mezz         ###   ########.fr        #
+#    Updated: 2021/11/01 13:30:11 by ael-mezz         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,7 +41,7 @@ SRCS := $(addprefix $(SRCS_PATH)/, $(SRCS))
 
 LIBFT =	libft/libft.a
 
-FLAGS = -g -lreadline -ledit -Wall -Werror -Wextra #-fsanitize=address
+FLAGS = -g -lreadline -ledit #-Wall -Werror -Wextra #-fsanitize=address
 
 CC = gcc
 
@@ -51,8 +51,8 @@ HEADER = headers/minishell.h
 
 $(NAME): $(SRCS) $(HEADER)
 	@make all -C libft
-	@$(CC) $(SRCS) $(LIBFT) $(FLAGS) -o minishell
-	@./minishell
+	@$(CC) $(SRCS) $(LIBFT) $(FLAGS) -o $(NAME)
+	@./$(NAME)
 
 all: $(NAME)
 
@@ -61,7 +61,7 @@ clean:
 	@make clean -C libft
 
 fclean:	clean
-	@$(RM) minishell minishell.dSYM
+	@$(RM) $(NAME) $(NAME).dSYM
 	@make fclean -C libft
 
 test:

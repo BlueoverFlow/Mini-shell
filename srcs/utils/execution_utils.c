@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/20 14:22:16 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/30 18:23:10 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/11/01 11:19:51 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,10 @@ void	close_fds(t_data *data)
 void	close_fds_and_wait(t_data *data)
 {
 	int		stat;
+	t_list	*tmp;
 
 	close_fds(data);
+	tmp = data->lst_child_id;
 	while (data->lst_child_id)
 	{
 		data->process = data->lst_child_id->content;
@@ -36,6 +38,8 @@ void	close_fds_and_wait(t_data *data)
 	}
 	if (WIFEXITED(stat))
 		data->exit_status = WEXITSTATUS(stat);
+	data->lst_child_id = tmp;
+	free_list(&data->lst_child_id);
 }
 
 void	error_prompt(t_data *data, char *arg)

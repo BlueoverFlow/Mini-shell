@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/06 11:44:55 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/30 17:07:49 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/11/01 08:12:59 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ int	unset(t_data *data)
 				free(data->info->value);
 				free(data->info->var);
 				free(data->info);
+				free(tmp);
 				break ;
 			}
 			tmp = tmp->next;

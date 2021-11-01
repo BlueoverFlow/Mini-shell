@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 08:15:35 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/30 18:15:06 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/11/01 11:43:20 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,7 @@
 # define EXPORT_ERR 6
 # define UNSET_ERR 7
 # define NO_FILE -2
-
-typedef int	t_BOOL;
+# define BOOL int
 
 typedef struct s_process
 {
@@ -92,12 +91,12 @@ typedef struct s_data
 	t_list			*lst_child_id;
 	t_process		*process;
 	t_file_data		*file_data;
-	t_BOOL			passive;
-	t_BOOL			is_builtin;
-	t_BOOL			err_path_env;
-	t_BOOL			var_with_equals_sign;
-	t_BOOL			infile;
-	t_BOOL			outfile;
+	BOOL			passive;
+	BOOL			is_builtin;
+	BOOL			err_path_env;
+	BOOL			var_with_equals_sign;
+	BOOL			infile;
+	BOOL			outfile;
 	pid_t			id;
 	int				fd[4];
 	int				end[2];
@@ -129,11 +128,11 @@ t_list		*ft_lst_head(t_list *lst);
 int			is_backslashed(int i, char *str);
 int			find_char(char *str, char c);
 char		**ft_split_input(char const *s, char *separator);
-t_BOOL		quoted_fragment(char c);
+BOOL		quoted_fragment(char c);
 int			find_value(t_data *data, char *var, char **value);
 int			theres_atoken(char *fragment);
-t_BOOL		is_redirection(t_data *data, char *str, int i);
-t_BOOL		closed_quotes(char *input, int i);
+BOOL		is_redirection(t_data *data, char *str, int i);
+BOOL		closed_quotes(char *input, int i);
 char		*lst_to_word(t_list *lst);
 int			syntax_checking(t_data *data, int i);
 void		close_fds(t_data *data);
@@ -147,8 +146,8 @@ char		**env_array(t_data *data);
 int			norm_(int errno_code);
 int			error_msg(t_data *data, int errno_code, char *file);
 void		insert_var(t_data *data, char *input);
-char		**env_array(t_data *data);
 int			error_msg(t_data *data, int errno_code, char *file);
+void		free_command_struct(t_data data);
 
 //======== parsing ============================================
 
@@ -174,7 +173,7 @@ void		build_env_vars(t_data *data, char *const	*envp);
 void		scan_command(t_data *data);
 int			file_search_using_path_var(t_data *data);
 char		*ft_getenv(t_data *data, char *var);
-int			stream_source(t_data *data, int read_end, t_BOOL	simple_cmd);
+int			stream_source(t_data *data, int read_end, BOOL	simple_cmd);
 void		execve_errs(t_data *data);
 
 #endif

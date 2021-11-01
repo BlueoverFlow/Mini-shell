@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/17 10:06:45 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/30 18:30:32 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/11/01 13:57:28 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,9 +71,11 @@ static int	simple_command(t_data *data)
 
 static void	piped_commands(t_data *data)
 {
-	int	read_end;
+	t_list	*tmp;
+	int		read_end;
 
 	read_end = -1;
+	tmp = data->piped_cmd;
 	while (data->piped_cmd)
 	{
 		scan_command(data);
@@ -86,6 +88,7 @@ static void	piped_commands(t_data *data)
 		data->piped_cmd = data->piped_cmd->next;
 		free_2d(data->prototype);
 	}
+	data->piped_cmd = tmp;
 }
 
 int	execute(t_data *data)

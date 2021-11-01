@@ -1,5 +1,0 @@
-
-
-
-
-	ft_lstadd_back(&(data->char_1d), ft_lstnew(&fragment));
