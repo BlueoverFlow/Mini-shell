@@ -10,9 +10,14 @@
 #                                                                              #
 # **************************************************************************** #
 
+.PHONY: all fclean clean re bonus
+
+BONUS = bonus
+
 NAME = minishell
 
 SRCS =	main.c								\
+		signals.c							\
 		utils/lst_utils.c					\
 		utils/utils.c						\
 		utils/parsing_utils.c				\
@@ -37,11 +42,14 @@ SRCS =	main.c								\
 
 SRCS_PATH =	./srcs
 
+LDFLAGS= -L/goinfre/mlabrayj/.brew/opt/readline/lib
+CFLAGS= -I/goinfre/mlabrayj/.brew/opt/readline/include
+
 SRCS := $(addprefix $(SRCS_PATH)/, $(SRCS))
 
 LIBFT =	libft/libft.a
 
-FLAGS = -g -lreadline -ledit #-Wall -Werror -Wextra #-fsanitize=address
+FLAGS = -g -lreadline -ledit $(LDFLAGS) $(CFLAGS) #-Wall -Werror -Wextra #-fsanitize=address
 
 CC = gcc
 

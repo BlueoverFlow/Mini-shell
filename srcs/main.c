@@ -47,6 +47,8 @@ static void	free_leaks(t_data data)
 	t_list	*tmp_2;
 
 	tmp = data.piped_cmd;
+	signal(SIGINT, sig_handler;
+	signal(SIGQUIT, sig_handler);
 	while (data.piped_cmd)
 	{
 		data.command = data.piped_cmd->content;

@@ -176,4 +176,8 @@ char		*ft_getenv(t_data *data, char *var);
 int			stream_source(t_data *data, int read_end, BOOL	simple_cmd);
 void		execve_errs(t_data *data);
 
+//============ SIGNALS ===========
+
+void		sig_handler(int sig);
+
 #endif
