@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/12 15:09:32 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/31 10:24:29 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/11/02 12:40:52 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 # define LIBFT_H
 # include <unistd.h>
 # include <string.h>
-# include <stdio.h>
 # include <stdlib.h>
+# include <stdio.h>
 
 typedef struct s_list
 {

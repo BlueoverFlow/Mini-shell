@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/24 13:29:24 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/11/01 08:38:56 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/11/02 12:40:35 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,9 +84,10 @@ static int	scan_env_vars(t_data *data)
 		if (already_exported(data, i, info_1))
 		{
 			data->exported = tmp;
-			free(data->info->var);
-			free(data->info->value);
+			if (ft_strcmp(data->info->value, info_1->value))
+				free(data->info->value);
 			free(data->info);
+			free(data->info->var);
 			return (1);
 		}
 		data->exported = data->exported->next;

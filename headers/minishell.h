@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 08:15:35 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/11/01 11:43:20 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/11/02 13:51:54 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,13 +140,11 @@ void		close_fds_and_wait(t_data *data);
 void		build_env_vars(t_data *data, char *const	*envp);
 void		export_print(t_data *data);
 int			is_plus_sign(t_data *data, char *var, int i);
-void		error_prompt(t_data *data, char *arg);
 void		execve_errs(t_data *data);
 char		**env_array(t_data *data);
 int			norm_(int errno_code);
 int			error_msg(t_data *data, int errno_code, char *file);
 void		insert_var(t_data *data, char *input);
-int			error_msg(t_data *data, int errno_code, char *file);
 void		free_command_struct(t_data data);
 
 //======== parsing ============================================
@@ -174,10 +172,6 @@ void		scan_command(t_data *data);
 int			file_search_using_path_var(t_data *data);
 char		*ft_getenv(t_data *data, char *var);
 int			stream_source(t_data *data, int read_end, BOOL	simple_cmd);
-void		execve_errs(t_data *data);
-
-//============ SIGNALS ===========
-
 void		sig_handler(int sig);
 
 #endif

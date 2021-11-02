@@ -6,18 +6,13 @@
 #    By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/05/13 08:14:39 by ael-mezz          #+#    #+#              #
-#    Updated: 2021/11/01 13:30:11 by ael-mezz         ###   ########.fr        #
+#    Updated: 2021/11/02 13:10:25 by ael-mezz         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
-
-.PHONY: all fclean clean re bonus
-
-BONUS = bonus
 
 NAME = minishell
 
 SRCS =	main.c								\
-		signals.c							\
 		utils/lst_utils.c					\
 		utils/utils.c						\
 		utils/parsing_utils.c				\
@@ -30,6 +25,7 @@ SRCS =	main.c								\
 		parsing/heredoc_parsing.c			\
 		parsing/redirections.c				\
 		execution/execution.c				\
+		execution/signals.c					\
 		execution/streams.c					\
 		execution/scan_command.c			\
 		execution/find_executable.c			\
@@ -42,14 +38,11 @@ SRCS =	main.c								\
 
 SRCS_PATH =	./srcs
 
-LDFLAGS= -L/goinfre/mlabrayj/.brew/opt/readline/lib
-CFLAGS= -I/goinfre/mlabrayj/.brew/opt/readline/include
-
 SRCS := $(addprefix $(SRCS_PATH)/, $(SRCS))
 
 LIBFT =	libft/libft.a
 
-FLAGS = -g -lreadline -ledit $(LDFLAGS) $(CFLAGS) #-Wall -Werror -Wextra #-fsanitize=address
+FLAGS = -g -lreadline -L $(RDLINE_PATH)/lib -I $(RDLINE_PATH)/include #-Wall -Werror -Wextra #-fsanitize=address
 
 CC = gcc
 

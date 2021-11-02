@@ -6,43 +6,13 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/20 14:22:16 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/11/01 11:19:51 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/11/02 13:13:51 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../headers/minishell.h"
 
-void	close_fds(t_data *data)
-{
-	int	i;
-
-	i = -1;
-	while (++i < 4)
-		close(data->fd[i]);
-	close(data->end[0]);
-	close(data->end[1]);
-}
-
-void	close_fds_and_wait(t_data *data)
-{
-	int		stat;
-	t_list	*tmp;
-
-	close_fds(data);
-	tmp = data->lst_child_id;
-	while (data->lst_child_id)
-	{
-		data->process = data->lst_child_id->content;
-		waitpid(data->process->id, &stat, 0);
-		data->lst_child_id = data->lst_child_id->next;
-	}
-	if (WIFEXITED(stat))
-		data->exit_status = WEXITSTATUS(stat);
-	data->lst_child_id = tmp;
-	free_list(&data->lst_child_id);
-}
-
-void	error_prompt(t_data *data, char *arg)
+static void	error_prompt(t_data *data, char *arg)
 {
 	ft_putstr_fd("minishell: ", STDERR_FILENO);
 	if (data->prototype)
@@ -56,6 +26,34 @@ void	error_prompt(t_data *data, char *arg)
 		ft_putstr_fd(arg, STDERR_FILENO);
 		ft_putstr_fd("': ", STDERR_FILENO);
 	}
+}
+
+int	error_msg(t_data *data, int errno_code, char *file)
+{
+	error_prompt(data, file);
+	if (errno_code == M_NOCMD || errno_code == M_NOEXENT)
+	{
+		if (errno_code == M_NOCMD)
+			ft_putstr_fd("command not found\n", STDERR_FILENO);
+		else
+			ft_putstr_fd("No such file or directory\n", STDERR_FILENO);
+		return (127);
+	}
+	else if (errno_code == M_ARGERR || errno_code == M_NOVALID)
+	{
+		if (errno_code == M_NOVALID)
+			ft_putstr_fd("not a valid identifier\n", STDERR_FILENO);
+		else
+			perror(NULL);
+		return (1);
+	}
+	else if (errno_code == M_BADACCES)
+	{
+		ft_putstr_fd("can't access/execute\n", STDERR_FILENO);
+		return (126);
+	}
+	ft_putstr_fd("syntax error!\n", STDERR_FILENO);
+	return (258);
 }
 
 void	execve_errs(t_data *data)

@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/30 16:54:46 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/11/01 13:32:43 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/11/02 13:13:28 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,30 +54,32 @@ char	**env_array(t_data *data)
 	return (envp);
 }
 
-int	error_msg(t_data *data, int errno_code, char *file)
+void	close_fds(t_data *data)
 {
-	error_prompt(data, file);
-	if (errno_code == M_NOCMD || errno_code == M_NOEXENT)
+	int	i;
+
+	i = -1;
+	while (++i < 4)
+		close(data->fd[i]);
+	close(data->end[0]);
+	close(data->end[1]);
+}
+
+void	close_fds_and_wait(t_data *data)
+{
+	int		stat;
+	t_list	*tmp;
+
+	close_fds(data);
+	tmp = data->lst_child_id;
+	while (data->lst_child_id)
 	{
-		if (errno_code == M_NOCMD)
-			ft_putstr_fd("command not found\n", STDERR_FILENO);
-		else
-			ft_putstr_fd("No such file or directory\n", STDERR_FILENO);
-		return (127);
+		data->process = data->lst_child_id->content;
+		waitpid(data->process->id, &stat, 0);
+		data->lst_child_id = data->lst_child_id->next;
 	}
-	else if (errno_code == M_ARGERR || errno_code == M_NOVALID)
-	{
-		if (errno_code == M_NOVALID)
-			ft_putstr_fd("not a valid identifier\n", STDERR_FILENO);
-		else
-			perror(NULL);
-		return (1);
-	}
-	else if (errno_code == M_BADACCES)
-	{
-		ft_putstr_fd("can't access/execute\n", STDERR_FILENO);
-		return (126);
-	}
-	ft_putstr_fd("syntax error!\n", STDERR_FILENO);
-	return (258);
+	if (WIFEXITED(stat))
+		data->exit_status = WEXITSTATUS(stat);
+	data->lst_child_id = tmp;
+	free_list(&data->lst_child_id);
 }

@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 08:15:00 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/11/01 09:35:42 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/11/02 12:43:57 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,8 +47,6 @@ static void	free_leaks(t_data data)
 	t_list	*tmp_2;
 
 	tmp = data.piped_cmd;
-	signal(SIGINT, sig_handler;
-	signal(SIGQUIT, sig_handler);
 	while (data.piped_cmd)
 	{
 		data.command = data.piped_cmd->content;
@@ -73,6 +71,7 @@ int	main(int argc, char **argv, char *const envp[])
 	t_data	data;
 
 	global_init(&data, argc, argv, envp);
+	signal(SIGINT, sig_handler);
 	while (1)
 	{
 		data.input = readline(PROMPT);
@@ -83,12 +82,8 @@ int	main(int argc, char **argv, char *const envp[])
 			data.exit_status = 0;
 		free_leaks(data);
 		if (data.input && *data.input)
-		{
 			add_history(data.input);
-			free(data.input);
-		}
-		else if (!data.input)
-			printf("\n");
+		free(data.input);
 	}
 	return (0);
 }
