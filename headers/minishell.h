@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 08:15:35 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/11/02 13:51:54 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/11/10 18:16:09 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@
 # define M_NOCMD 303
 # define M_NOEXENT 304
 # define M_STXERR 305
+# define M_HMERR 306
 # define TRUE 10
 # define FALSE 0
 # define ERROR -1
@@ -65,6 +66,13 @@ typedef struct s_file_data
 	int			id;
 }				t_file_data;
 
+typedef struct s_file_sys
+{
+	char	*home;
+	char	pwd;
+	char	old_pwd;
+}				t_file_sys;
+
 typedef struct s_command
 {
 	t_list		*prototype;
@@ -77,9 +85,7 @@ typedef struct s_info
 	char	*value;
 }				t_info;
 
-/*
-first node of garbage list contain a list to *char, the 2nd to char **char 
-*/
+pid_t	g_parent_id;
 
 typedef struct s_data
 {

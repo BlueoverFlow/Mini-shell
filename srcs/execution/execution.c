@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/17 10:06:45 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/11/02 13:11:43 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/11/03 08:51:58 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 static void	daughter_process(t_data *data, int read_end)
 {
+	signal(SIGQUIT, SIG_DFL);
+	signal(SIGINT, SIG_DFL);
 	if (stream_source(data, read_end, FALSE) || builtin(data))
 		exit(EXIT_FAILURE);
 	if (data->is_builtin == TRUE)
@@ -34,6 +36,7 @@ static int	pipe_and_fork(t_data *data)
 	}
 	data->process = malloc(sizeof(t_process));
 	data->process->id = fork();
+	g_parent_id = data->process->id;
 	if (data->process->id == ERROR)
 		return (EXIT_FAILURE);
 	if (data->process->id)

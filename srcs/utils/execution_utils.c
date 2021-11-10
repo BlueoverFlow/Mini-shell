@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/20 14:22:16 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/11/02 13:13:51 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/11/10 17:46:11 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,12 @@ static void	error_prompt(t_data *data, char *arg)
 	}
 }
 
+static int	error_msg_2(t_data *data, int errno_code, char *file)
+{
+	ft_putstr_fd("syntax error!\n", STDERR_FILENO);
+	return (258);
+}
+
 int	error_msg(t_data *data, int errno_code, char *file)
 {
 	error_prompt(data, file);
@@ -43,6 +49,8 @@ int	error_msg(t_data *data, int errno_code, char *file)
 	{
 		if (errno_code == M_NOVALID)
 			ft_putstr_fd("not a valid identifier\n", STDERR_FILENO);
+		else if (errno_code == M_HMERR)
+			ft_putstr_fd("HOME not set\n", STDERR_FILENO);
 		else
 			perror(NULL);
 		return (1);
@@ -52,8 +60,7 @@ int	error_msg(t_data *data, int errno_code, char *file)
 		ft_putstr_fd("can't access/execute\n", STDERR_FILENO);
 		return (126);
 	}
-	ft_putstr_fd("syntax error!\n", STDERR_FILENO);
-	return (258);
+	return (error_msg_2(data, errno_code, file));
 }
 
 void	execve_errs(t_data *data)

@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/12 15:09:32 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/11/02 12:40:52 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/11/10 18:25:29 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,5 +83,6 @@ int					ft_strcmp(char *s1, char *s2);
 char				**realloc_2d(char **str, int d);
 char				*ft_strjoin_and_free_s1(char *s1, char const *s2);
 char				*ft_strjoin_and_free_all(char *s1, char *s2);
+char				*ft_strjoin_and_free(char *s1, char *s2, int to_free);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/15 11:04:30 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/11/02 12:23:24 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/11/10 17:05:57 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,8 +66,8 @@ BOOL	file_search_using_path_var(t_data *data)
 		data->err_path_env = TRUE;
 		return (EXIT_FAILURE);
 	}
-	free(path);
 	tree = ft_split(path, ':');
+	free(path);2
 	i = -1;
 	while (tree[++i])
 	{

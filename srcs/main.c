@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 08:15:00 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/11/02 12:43:57 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/11/03 09:17:02 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ static void	_init(t_data *data)
 	data->fd[1] = ERROR;
 	data->fd[2] = ERROR;
 	data->fd[3] = ERROR;
+	g_parent_id = 0;
 }
 
 static void	free_leaks(t_data data)
