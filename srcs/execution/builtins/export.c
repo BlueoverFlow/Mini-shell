@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/24 13:29:24 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/11/02 12:40:35 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/11/11 10:11:32 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ static int	already_exported(t_data *data, int i, t_info *info_1)
 				info_1->value = NULL;
 			}
 			info_1->value
-				= ft_strjoin_and_free_s1(info_1->value, data->info->value);
+				= ft_strjoin_and_free(info_1->value, data->info->value, 1);
 		}
 		return (1);
 	}
@@ -103,12 +103,10 @@ int	export(t_data *data)
 	i = 0;
 	if (!data->prototype[1] || !data->prototype[1][0])
 		export_print(data);
-	else if (*(data->prototype)[1] == '-')
-		return (error_msg(data, M_STXERR, NULL));
 	while (data->prototype[++i] && data->prototype[i][0])
 	{
 		if (check_export_syntax(data, i) == ERROR)
-			return (error_msg(data, M_NOVALID, data->prototype[i]));
+			return (error_msg(*data, M_NOVALID, 1, data->prototype[i]));
 		if (!scan_env_vars(data))
 			insert_var(data, NULL);
 	}

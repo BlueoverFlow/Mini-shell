@@ -6,13 +6,13 @@
 #    By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/05/13 08:14:39 by ael-mezz          #+#    #+#              #
-#    Updated: 2021/11/02 13:10:25 by ael-mezz         ###   ########.fr        #
+#    Updated: 2021/11/11 14:26:53 by ael-mezz         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = minishell
 
-SRCS =	main.c								\
+SRCS =	minishell.c							\
 		utils/lst_utils.c					\
 		utils/utils.c						\
 		utils/parsing_utils.c				\
@@ -25,16 +25,16 @@ SRCS =	main.c								\
 		parsing/heredoc_parsing.c			\
 		parsing/redirections.c				\
 		execution/execution.c				\
-		execution/signals.c					\
 		execution/streams.c					\
-		execution/scan_command.c			\
+		execution/scan_prototype.c			\
 		execution/find_executable.c			\
 		execution/builtins/builtins.c		\
 		execution/builtins/echo.c			\
 		execution/builtins/env.c			\
 		execution/builtins/export.c			\
 		execution/builtins/cd.c				\
-		execution/builtins/unset.c
+		execution/builtins/unset.c			\
+		execution/builtins/pwd.c
 
 SRCS_PATH =	./srcs
 
@@ -53,7 +53,6 @@ HEADER = headers/minishell.h
 $(NAME): $(SRCS) $(HEADER)
 	@make all -C libft
 	@$(CC) $(SRCS) $(LIBFT) $(FLAGS) -o $(NAME)
-	@./$(NAME)
 
 all: $(NAME)
 

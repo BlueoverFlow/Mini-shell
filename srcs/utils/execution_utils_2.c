@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/30 16:54:46 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/11/02 13:13:28 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/11/11 10:14:05 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,8 @@ char	**env_array(t_data *data)
 	while (data->exported)
 	{
 		data->info = data->exported->content;
-		envp[i++] = ft_strjoin_and_free_s1
-			(ft_strjoin(data->info->var, "="), data->info->value);
+		envp[i++] = ft_strjoin_and_free
+			(ft_strjoin(data->info->var, "="), data->info->value, 1);
 		data->exported = data->exported->next;
 	}
 	envp[i] = NULL;
@@ -60,9 +60,14 @@ void	close_fds(t_data *data)
 
 	i = -1;
 	while (++i < 4)
-		close(data->fd[i]);
-	close(data->end[0]);
-	close(data->end[1]);
+	{
+		if (data->fd[i] != ERROR)
+			close(data->fd[i]);
+	}
+	if (data->end[0] != ERROR)
+		close(data->end[0]);
+	if (data->end[1] != ERROR)
+		close(data->end[1]);
 }
 
 void	close_fds_and_wait(t_data *data)

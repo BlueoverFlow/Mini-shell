@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/17 10:06:45 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/11/03 08:51:58 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/11/11 14:20:51 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,6 @@
 
 static void	daughter_process(t_data *data, int read_end)
 {
-	signal(SIGQUIT, SIG_DFL);
-	signal(SIGINT, SIG_DFL);
 	if (stream_source(data, read_end, FALSE) || builtin(data))
 		exit(EXIT_FAILURE);
 	if (data->is_builtin == TRUE)
@@ -24,7 +22,7 @@ static void	daughter_process(t_data *data, int read_end)
 		data->executable = data->prototype[0];
 	if (execve(data->executable, data->prototype,
 			(char *const *)env_array(data)))
-		execve_errs(data);
+		execve_errs(*data);
 }
 
 static int	pipe_and_fork(t_data *data)
@@ -41,7 +39,7 @@ static int	pipe_and_fork(t_data *data)
 		return (EXIT_FAILURE);
 	if (data->process->id)
 		ft_lstadd_back(&data->lst_child_id, ft_lstnew(data->process));
-	return (EXIT_SUCCESS);
+	return (0);
 }
 
 static int	simple_command(t_data *data)
@@ -51,7 +49,7 @@ static int	simple_command(t_data *data)
 	ret = FALSE;
 	if (!data->piped_cmd->next)
 	{
-		scan_command(data);
+		scan_prototype(data);
 		if (stream_source(data, 0, TRUE) || builtin(data))
 			ret = EXIT_FAILURE;
 		else if (data->is_builtin == TRUE)
@@ -59,12 +57,12 @@ static int	simple_command(t_data *data)
 		if (data->fd[0] != ERROR)
 		{
 			if (dup2(data->fd[2], STDIN_FILENO) == ERROR)
-				return (error_msg(data, M_ARGERR, NULL));
+				return (error_msg(*data, NULL, 1, NULL));
 		}
 		if (data->fd[1] != ERROR)
 		{
 			if (dup2(data->fd[3], STDOUT_FILENO) == ERROR)
-				return (error_msg(data, M_ARGERR, NULL));
+				return (error_msg(*data, NULL, 1, NULL));
 		}
 		close_fds(data);
 		free_2d(data->prototype);
@@ -81,9 +79,9 @@ static void	piped_commands(t_data *data)
 	tmp = data->piped_cmd;
 	while (data->piped_cmd)
 	{
-		scan_command(data);
+		scan_prototype(data);
 		if (pipe_and_fork(data))
-			error_msg(data, M_ARGERR, NULL);
+			error_msg(*data, NULL, 1, NULL);
 		if (data->process->id == 0)
 			daughter_process(data, read_end);
 		read_end = data->end[0];

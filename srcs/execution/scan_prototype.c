@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   scan_command.c                                     :+:      :+:    :+:   */
+/*   scan_prototype.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/10/15 10:58:05 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/11/01 08:14:34 by ael-mezz         ###   ########.fr       */
+/*   Created: 2021/10/01 14:25:44 by ael-mezz          #+#    #+#             */
+/*   Updated: 2021/11/11 14:25:55 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@ static void	command_name_to_lower_case(t_data *data)
 	tmp = ft_strdup(command_name);
 	while (command_name[++j])
 		command_name[j] = ft_tolower(command_name[j]);
-	if (!ft_strcmp(command_name, "export") || !ft_strcmp(command_name, "cd")
-		|| !ft_strcmp(command_name, "exit"))
+	if (!ft_strcmp(command_name, "export") || !ft_strcmp(command_name, "unset")
+		|| !ft_strcmp(command_name, "exit") || !ft_strcmp(command_name, "cd"))
 	{
 		free(data->command->prototype->content);
 		data->command->prototype->content = tmp;
@@ -61,7 +61,7 @@ static void	expand_prototype(t_data *data)
 	expand_prototype(data);
 }
 
-void	scan_command(t_data *data)
+void	scan_prototype(t_data *data)
 {
 	t_list	*tmp;
 

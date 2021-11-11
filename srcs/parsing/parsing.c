@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/18 17:20:29 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/11/02 13:12:54 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/11/11 11:04:58 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ static	int	build_tree(t_data *data, int i)
 	if (!data->input[i + 1])
 		return (fill_pipeline(data, i));
 	ft_lstadd_back(&data->word, ft_lstnew(ft_substr(data->input, i, 1)));
-	return (EXIT_SUCCESS);
+	return (0);
 }
 
 int	parser(t_data *data)
@@ -96,7 +96,7 @@ int	parser(t_data *data)
 		define_quoting_state(data, data->input, i);
 		if (build_tree(data, i))
 		{
-			ret = error_msg(data, M_STXERR, NULL);
+			ret = error_msg(*data, M_STXERR, 1, NULL);
 			break ;
 		}
 	}

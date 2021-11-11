@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/18 09:45:38 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/11/02 12:22:10 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/11/11 11:16:37 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,16 +20,16 @@ static char	*value_concatenation(char *new, char *s)
 	i = 0;
 	fragment = ft_split(s, ' ');
 	free(s);
-	new = ft_strjoin_and_free_all(new, ft_strdup("\""));
+	new = ft_strjoin_and_free(new, "\"", 1);
 	if (ft_strlen(new) != 1 && *s == ' ')
-		fragment[0] = ft_strjoin_and_free_all(ft_strdup(" "), fragment[0]);
-	new = ft_strjoin_and_free_all(new, ft_strdup(fragment[0]));
+		fragment[0] = ft_strjoin_and_free(" ", fragment[0], 2);
+	new = ft_strjoin_and_free(new, fragment[0], 1);
 	while (fragment[++i])
 	{
-		new = ft_strjoin_and_free_s1(new, " ");
-		new = ft_strjoin_and_free_all(new, ft_strdup(fragment[i]));
+		new = ft_strjoin_and_free(new, " ", 1);
+		new = ft_strjoin_and_free(new, fragment[i], 1);
 	}
-	new = ft_strjoin_and_free_s1(new, "\"");
+	new = ft_strjoin_and_free(new, "\"", 1);
 	free_2d(fragment);
 	return (new);
 }
@@ -59,14 +59,14 @@ static char	*assign_var_and_value(t_data *data, char *input, char *new, int *i)
 
 	len = find_len(input, *i);
 	assign.var = ft_substr(input, *i + 1, len);
-	if (!ft_strncmp(assign.var, "?", 1))
+	if (*assign.var == '?')
 	{
 		assign.value = ft_itoa(data->exit_status);
 		(*i)++;
 	}
 	else
 	{
-		assign.value = ft_getenv(data, assign.var);
+		assign.value = ft_getenv(*data, assign.var);
 		*i += ft_strlen(assign.var);
 	}
 	free(assign.var);
@@ -75,7 +75,7 @@ static char	*assign_var_and_value(t_data *data, char *input, char *new, int *i)
 		if (data->quoting_state == UNQUOTED)
 			new = value_concatenation(new, assign.value);
 		else
-			new = ft_strjoin_and_free_all(new, assign.value);
+			new = ft_strjoin_and_free(new, assign.value, 3);
 	}
 	return (new);
 }
@@ -110,7 +110,7 @@ char	*expand_env_vars(t_data *data, char *input)
 		define_quoting_state(data, input, i);
 		if ((input[i] == '\"' && data->quoting_state == '\"')
 			|| !is_env_var(data, input, &new, &i))
-			new = ft_strjoin_and_free_all(new, ft_substr(input, i, 1));
+			new = ft_strjoin_and_free(new, ft_substr(input, i, 1), 3);
 	}
 	free(input);
 	return (new);

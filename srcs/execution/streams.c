@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/20 11:00:30 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/11/01 13:31:57 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/11/11 14:18:15 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ static int	open_file(t_data *data, int *stream_type)
 		flags = O_CREAT | O_WRONLY | O_APPEND;
 	fd = open(path, flags, S_IRWXU);
 	if (fd < 3)
-		fd = error_msg(data, M_ARGERR, path);
+		fd = error_msg(*data, NULL, 1, path);
 	return (fd);
 }
 
@@ -90,7 +90,7 @@ static int	cmd_input_output(t_data *data)
 		close_unnecessary_fds(data, file, stream_type);
 		tmp = tmp->next;
 	}
-	return (EXIT_SUCCESS);
+	return (0);
 }
 
 int	stream_source(t_data *data, int read_end, BOOL	simple_cmd)
@@ -107,7 +107,7 @@ int	stream_source(t_data *data, int read_end, BOOL	simple_cmd)
 		if (data->fd[0] == ERROR)
 			data->fd[0] = read_end;
 		if (dup2(data->fd[0], STDIN_FILENO) == ERROR)
-			return (EXIT_FAILURE);
+			return (error_msg(*data, NULL, 1, NULL));
 	}
 	if (data->piped_cmd
 		&& (data->piped_cmd->next || data->fd[1] != ERROR))
@@ -115,7 +115,7 @@ int	stream_source(t_data *data, int read_end, BOOL	simple_cmd)
 		if (data->fd[1] == ERROR)
 			data->fd[1] = data->end[1];
 		if (dup2(data->fd[1], STDOUT_FILENO) == ERROR)
-			return (ERROR);
+			return (error_msg(*data, NULL, 1, NULL));
 	}
 	if (simple_cmd == FALSE)
 		close_fds(data);

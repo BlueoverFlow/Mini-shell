@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 16:44:54 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/31 10:25:02 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/11/11 09:17:21 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void	define_quoting_state(t_data *data, char *input, int i)
 	}
 	else if (input[i] == data->quoting_state)
 		data->passive = TRUE;
-	if (data->quoting_state == UNQUOTED && quoted_fragment(input[i])
+	if (data->quoting_state == UNQUOTED && (input[i] == '"' || input[i] == '\'')
 		&& closed_quotes(input, i))
 		data->quoting_state = input[i];
 }

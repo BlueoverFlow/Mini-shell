@@ -6,18 +6,18 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/06 11:44:55 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/11/02 12:39:48 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/11/11 09:58:11 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../headers/minishell.h"
 
-static int	check_syntax(t_data *data, char *var)
+static int	check_syntax(t_data data, char *var)
 {
 	int	i;
 
 	i = 0;
-	data->var_with_equals_sign = FALSE;
+	data.var_with_equals_sign = FALSE;
 	if (!ft_isalpha(var[0]) && var[i] != '_')
 		return (ERROR);
 	while (var[++i])
@@ -45,8 +45,8 @@ int	unset(t_data *data)
 	i = 0;
 	while (data->prototype[++i] && data->prototype[i][0])
 	{
-		if (check_syntax(data, data->prototype[i]) == ERROR)
-			return (error_msg(data, M_NOVALID, data->prototype[i]));
+		if (check_syntax(*data, data->prototype[i]) == ERROR)
+			return (error_msg(*data, M_NOVALID, 1, data->prototype[i]));
 		tmp = data->exported;
 		while (tmp)
 		{

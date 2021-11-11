@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 08:15:00 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/11/03 09:17:02 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/11/11 14:26:22 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,6 @@ int	main(int argc, char **argv, char *const envp[])
 	t_data	data;
 
 	global_init(&data, argc, argv, envp);
-	signal(SIGINT, sig_handler);
 	while (1)
 	{
 		data.input = readline(PROMPT);

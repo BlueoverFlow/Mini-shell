@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 16:48:47 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/31 09:40:20 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/11/11 10:12:28 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,16 +17,16 @@ static int	initiate_vars(t_data *data, int file_number, t_h_d *h_d)
 	int	ret;
 
 	h_d->input = NULL;
-	h_d->file_name = ft_strjoin_and_free_all
-		(ft_strdup("/tmp/.heredoc_"), ft_itoa(file_number));
+	h_d->file_name = ft_strjoin_and_free
+		("/tmp/.heredoc_", ft_itoa(file_number), 2);
 	h_d->fd = open(h_d->file_name, O_CREAT | O_RDWR | O_TRUNC, 0666);
 	if (h_d->fd < 3)
 	{
-		ret = error_msg(data, M_ARGERR, h_d->file_name);
+		ret = error_msg(*data, M_ARGERR, 1, h_d->file_name);
 		free(h_d->file_name);
 		return (ret);
 	}
-	return (EXIT_SUCCESS);
+	return (0);
 }
 
 static int	input_stream_literal(t_data *data)
@@ -49,7 +49,7 @@ static int	input_stream_literal(t_data *data)
 	free(h_d.input);
 	data->file_data->path_2 = h_d.file_name;
 	close(h_d.fd);
-	return (EXIT_SUCCESS);
+	return (0);
 }
 
 int	hundle_heredoc(t_data *data)
@@ -74,5 +74,5 @@ int	hundle_heredoc(t_data *data)
 		data->piped_cmd = data->piped_cmd->next;
 	}
 	data->piped_cmd = tmp;
-	return (EXIT_SUCCESS);
+	return (0);
 }
