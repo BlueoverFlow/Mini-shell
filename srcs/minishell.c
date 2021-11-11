@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: mlabrayj <mlabrayj@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 08:15:00 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/11/11 14:26:22 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/11/11 15:37:58 by mlabrayj         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,12 @@ static void	global_init(t_data *data, int argc,
 	char **argv, char *const	*envp)
 {
 	data->exported = NULL;
-	data->exit_status = 0;
 	data->argc = argc;
 	data->argv = argv;
 	data->envp = envp;
 	build_env_vars(data, envp);
+	g_shell.exit_status = 0;
+	g_shell.parent = TRUE;
 }
 
 static void	_init(t_data *data)
@@ -39,7 +40,6 @@ static void	_init(t_data *data)
 	data->fd[1] = ERROR;
 	data->fd[2] = ERROR;
 	data->fd[3] = ERROR;
-	g_parent_id = 0;
 }
 
 static void	free_leaks(t_data data)
@@ -72,6 +72,8 @@ int	main(int argc, char **argv, char *const envp[])
 	t_data	data;
 
 	global_init(&data, argc, argv, envp);
+	signal(SIGINT, sig_handler);
+	signal(SIGQUIT, sig_handler);
 	while (1)
 	{
 		data.input = readline(PROMPT);
@@ -79,11 +81,17 @@ int	main(int argc, char **argv, char *const envp[])
 		if (!data.input || !*data.input || parser(&data) || execute(&data))
 			;
 		else
-			data.exit_status = 0;
+			g_shell.exit_status = 0;
 		free_leaks(data);
 		if (data.input && *data.input)
 			add_history(data.input);
+		if (!data.input)
+		{
+			write(1, "exit\n", 5);
+			exit(1);
+		}
 		free(data.input);
+		
 	}
 	return (0);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: mlabrayj <mlabrayj@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/18 17:20:29 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/11/11 11:04:58 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/11/11 15:10:28 by mlabrayj         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,6 @@ int	parser(t_data *data)
 	if (!ret)
 		ret = hundle_heredoc(data);
 	if (ret)
-		data->exit_status = ret;
+		g_shell.exit_status = ret;
 	return (ret);
 }

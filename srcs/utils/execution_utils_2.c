@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution_utils_2.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: mlabrayj <mlabrayj@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/30 16:54:46 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/11/11 10:14:05 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/11/11 15:10:28 by mlabrayj         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ void	close_fds_and_wait(t_data *data)
 		data->lst_child_id = data->lst_child_id->next;
 	}
 	if (WIFEXITED(stat))
-		data->exit_status = WEXITSTATUS(stat);
+		g_shell.exit_status = WEXITSTATUS(stat);
 	data->lst_child_id = tmp;
 	free_list(&data->lst_child_id);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: mlabrayj <mlabrayj@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/17 10:06:45 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/11/11 14:20:51 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/11/11 15:27:44 by mlabrayj         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,9 @@ static int	pipe_and_fork(t_data *data)
 	}
 	data->process = malloc(sizeof(t_process));
 	data->process->id = fork();
-	g_parent_id = data->process->id;
 	if (data->process->id == ERROR)
 		return (EXIT_FAILURE);
+	g_shell.parent = FALSE;
 	if (data->process->id)
 		ft_lstadd_back(&data->lst_child_id, ft_lstnew(data->process));
 	return (0);
@@ -100,12 +100,12 @@ int	execute(t_data *data)
 	if (ret)
 	{
 		if (ret == EXIT_FAILURE)
-			data->exit_status = ret;
+			g_shell.exit_status = ret;
 		else
 			ret = EXIT_SUCCESS;
 		return (ret);
 	}
 	piped_commands(data);
 	close_fds_and_wait(data);
-	return (data->exit_status);
+	return (g_shell.exit_status);
 }
