@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: mlabrayj <mlabrayj@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/07 13:31:46 by mlabrayj          #+#    #+#             */
-/*   Updated: 2021/11/12 09:55:47 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/11/12 15:13:50 by mlabrayj         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ unsigned long long int	to_ullong(const char *str, int type)
 	return (ret * sign);
 }
 
-static BOOL is_over_limit(char *arg, int *negative)
+static BOOL	is_over_limit(char *arg, int *negative)
 {
 	int		len;
 	int		j;
@@ -61,10 +61,9 @@ static BOOL is_over_limit(char *arg, int *negative)
 
 static BOOL	is_valid_argument(char *arg)
 {
-	int						j;
 	BOOL					negative;
 	unsigned long long int	value;
-	
+
 	negative = FALSE;
 	if (is_over_limit(arg, &negative))
 		return (FALSE);
@@ -84,7 +83,7 @@ int	exit_shell(t_data data)
 		if (data.prototype[2])
 			return (error_msg(data, "too many arguments\n", 255, NULL));
 		else if (!is_valid_argument(data.prototype[1]))
-			g_shell.exit_status =
+			g_shell.exit_status = \
 				error_msg(data, "numeric argument required\n", 255, NULL);
 		else
 			g_shell.exit_status = to_ullong(data.prototype[1], -1) % 256;

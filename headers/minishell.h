@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: mlabrayj <mlabrayj@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 08:15:35 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/11/12 14:02:01 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/11/12 15:10:40 by mlabrayj         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,12 +78,11 @@ typedef struct s_info
 	char	*value;
 }				t_info;
 
-typedef struct	s_shell
+typedef struct s_shell
 {
 	BOOL	parent;
 	int		exit_status;
 }				t_shell;
-
 
 typedef struct s_data
 {

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+         #
+#    By: mlabrayj <mlabrayj@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/05/13 08:14:39 by ael-mezz          #+#    #+#              #
-#    Updated: 2021/11/11 17:46:46 by ael-mezz         ###   ########.fr        #
+#    Updated: 2021/11/12 15:24:37 by mlabrayj         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -44,7 +44,10 @@ SRCS := $(addprefix $(SRCS_PATH)/, $(SRCS))
 
 LIBFT =	libft/libft.a
 
-FLAGS = -g -lreadline -L $(RDLINE_PATH)/lib -I $(RDLINE_PATH)/include #-Wall -Werror -Wextra #-fsanitize=address
+LDFLAGS=-L/goinfre/mlabrayj/.brew/opt/readline/lib
+CPFLAGS=-I/goinfre/mlabrayj/.brew/opt/readline/include
+
+FLAGS = -lreadline $(LDFLAGS) $(CPFLAGS) -Wall -Werror -Wextra 
 
 CC = gcc
 
@@ -57,6 +60,8 @@ $(NAME): $(SRCS) $(HEADER)
 	@$(CC) $(SRCS) $(LIBFT) $(FLAGS) -o $(NAME)
 
 all: $(NAME)
+
+bonus: all
 
 clean:
 	@echo "cleaning..."

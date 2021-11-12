@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_env_vars.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: mlabrayj <mlabrayj@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/18 09:45:38 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/11/12 14:41:05 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/11/12 15:06:35 by mlabrayj         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,7 @@ char	*expand_env_vars(t_data *data, char *input)
 		define_quoting_state(data, input, i);
 		if ((input[i] == '\"' && data->quoting_state == '\"')
 			|| !is_env_var(data, input, &new, &i))
-				new = ft_strjoin_and_free(new, ft_substr(input, i, 1), 3);	
+				new = ft_strjoin_and_free(new, ft_substr(input, i, 1), 3);
 	}
 	free(input);
 	return (new);

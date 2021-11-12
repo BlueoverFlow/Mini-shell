@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc_parsing.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: mlabrayj <mlabrayj@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 16:48:47 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/11/12 14:02:53 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/11/12 15:21:41 by mlabrayj         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,11 +35,11 @@ static void	catch_input(t_data data, t_h_d h_d)
 	{
 		h_d.input = readline("> ");
 		if (!h_d.input || !ft_strcmp(data.file_data->path, h_d.input))
-			{
-				if (h_d.input)
-					free(h_d.input);
-				break ;
-			}
+		{
+			if (h_d.input)
+				free(h_d.input);
+			break ;
+		}
 		write(h_d.fd, h_d.input, ft_strlen(h_d.input));
 		write(h_d.fd, "\n", 1);
 		free(h_d.input);
@@ -60,6 +60,13 @@ static int	input_stream_literal(t_data *data)
 	return (0);
 }
 
+int	hundle_heredoc_norm(t_data *data, t_list *tmp, t_list *tmp_2)
+{
+	data->command->file = tmp_2;
+	data->piped_cmd = tmp;
+	return (EXIT_FAILURE);
+}
+
 int	hundle_heredoc(t_data *data)
 {
 	t_list		*tmp;
@@ -75,11 +82,7 @@ int	hundle_heredoc(t_data *data)
 			data->file_data = data->command->file->content;
 			if (data->file_data->id == HEREDOC)
 				if (input_stream_literal(data))
-				{
-					data->command->file = tmp_2;
-					data->piped_cmd = tmp;
-					return (EXIT_FAILURE);
-				}
+					return (hundle_heredoc_norm(data, tmp, tmp_2));
 			data->command->file = data->command->file->next;
 		}
 		data->command->file = tmp_2;

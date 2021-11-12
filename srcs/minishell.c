@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: mlabrayj <mlabrayj@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 08:15:00 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/11/12 14:02:13 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/11/12 15:18:17 by mlabrayj         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,8 +76,8 @@ int	main(int argc, char **argv, char *const envp[])
 	signal(SIGQUIT, sig_handler);
 	while (1)
 	{
-		data.input = readline(PROMPT);
 		_init(&data);
+		data.input = readline(PROMPT);
 		if (!data.input || !*data.input || parser(&data) || execute(&data))
 			;
 		else
@@ -88,7 +88,6 @@ int	main(int argc, char **argv, char *const envp[])
 		else if (*data.input)
 			add_history(data.input);
 		free(data.input);
-		
 	}
 	return (0);
 }
