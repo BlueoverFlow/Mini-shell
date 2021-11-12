@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execution_utils.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: mlabrayj <mlabrayj@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/20 14:22:16 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/11/11 14:29:36 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/11/12 16:12:35 by mlabrayj         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,9 +50,15 @@ void	execve_errs(t_data data)
 	if ((errno == ENOENT || errno == EFAULT)
 		&& (data.prototype[0][0] == '~' || data.prototype[0][0] == '.'
 		|| data.prototype[0][0] == '/' || data.err_path_env))
-		exit(error_msg(data, strerror(ENOENT), 127, NULL));
+	{
+		errno = ENOENT;
+		exit(error_msg(data, NULL, 127, NULL));
+	}
 	else if (errno == ENOENT || errno == EFAULT)
 		exit(error_msg(data, M_UNFCMD, 127, NULL));
 	else if (errno == EACCES)
-		exit(error_msg(data, strerror(EPERM), 126, NULL));
+	{
+		errno = EPERM;
+		exit(error_msg(data, NULL, 126, NULL));
+	}
 }
