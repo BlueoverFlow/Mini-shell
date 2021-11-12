@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlabrayj <mlabrayj@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 08:15:35 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/11/11 15:26:02 by mlabrayj         ###   ########.fr       */
+/*   Updated: 2021/11/11 18:36:38 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <dirent.h>
+# include <limits.h>
 
 //macros
 # define M_ARGERR "No such file or directory\n"
@@ -80,6 +81,7 @@ typedef struct s_info
 typedef struct	s_shell
 {
 	BOOL	parent;
+	BOOL	heredoc;
 	int		exit_status;
 }				t_shell;
 
@@ -161,6 +163,7 @@ int			export(t_data *data);
 int			cd(t_data *data);
 int			pwd(t_data data);
 int			unset(t_data *data);
+int			exit_shell(t_data data);
 void		build_env_vars(t_data *data, char *const	*envp);
 void		scan_prototype(t_data *data);
 int			file_search_using_path_var(t_data *data);

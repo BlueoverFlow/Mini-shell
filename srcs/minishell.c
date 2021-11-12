@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlabrayj <mlabrayj@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 08:15:00 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/11/11 15:37:58 by mlabrayj         ###   ########.fr       */
+/*   Updated: 2021/11/12 10:07:11 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,13 +83,10 @@ int	main(int argc, char **argv, char *const envp[])
 		else
 			g_shell.exit_status = 0;
 		free_leaks(data);
-		if (data.input && *data.input)
-			add_history(data.input);
 		if (!data.input)
-		{
-			write(1, "exit\n", 5);
-			exit(1);
-		}
+			execute_builtin(&data, ft_strdup("exit"));
+		else if (*data.input)
+			add_history(data.input);
 		free(data.input);
 		
 	}

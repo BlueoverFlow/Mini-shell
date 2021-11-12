@@ -3,40 +3,42 @@
 /*                                                        :::      ::::::::   */
 /*   ft_atoi.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-mezz <ael-mezz@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/09 17:06:02 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/05/04 13:31:10 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/11/11 16:49:51 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/libft.h"
 
-long int	ft_atoi(const char *str)
-{
-	int			a;
-	int			b;
-	long int	c;
+/*
+	atoi should always be given a value in the limit of int data type
+*/
 
-	a = 0;
-	b = 1;
-	c = 0;
-	while (str[a] == ' ' || str[a] == '\t' || str[a] == '\n'
-		|| str[a] == '\v' || str[a] == '\f' || str[a] == '\r')
-		a++;
-	if (str[a] == '-')
-		b = -1;
-	if (str[a] == '+' || str[a] == '-')
-		a++;
-	while (str[a] <= '9' && str[a] >= '0')
+int	ft_atoi(const char *str)
+{
+	int	i;
+	int	sign;
+	int	ret;
+
+	i = 0;
+	sign = 1;
+	ret = 0;
+	while (str[i] == ' ' || str[i] == '\t' || str[i] == '\n'
+		|| str[i] == '\v' || str[i] == '\f' || str[i] == '\r')
+		i++;
+	if (str[i] == '-' || str[i] == '+')
 	{
-		c = c * 10;
-		c = c + (str[a] - 48);
-		a++;
-		if ((c * b) > 2147483647)
-			return (2147483649);
-		else if ((c * b) < -2147483648)
-			return (2147483649);
+		if (str[i] == '-')
+			sign = -1;
+		i++;
 	}
-	return ((int)(c * b));
+	while (str[i])
+	{
+		if (!ft_isdigit(str[i]))
+			return (0);
+		ret = ret * 10 + str[i++] - '0';
+	}
+	return (ret * sign);
 }

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: mlabrayj <mlabrayj@student.42.fr>          +#+  +:+       +#+         #
+#    By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/05/13 08:14:39 by ael-mezz          #+#    #+#              #
-#    Updated: 2021/11/11 15:09:00 by mlabrayj         ###   ########.fr        #
+#    Updated: 2021/11/11 17:46:46 by ael-mezz         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,6 +35,7 @@ SRCS =	minishell.c							\
 		execution/builtins/cd.c				\
 		execution/builtins/unset.c			\
 		execution/builtins/pwd.c			\
+		execution/builtins/exit.c			\
 		execution/signals.c
 
 SRCS_PATH =	./srcs
@@ -43,10 +44,7 @@ SRCS := $(addprefix $(SRCS_PATH)/, $(SRCS))
 
 LIBFT =	libft/libft.a
 
-LDFLAGS=-L/goinfre/mlabrayj/.brew/opt/readline/lib
-CPFLAGS=-I/goinfre/mlabrayj/.brew/opt/readline/include
-
-FLAGS = -g -lreadline $(CPFLAGS) $(LDFLAGS) #-Wall -Werror -Wextra #-fsanitize=address
+FLAGS = -g -lreadline -L $(RDLINE_PATH)/lib -I $(RDLINE_PATH)/include #-Wall -Werror -Wextra #-fsanitize=address
 
 CC = gcc
 

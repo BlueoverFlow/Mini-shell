@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 16:48:47 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/11/11 10:12:28 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/11/11 18:05:22 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,15 +37,18 @@ static int	input_stream_literal(t_data *data)
 	file_number++;
 	if (initiate_vars(data, file_number, &h_d))
 		return (EXIT_FAILURE);
+	g_shell.heredoc = TRUE;
 	while (1)
 	{
 		h_d.input = readline("> ");
-		if (!ft_strcmp(data->file_data->path, h_d.input))
+		if (!h_d.input || !g_shell.heredoc
+			|| !ft_strcmp(data->file_data->path, h_d.input))
 			break ;
 		write(h_d.fd, h_d.input, ft_strlen(h_d.input));
 		write(h_d.fd, "\n", 1);
 		free(h_d.input);
 	}
+	g_shell.heredoc = FALSE;
 	free(h_d.input);
 	data->file_data->path_2 = h_d.file_name;
 	close(h_d.fd);
@@ -74,5 +77,5 @@ int	hundle_heredoc(t_data *data)
 		data->piped_cmd = data->piped_cmd->next;
 	}
 	data->piped_cmd = tmp;
-	return (0);
+	return (EXIT_SUCCESS);
 }

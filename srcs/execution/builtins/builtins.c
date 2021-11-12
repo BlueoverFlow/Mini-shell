@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/14 14:23:07 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/11/11 14:27:14 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/11/11 17:45:42 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,8 @@ int	builtin(t_data *data)
 		return (pwd(*data));
 	else if (!ft_strcmp(data->prototype[0], "unset"))
 		return (unset(data));
+	else if (!ft_strcmp(data->prototype[0], "exit"))
+		return (exit_shell(*data));
 	data->is_builtin = FALSE;
 	return (EXIT_SUCCESS);
 }
