@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/11/01 19:41:24 by mlabrayj          #+#    #+#             */
-/*   Updated: 2021/11/11 16:23:42 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/11/12 14:02:17 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,5 +48,4 @@ void	sig_handler(int sig)
 	}
 	if (!g_shell.parent)
 		write(1, "\n", 1);
-	g_shell.parent = TRUE;
 }

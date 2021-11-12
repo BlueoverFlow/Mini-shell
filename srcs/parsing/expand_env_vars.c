@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/18 09:45:38 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/11/12 10:42:47 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/11/12 14:41:05 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,6 @@ static BOOL	is_env_var(t_data *data, char *input, char **new, int *i)
 char	*expand_env_vars(t_data *data, char *input)
 {
 	int		i;
-	char	*c;
 	char	*new;
 
 	i = -1;

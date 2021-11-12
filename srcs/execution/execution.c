@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/17 10:06:45 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/11/12 10:17:23 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/11/12 14:43:15 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ static int	simple_command(t_data *data)
 	int	ret;
 
 	ret = FALSE;
-	if (!data->piped_cmd->next)
+	if (data->piped_cmd && !data->piped_cmd->next)
 	{
 		scan_prototype(data);
 		if (stream_source(data, 0, TRUE) || builtin(data))

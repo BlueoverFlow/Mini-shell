@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 08:15:35 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/11/11 18:36:38 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/11/12 14:02:01 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,6 @@ typedef struct s_info
 typedef struct	s_shell
 {
 	BOOL	parent;
-	BOOL	heredoc;
 	int		exit_status;
 }				t_shell;
 

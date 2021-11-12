@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 16:44:54 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/11/11 09:17:21 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/11/12 13:28:43 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,15 @@ BOOL	theres_atoken(char *fragment)
 	int	i;
 
 	i = -1;
-	while (fragment[++i])
+	if (fragment)
 	{
-		if (fragment[i] != ' ')
-			return (TRUE);
+		while (fragment[++i])
+		{
+			if (fragment[i] != ' ')
+				return (TRUE);
+		}
+		free(fragment);
 	}
-	free(fragment);
 	return (FALSE);
 }
 
@@ -69,6 +72,8 @@ char	*lst_to_word(t_list *lst)
 
 	i = 0;
 	l = ft_lstsize(lst);
+	if (!l)
+		return (NULL);
 	str = malloc(sizeof(*str) * (l + 1));
 	while (lst)
 	{

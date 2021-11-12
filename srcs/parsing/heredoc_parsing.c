@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 16:48:47 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/11/11 18:05:22 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/11/12 14:02:53 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,23 @@ static int	initiate_vars(t_data *data, int file_number, t_h_d *h_d)
 	return (0);
 }
 
+static void	catch_input(t_data data, t_h_d h_d)
+{
+	while (1)
+	{
+		h_d.input = readline("> ");
+		if (!h_d.input || !ft_strcmp(data.file_data->path, h_d.input))
+			{
+				if (h_d.input)
+					free(h_d.input);
+				break ;
+			}
+		write(h_d.fd, h_d.input, ft_strlen(h_d.input));
+		write(h_d.fd, "\n", 1);
+		free(h_d.input);
+	}
+}
+
 static int	input_stream_literal(t_data *data)
 {
 	static int	file_number = 0;
@@ -36,20 +53,8 @@ static int	input_stream_literal(t_data *data)
 
 	file_number++;
 	if (initiate_vars(data, file_number, &h_d))
-		return (EXIT_FAILURE);
-	g_shell.heredoc = TRUE;
-	while (1)
-	{
-		h_d.input = readline("> ");
-		if (!h_d.input || !g_shell.heredoc
-			|| !ft_strcmp(data->file_data->path, h_d.input))
-			break ;
-		write(h_d.fd, h_d.input, ft_strlen(h_d.input));
-		write(h_d.fd, "\n", 1);
-		free(h_d.input);
-	}
-	g_shell.heredoc = FALSE;
-	free(h_d.input);
+		return (ERROR);
+	catch_input(*data, h_d);
 	data->file_data->path_2 = h_d.file_name;
 	close(h_d.fd);
 	return (0);
@@ -70,7 +75,11 @@ int	hundle_heredoc(t_data *data)
 			data->file_data = data->command->file->content;
 			if (data->file_data->id == HEREDOC)
 				if (input_stream_literal(data))
+				{
+					data->command->file = tmp_2;
+					data->piped_cmd = tmp;
 					return (EXIT_FAILURE);
+				}
 			data->command->file = data->command->file->next;
 		}
 		data->command->file = tmp_2;

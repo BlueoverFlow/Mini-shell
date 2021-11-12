@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parsing.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlabrayj <mlabrayj@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/18 17:20:29 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/11/11 15:10:28 by mlabrayj         ###   ########.fr       */
+/*   Updated: 2021/11/12 13:36:14 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static int	fill_branch(t_data *data, int i)
 	char	*fragment;
 	int		ret;
 
-	if (!data->command)
+	if (!data->command && data->word)
 	{
 		data->command = malloc(sizeof(t_command));
 		data->command->file = NULL;
@@ -43,7 +43,7 @@ static int	fill_branch(t_data *data, int i)
 	fragment = lst_to_word(data->word);
 	if (!theres_atoken(fragment))
 	{
-		if (data->input[i + 1] || data->command->prototype)
+		if (data->input[i + 1] || !data->command)
 			return (EXIT_SUCCESS);
 		return (EXIT_FAILURE);
 	}
@@ -64,6 +64,8 @@ static int	fill_pipeline(t_data *data, int i)
 	if (data->word || !data->command)
 		if (fill_branch(data, i))
 			return (EXIT_FAILURE);
+	if (!data->command && !data->piped_cmd)
+		return (EXIT_SUCCESS);
 	ft_dlstadd_back(&data->piped_cmd, ft_dlstnew(data->command));
 	free_list(&data->word);
 	return (syntax_checking(data, i));
