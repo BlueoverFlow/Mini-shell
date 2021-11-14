@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: ael-mezz <ael-mezz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/24 18:16:59 by mlabrayj          #+#    #+#             */
-/*   Updated: 2021/11/11 14:28:00 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/11/14 14:47:26 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,9 +53,10 @@ int	cd(t_data *data)
 			ret = EXIT_SUCCESS;
 		return (ret);
 	}
-	execute_builtin(data, ft_strjoin_and_free
+	execute_edited_prototype(data, ft_strjoin_and_free
 		("export OLDPWD=", current_dir, 2));
 	current_dir = getcwd(NULL, 0);
-	execute_builtin(data, ft_strjoin_and_free("export PWD=", current_dir, 2));
+	execute_edited_prototype(data, ft_strjoin_and_free
+		("export PWD=", current_dir, 2));
 	return (EXIT_SUCCESS);
 }

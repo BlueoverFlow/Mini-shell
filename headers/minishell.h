@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlabrayj <mlabrayj@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ael-mezz <ael-mezz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 08:15:35 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/11/12 15:10:40 by mlabrayj         ###   ########.fr       */
+/*   Updated: 2021/11/14 16:24:59 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,6 @@ typedef struct s_data
 	t_process		*process;
 	t_file_data		*file_data;
 	BOOL			passive;
-	BOOL			is_builtin;
 	BOOL			err_path_env;
 	BOOL			var_with_equals_sign;
 	BOOL			infile;
@@ -137,8 +136,10 @@ void		execve_errs(t_data data);
 char		**env_array(t_data *data);
 int			error_msg(t_data data, char *message, int exit_code, char *file);
 void		insert_var(t_data *data, char *input);
-void		execute_builtin(t_data *data, char	*cmd);
+void		execute_edited_prototype(t_data *data, char	*cmd);
 void		free_command_struct(t_data data);
+void		free_info_struct(t_data	*data);
+BOOL		is_relative_path(t_data data);
 
 //======== parsing ============================================
 
@@ -154,7 +155,8 @@ int			hundle_redirection(t_data *data, char *fragment,
 //=========== execution ========================================
 
 int			execute(t_data *data);
-int			builtin(t_data *data);
+BOOL		is_builtin(t_data data);
+int			execute_builtin(t_data *data);
 int			echo(t_data data);
 int			env(t_data data);
 int			export(t_data *data);

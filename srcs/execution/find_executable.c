@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   find_executable.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: ael-mezz <ael-mezz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/15 11:04:30 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/11/11 10:16:25 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/11/14 16:13:37 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ BOOL	file_search_using_path_var(t_data *data)
 	if (!path)
 	{
 		data->err_path_env = TRUE;
-		return (EXIT_FAILURE);
+		return (FALSE);
 	}
 	tree = ft_split(path, ':');
 	free(path);

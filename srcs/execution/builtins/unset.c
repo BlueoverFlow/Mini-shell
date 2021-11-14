@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/06 11:44:55 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/11/11 09:58:11 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/11/12 18:39:23 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,9 +54,7 @@ int	unset(t_data *data)
 			if (!ft_strcmp(data->info->var, data->prototype[i]))
 			{
 				data->exported = skip(tmp, data->exported);
-				free(data->info->value);
-				free(data->info->var);
-				free(data->info);
+				free_info_struct(data);
 				free(tmp);
 				break ;
 			}

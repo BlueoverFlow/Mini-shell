@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/24 13:29:24 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/11/11 10:11:32 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/11/12 18:50:03 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,10 +84,7 @@ static int	scan_env_vars(t_data *data)
 		if (already_exported(data, i, info_1))
 		{
 			data->exported = tmp;
-			if (ft_strcmp(data->info->value, info_1->value))
-				free(data->info->value);
-			free(data->info);
-			free(data->info->var);
+			free_info_struct(data);
 			return (1);
 		}
 		data->exported = data->exported->next;
@@ -106,7 +103,10 @@ int	export(t_data *data)
 	while (data->prototype[++i] && data->prototype[i][0])
 	{
 		if (check_export_syntax(data, i) == ERROR)
+		{
+			free_info_struct(data);
 			return (error_msg(*data, M_NOVALID, 1, data->prototype[i]));
+		}
 		if (!scan_env_vars(data))
 			insert_var(data, NULL);
 	}

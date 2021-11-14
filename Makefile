@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: mlabrayj <mlabrayj@student.42.fr>          +#+  +:+       +#+         #
+#    By: ael-mezz <ael-mezz@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/05/13 08:14:39 by ael-mezz          #+#    #+#              #
-#    Updated: 2021/11/12 16:12:18 by mlabrayj         ###   ########.fr        #
+#    Updated: 2021/11/14 15:31:56 by ael-mezz         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -44,10 +44,7 @@ SRCS := $(addprefix $(SRCS_PATH)/, $(SRCS))
 
 LIBFT =	libft/libft.a
 
-LDFLAGS=-L/goinfre/mlabrayj/.brew/opt/readline/lib
-CPFLAGS=-I/goinfre/mlabrayj/.brew/opt/readline/include
-
-FLAGS = -lreadline $(LDFLAGS) $(CPFLAGS) -Wall -Werror -Wextra 
+FLAGS = -g -lreadline -L $(RDLINE_PATH)/lib -I $(RDLINE_PATH)/include -Wall -Werror -Wextra
 
 CC = gcc
 

@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/14 08:37:34 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/10/30 17:16:32 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/11/12 18:38:26 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,4 +62,11 @@ void	print_list(t_list *lst)
 		printf("%s\n", (char *)lst->content);
 		lst = lst->next;
 	}
+}
+
+void	free_info_struct(t_data	*data)
+{
+	free(data->info->value);
+	free(data->info->var);
+	free(data->info);
 }
