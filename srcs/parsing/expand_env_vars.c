@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/18 09:45:38 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/11/14 14:04:57 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/11/15 15:44:05 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,41 +34,19 @@ static char	*value_concatenation(char *new, char *s)
 	return (new);
 }
 
-static int	find_len(char *input, int i)
-{
-	int	len;
-	int	len_2;
-	int	len_3;
-
-	len = find_char(input + i + 1, '\'');
-	len_2 = find_char(input + i + 1, '"');
-	if ((len_2 < len && len_2 != ERROR) || len == ERROR)
-		len = len_2;
-	len_3 = find_char(input + i + 1, '$');
-	if ((len_3 < len && len_3 != ERROR) || len == ERROR)
-		len = len_3;
-	if (len == ERROR)
-		len = ft_strlen(input) - i - 1;
-	return (len);
-}
-
 static char	*assign_var_and_value(t_data *data, char *input, char *new, int *i)
 {
 	t_info	assign;
 	int		len;
+	int		j;
 
-	len = find_len(input, *i);
+	j = *i;
+	len = 0;
+	while (input[++j] && (ft_isalnum(input[j]) || input[j] == '_'))
+		len++;
 	assign.var = ft_substr(input, *i + 1, len);
-	if (*assign.var == '?')
-	{
-		assign.value = ft_itoa(g_shell.exit_status);
-		(*i)++;
-	}
-	else
-	{
-		assign.value = ft_getenv(*data, assign.var);
-		*i += ft_strlen(assign.var);
-	}
+	assign.value = ft_getenv(*data, assign.var);
+	*i += ft_strlen(assign.var);
 	free(assign.var);
 	if (assign.value)
 	{
@@ -82,9 +60,7 @@ static char	*assign_var_and_value(t_data *data, char *input, char *new, int *i)
 
 static BOOL	is_env_var(t_data *data, char *input, char **new, int *i)
 {
-	if (data->quoting_state != '\'' && input[*i + 1]
-		&& input[*i] == '$' && (ft_isalnum(input[*i + 1])
-			|| input[*i + 1] == '?'))
+	if (data->quoting_state != '\'' && input[*i + 1] && input[*i] == '$')
 	{
 		if (!ft_isdigit(input[*i + 1]))
 		{

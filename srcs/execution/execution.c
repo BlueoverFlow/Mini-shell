@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/06/17 10:06:45 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/11/14 17:29:27 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/11/15 14:26:11 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,8 @@ static int	simple_builtin_command(t_data *data)
 	int		i;
 
 	ret = EXIT_SUCCESS;
-	if (stream_source(data, 0, TRUE) || execute_builtin(data))
+	if (stream_source(data, 0, TRUE)
+		|| (data->command->prototype && execute_builtin(data)))
 		ret = EXIT_FAILURE;
 	i = -1;
 	while (++i < 2)
@@ -91,7 +92,8 @@ int	execute(t_data *data)
 	if (data->piped_cmd)
 	{
 		scan_prototype(data);
-		if (!data->piped_cmd->next && is_builtin(*data))
+		if (!data->command->prototype
+			|| (!data->piped_cmd->next && is_builtin(*data)))
 		{
 			g_shell.exit_status = simple_builtin_command(data);
 			return (g_shell.exit_status);

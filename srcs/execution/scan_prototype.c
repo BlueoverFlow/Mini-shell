@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/01 14:25:44 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/11/14 14:56:38 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/11/15 14:19:34 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,8 @@ void	scan_prototype(t_data *data)
 
 	data->command = data->piped_cmd->content;
 	tmp = data->command->prototype;
+	if (!tmp)
+		return ;
 	command_name_to_lower_case(data);
 	expand_prototype(data);
 	data->command->prototype = tmp;
