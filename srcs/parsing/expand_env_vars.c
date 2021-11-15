@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expand_env_vars.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-mezz <ael-mezz@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mlabrayj <mlabrayj@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/18 09:45:38 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/11/15 15:44:05 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/11/15 16:25:59 by mlabrayj         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,8 @@ static char	*assign_var_and_value(t_data *data, char *input, char *new, int *i)
 
 static BOOL	is_env_var(t_data *data, char *input, char **new, int *i)
 {
-	if (data->quoting_state != '\'' && input[*i + 1] && input[*i] == '$')
+	if (data->quoting_state != '\'' && input[*i + 1] && input[*i] == '$'
+		&& (ft_isalnum(input[*i + 1]) || input[*i + 1] == '_'))
 	{
 		if (!ft_isdigit(input[*i + 1]))
 		{

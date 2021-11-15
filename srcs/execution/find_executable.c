@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   find_executable.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-mezz <ael-mezz@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mlabrayj <mlabrayj@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/15 11:04:30 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/11/15 15:30:22 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/11/15 16:27:51 by mlabrayj         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 char	*ft_getenv(t_data data, char *var)
 {
 	if (*var == '?')
-		return(ft_itoa(g_shell.exit_status));
+		return (ft_itoa(g_shell.exit_status));
 	while (data.exported)
 	{
 		data.info = data.exported->content;

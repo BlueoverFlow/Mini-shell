@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-mezz <ael-mezz@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mlabrayj <mlabrayj@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/09/24 18:16:59 by mlabrayj          #+#    #+#             */
-/*   Updated: 2021/11/15 15:02:06 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/11/15 16:26:57 by mlabrayj         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,6 @@ int	cd(t_data *data)
 
 	current_dir = getcwd(NULL, 0);
 	ret = switch_dir(*data);
-	printf("-- %s\n", data->prototype[1]);
 	if (ret || ft_strcmp(data->prototype[0], "cd"))
 	{
 		chdir(current_dir);
