@@ -1,0 +1,1 @@
+correct cmd : "env env ...." Worked when edit in env.c (delete 1st condition)

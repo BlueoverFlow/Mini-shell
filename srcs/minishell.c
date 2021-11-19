@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 08:15:00 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/11/14 15:05:32 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/11/19 14:11:12 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ static void	global_init(t_data *data, int argc,
 	data->envp = envp;
 	build_env_vars(data, envp);
 	g_shell.exit_status = 0;
+	data->is_heredoc = FALSE;
 }
 
 static void	_init(t_data *data)

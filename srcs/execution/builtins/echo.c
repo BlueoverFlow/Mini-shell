@@ -3,54 +3,51 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-mezz <ael-mezz@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: mlabrayj <mlabrayj@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/14 14:23:07 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/11/11 14:29:22 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/11/15 18:57:17 by mlabrayj         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../../headers/minishell.h"
 
-static size_t	n_option(t_data data)
+static int	n_option(t_data data, int *i)
 {
-	size_t	i;
 	size_t	j;
+	int		new_line;
 
-	i = 0;
-	while (data.prototype[++i])
+	*i = 0;
+	new_line = 1;
+	while (data.prototype[++(*i)])
 	{
 		j = 0;
-		if (data.prototype[i][j++] == '-' && data.prototype[i][j]
-			&& data.prototype[i][j] == 'n')
+		if (data.prototype[*i][j++] == '-' && data.prototype[*i][j]
+			&& data.prototype[*i][j] == 'n')
 		{
-			while (data.prototype[i][j] == 'n')
+			while (data.prototype[*i][j] == 'n')
 				j++;
-			if (data.prototype[i][j] && data.prototype[i][j] != 'n')
-				return (1);
+			if (data.prototype[*i][j] && data.prototype[*i][j] != 'n')
+				return (new_line);
+			new_line = 0;
 		}
 		else
-			return (i);
+			return (new_line);
 	}
-	return (i);
+	return (new_line);
 }
 
 int	echo(t_data data)
 {
-	size_t	i;
+	int		i;
 	int		n;
 
-	n = 1;
 	if (!data.prototype[1])
 	{
 		printf("\n");
 		return (0);
 	}
-	i = n_option(data);
-	if (i > 1)
-		n = 0;
-	else
-		n = 1;
+	n = n_option(data, &i);
 	while (data.prototype[i])
 	{
 		ft_putstr_fd(data.prototype[i++], STDOUT_FILENO);

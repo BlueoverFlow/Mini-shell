@@ -6,7 +6,7 @@
 #    By: mlabrayj <mlabrayj@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/05/13 08:14:39 by ael-mezz          #+#    #+#              #
-#    Updated: 2021/11/15 15:52:48 by mlabrayj         ###   ########.fr        #
+#    Updated: 2021/11/17 21:59:30 by mlabrayj         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -44,7 +44,7 @@ SRCS := $(addprefix $(SRCS_PATH)/, $(SRCS))
 
 LIBFT =	libft/libft.a
 
-FLAGS = -g -lreadline -L $(RDLINE_PATH)/lib -I $(RDLINE_PATH)/include -Wall -Werror -Wextra
+FLAGS = -lreadline -L $(RDLINE_PATH)/lib -I $(RDLINE_PATH)/include -Wall -Wextra -Werror
 
 CC = gcc
 

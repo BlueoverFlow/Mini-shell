@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   heredoc_parsing.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mlabrayj <mlabrayj@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ael-mezz <ael-mezz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/19 16:48:47 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/11/12 15:21:41 by mlabrayj         ###   ########.fr       */
+/*   Updated: 2021/11/19 14:09:52 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ static void	catch_input(t_data data, t_h_d h_d)
 				free(h_d.input);
 			break ;
 		}
+		h_d.input = expand_env_vars(&data, h_d.input);
 		write(h_d.fd, h_d.input, ft_strlen(h_d.input));
 		write(h_d.fd, "\n", 1);
 		free(h_d.input);
@@ -54,13 +55,15 @@ static int	input_stream_literal(t_data *data)
 	file_number++;
 	if (initiate_vars(data, file_number, &h_d))
 		return (ERROR);
+	data->is_heredoc = TRUE;
 	catch_input(*data, h_d);
+	data->is_heredoc = FALSE;
 	data->file_data->path_2 = h_d.file_name;
 	close(h_d.fd);
 	return (0);
 }
 
-int	hundle_heredoc_norm(t_data *data, t_list *tmp, t_list *tmp_2)
+int	restore_adrs(t_data *data, t_list *tmp, t_list *tmp_2)
 {
 	data->command->file = tmp_2;
 	data->piped_cmd = tmp;
@@ -82,7 +85,7 @@ int	hundle_heredoc(t_data *data)
 			data->file_data = data->command->file->content;
 			if (data->file_data->id == HEREDOC)
 				if (input_stream_literal(data))
-					return (hundle_heredoc_norm(data, tmp, tmp_2));
+					return (restore_adrs(data, tmp, tmp_2));
 			data->command->file = data->command->file->next;
 		}
 		data->command->file = tmp_2;
