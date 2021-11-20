@@ -3,23 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   expand_env_vars.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ael-mezz <ael-mezz@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mlabrayj <mlabrayj@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/18 09:45:38 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/11/19 14:10:51 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/11/19 15:38:18 by mlabrayj         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../headers/minishell.h"
 
-static char	*value_concatenation(t_data data, char *new, char *s)
+static char	*value_concatenation(t_data data, char *new, char *s, char *input)
 {
 	int			i;
 	char		**fragment;
 
 	i = 0;
 	fragment = ft_split(s, ' ');
-	free(s);
 	if (!data.is_heredoc)
 		new = ft_strjoin_and_free(new, "\"", 1);
 	if (ft_strlen(new) != 1 && *s == ' ')
@@ -30,6 +29,9 @@ static char	*value_concatenation(t_data data, char *new, char *s)
 		new = ft_strjoin_and_free(new, " ", 1);
 		new = ft_strjoin_and_free(new, fragment[i], 1);
 	}
+	if (s[ft_strlen(s - 1)] == ' ' && *input)
+		new = ft_strjoin_and_free(new, " ", 1);
+	free(s);
 	if (!data.is_heredoc)
 		new = ft_strjoin_and_free(new, "\"", 1);
 	free_2d(fragment);
@@ -54,7 +56,7 @@ static char	*assign_var_and_value(t_data *data, char *input, char *new, int *i)
 	if (assign.value)
 	{
 		if (data->quoting_state == UNQUOTED)
-			new = value_concatenation(*data, new, assign.value);
+			new = value_concatenation(*data, new, assign.value, input + j);
 		else
 			new = ft_strjoin_and_free(new, assign.value, 3);
 	}

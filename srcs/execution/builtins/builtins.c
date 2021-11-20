@@ -6,7 +6,7 @@
 /*   By: mlabrayj <mlabrayj@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/14 14:23:07 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/11/17 21:44:35 by mlabrayj         ###   ########.fr       */
+/*   Updated: 2021/11/19 15:42:56 by mlabrayj         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ BOOL	is_builtin(t_data data)
 	char	**builtins;
 	int		i;
 
-	builtins = ft_split("echo export env pwd unset exit cd CD cD Dc", ' ');
+	builtins = ft_split("echo export env pwd unset exit cd CD cD Dc Cd", ' ');
 	i = -1;
 	while (builtins[++i])
 	{
