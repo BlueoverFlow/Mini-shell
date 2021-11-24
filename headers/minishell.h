@@ -6,7 +6,7 @@
 /*   By: ael-mezz <ael-mezz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/05/13 08:15:35 by ael-mezz          #+#    #+#             */
-/*   Updated: 2021/11/19 14:07:49 by ael-mezz         ###   ########.fr       */
+/*   Updated: 2021/11/24 16:03:29 by ael-mezz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,10 +39,6 @@
 # define APPENDED_REDIRECTED_OUTPUT 22
 # define PROMPT "minishell$ "
 # define UNQUOTED 0
-# define NORMAL_ERR 0
-# define PERROR 5
-# define EXPORT_ERR 6
-# define UNSET_ERR 7
 # define NO_FILE -2
 # define BOOL int
 
